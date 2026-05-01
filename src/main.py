@@ -141,9 +141,68 @@ def render_item(item: dict, briefing_path: Path) -> None:
                     log_action(briefing_path, item_id, "escalate")
                     st.rerun()
 
+# ── Eval tab ─────────────────────────────────────────────────────────────────
+
+def render_eval_tab() -> None:
+    st.title("📊 Eval — 15-case scoring")
+    eval_path = DATA_DIR / "eval_results.json"
+    if not eval_path.exists():
+        st.info("No eval results found. Run: `python -m src.eval.runner`")
+        if st.button("Run eval now"):
+            with st.spinner("Running eval..."):
+                result = subprocess.run(
+                    [sys.executable, "-m", "src.eval.runner"],
+                    capture_output=True, text=True, timeout=60,
+                )
+            if result.returncode == 0:
+                st.success("Eval complete.")
+                st.rerun()
+            else:
+                st.error(result.stderr[:500])
+        return
+
+    eval_data = json.loads(eval_path.read_text())
+    v1 = eval_data.get("v1", {})
+    agg = v1.get("aggregate", {})
+
+    # Aggregate metrics
+    m1, m2, m3, m4, m5 = st.columns(5)
+    m1.metric("Severity acc", f"{agg.get('severity_accuracy', 0):.0%}", delta="target ≥90%")
+    m2.metric("Citation acc", f"{agg.get('citation_accuracy', 0):.0%}", delta="target 100%")
+    m3.metric("Hallucination", f"{agg.get('hallucination_rate', 0):.0%}", delta="target <2%")
+    m4.metric("Recall", f"{agg.get('recall', 0):.0%}", delta="target 100%")
+    m5.metric("Clinical appr.", f"{agg.get('clinical_appropriateness', 0):.1f}/5", delta="target ≥4")
+
+    st.caption("Clinical appropriateness is stubbed at 4.0 for v0.1. Wire Claude-as-judge in v0.2.")
+
+    # Case-by-case table
+    results = v1.get("results", [])
+    if results:
+        st.subheader("Case results")
+        rows = []
+        for r in results:
+            s = r["scores"]
+            rows.append({
+                "Case": r["case_id"],
+                "Drug": r["drug_name"],
+                "Expected": r["expected_severity"],
+                "Actual": r["actual_severity"],
+                "Severity ✓": "✓" if s["severity_accuracy"] == 1.0 else "✗",
+                "Citations ✓": "✓" if s["citation_accuracy"] == 1.0 else "✗",
+                "Hallucination": "✓ clean" if s["hallucination_rate"] == 0.0 else "✗ detected",
+            })
+        st.dataframe(rows, use_container_width=True)
+
+
 # ── Main layout ──────────────────────────────────────────────────────────────
 
 def main():
+    # Sidebar navigation
+    page = st.sidebar.radio("Navigation", ["Briefing", "Eval"], index=0)
+    if page == "Eval":
+        render_eval_tab()
+        return
+
     # Header
     hcol1, hcol2 = st.columns([4, 1])
     hcol1.title("💊 Rx Shortage Intelligence")
