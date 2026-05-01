@@ -23,10 +23,26 @@ Log:
 | <ts> | T-NNN | architect | completed | PASS — <one-line> |
 ```
 
-### Step 2 — Research brief (researcher)
-Spawn `researcher` with ticket ID and H-block. Receive 60-line brief. Pass it forward verbatim to test-engineer and backend-dev.
+### Step 2 — Research brief (researcher fan-out, parallel)
 
-Log architect-style entry.
+Identify relevant `research/0X-*` dirs for the H-block (see mapping in `orchestrator.md`).
+
+Spawn one `researcher` sub-agent per relevant dir IN A SINGLE MESSAGE (parallel `Agent` calls). Each gets `dir_filter: research/0X-<dirname>` and operates in Mode 1 (≤15-line slice).
+
+Wait for all slices. Merge:
+1. Concatenate slices in dir-number order.
+2. Dedupe gotchas across slices (keep most specific source path).
+3. Append a 1-paragraph `## Recommended approach` synthesized from merged content.
+
+If only one dir is relevant for the block, skip fan-out — call researcher once in Mode 2 (full brief).
+
+Pass the merged brief verbatim to test-engineer + backend-dev downstream.
+
+Log one entry per slice + one merge entry:
+```
+| <ts> | T-NNN | researcher (slice: 0X-name) | completed | <one-line> |
+| <ts> | T-NNN | orchestrator | merged-brief | N slices → 1 brief |
+```
 
 ### Step 3 — Contract tests (test-engineer pass 1)
 Spawn `test-engineer` with ticket + research brief. Pass parameter `pass: 1-contract`. Expect tests written and RED.

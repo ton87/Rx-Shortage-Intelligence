@@ -15,21 +15,58 @@ You are the orchestrator. You command the Rx Shortage Intelligence agent team an
 4. Read `ISSUES.md` if exists. If missing, dispatch architect FIRST to generate it from `ROADMAP.md`, then resume.
 5. Read every other agent definition in `.claude/agents/` once per session for behavior alignment.
 
-## Pipeline (per ticket, strictly sequential)
+## Pipeline (per ticket, strictly sequential at ticket level)
 
 ```
 architect (validate ticket scope)
-  → researcher (load lessons + gotchas for this block)
-    → test-engineer (write contract tests, expect RED)
-      → backend-dev (implement until contract tests pass)
-        → test-engineer (adversarial pass: positive, negative, ambient/degraded)
-          → integration (eval suite, lint, build, dispatch-log audit)
-            → reviewer (adversarial review against PRD §5 principles)
-              → atomic commit to main
-                → halt OR next ticket
+  → researcher fan-out (N parallel sub-researchers, one per relevant research/0X-* dir)
+    → merge slices into single brief
+      → test-engineer pass 1 (contract tests, RED)
+        → backend-dev (implement until contract tests pass)
+          → test-engineer pass 2 (adversarial: positive, negative, ambient/degraded)
+            → integration (eval suite, lint, build, dispatch-log audit)
+              → reviewer (adversarial review against PRD §5 principles)
+                → atomic commit to main
+                  → halt OR next ticket
 ```
 
-No skipping. No batching. No parallel ticket execution. Sequential always.
+Tickets run sequentially. Within a ticket, only the researcher step fans out in parallel. All other steps remain sequential.
+
+## Researcher fan-out protocol (step 2)
+
+For the current ticket's H-block, identify which `research/0X-*` dirs are relevant. Mapping by H-block:
+
+| H-block | Relevant research dirs |
+|---------|------------------------|
+| H0 setup | 00-prd-summary, 07-tech-stack-tradeoffs |
+| H1 data layer | 00-prd-summary, 01-data-layer, 08-concerns-risks |
+| H2 MCP servers | 00-prd-summary, 02-mcp-servers, 08-concerns-risks |
+| H3 agent loop | 00-prd-summary, 03-agent-loop, 03b-caching, 08-concerns-risks |
+| H4 briefing+diff | 00-prd-summary, 04-briefing-diff, 03-agent-loop, 08-concerns-risks |
+| H5 Streamlit UI | 00-prd-summary, 05-streamlit-ui, 03b-caching, 08-concerns-risks |
+| H6 eval harness | 00-prd-summary, 06-eval-harness, 03-agent-loop |
+
+Spawn one `researcher` sub-agent per relevant dir IN A SINGLE MESSAGE (parallel `Agent` tool calls). Each prompt includes:
+- Ticket ID + scope
+- `dir_filter: research/0X-<dirname>` — researcher operates in Mode 1, reads only that dir
+- Expected return: ≤15-line slice
+
+Wait for all slices to return. Then merge:
+1. Concatenate slices in dir-number order (00, 01, 02, ...).
+2. Deduplicate any gotcha that appears in two slices (keep the one with the most specific source path).
+3. Append a synthesized `## Recommended approach (1 paragraph)` based on the merged content.
+4. Pass the merged brief to test-engineer + backend-dev verbatim.
+
+If ONLY one dir is relevant for the H-block, skip fan-out and call researcher once in Mode 2 (full brief).
+
+Append one dispatch log entry per researcher slice + one entry for the merge:
+```
+| <ts> | T-NNN | researcher (slice: 02-mcp-servers) | completed | <one-line summary> |
+| <ts> | T-NNN | researcher (slice: 08-concerns-risks) | completed | <one-line summary> |
+| <ts> | T-NNN | orchestrator | merged-brief | N slices → 1 brief |
+```
+
+No skipping. No batching at the ticket level. No parallel ticket execution. Within-ticket researcher fan-out is the ONLY parallel step in this milestone.
 
 ## Dispatch protocol
 
