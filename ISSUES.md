@@ -5,23 +5,21 @@
 
 ---
 
-## T-001: Implement fda_shortage_server.py
+## T-001: Implement fda_shortage_server.py ✅ Done (`c7a1b3b6`, 2026-05-01)
 
 - **Block:** H2
-- **Status:** Backlog
+- **Status:** Done
 - **Files:** `src/servers/fda_shortage_server.py`
 - **Acceptance criteria:**
-  - [ ] `FastMCP("fda-shortage")` server starts without error via `mcp.run()`
-  - [ ] `get_current_shortages(limit: int = 20) -> list[dict]` tool returns trimmed shortage records with `generic_name`, `status`, `rxcui` (list), `shortage_reason`, `source_url`
-  - [ ] `get_shortage_detail(rxcui: str) -> dict` tool returns single record or `{"error": "..."}` on miss
-  - [ ] All HTTP calls go through `src/cache.py` `cached_get()` with `TTL_FDA_SHORTAGES`
-  - [ ] Both tools wrap body in `try/except`, return `{"error": "..."}` on failure — never raise
-  - [ ] `status:Current` filter applied (Q1 decision — TBD excluded)
-  - [ ] `rxcui` preserved as list in returned records (Q2 decision)
-  - [ ] `source_url` field present on every record for citation support
-- **Out of scope:** HTTP transport, ngrok, `mcp_servers` beta parameter, TBD status handling, drug pricing, brand name disambiguation
-- **Source:** ROADMAP.md H2 + `research/02-mcp-servers/LESSON.md` + `research/02-mcp-servers/POC-fda-shortage-server.py`
-- **Cut line ref:** "drop rxnorm_server, fold normalize + alternatives into drug_label_server" — does NOT apply to this ticket
+  - [x] `FastMCP("fda-shortage")` server starts without error via `mcp.run()`
+  - [x] `get_current_shortages(limit: int = 20) -> list[dict]` tool returns trimmed shortage records with `generic_name`, `status`, `rxcui` (list), `shortage_reason`, `source_url`
+  - [x] `get_shortage_detail(rxcui: str) -> dict` tool returns single record or `{"error": "..."}` on miss
+  - [x] All HTTP calls go through `src/cache.py` `cached_get()` with `TTL_FDA_SHORTAGES`
+  - [x] Both tools wrap body in `try/except`, return `{"error": "..."}` on failure — never raise
+  - [x] `status:Current` filter applied (Q1 decision — TBD excluded)
+  - [x] `rxcui` preserved as list in returned records (Q2 decision)
+  - [x] `source_url` field present on every record for citation support (query-specific URL)
+- **Tests:** 50 passing (29 contract + 21 adversarial)
 
 ---
 
