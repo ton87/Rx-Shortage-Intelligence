@@ -1,0 +1,442 @@
+[
+  {
+    "case_id": "C-01",
+    "input": {
+      "rxcui": "309311",
+      "drug_name": "cisplatin",
+      "diff_bucket": "escalated",
+      "today_status": "Current",
+      "yesterday_status": "Available with limitations",
+      "active_orders_30d": 23,
+      "departments": [
+        "Oncology",
+        "Surgery"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "2555"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "no formulary alternative",
+        "IV-only or restricted",
+        "active oncology orders"
+      ],
+      "expected_alternatives_class": "L01XA platinum compounds",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-02",
+    "input": {
+      "rxcui": "105585",
+      "drug_name": "methotrexate",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 18,
+      "departments": [
+        "Oncology",
+        "Rheumatology"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "6851"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "new shortage",
+        "no IV alternative on formulary"
+      ],
+      "expected_alternatives_class": "L04AX antifolates",
+      "min_confidence": "medium"
+    }
+  },
+  {
+    "case_id": "C-03",
+    "input": {
+      "rxcui": "1863343",
+      "drug_name": "vincristine",
+      "diff_bucket": "resolved",
+      "today_status": null,
+      "yesterday_status": "Current",
+      "active_orders_30d": 0,
+      "departments": [],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "11202"
+    },
+    "expected": {
+      "severity": "Resolved",
+      "must_mention_facts": [
+        "no longer in shortage feed"
+      ],
+      "expected_alternatives_class": null,
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-04",
+    "input": {
+      "rxcui": "597195",
+      "drug_name": "carboplatin",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 12,
+      "departments": [
+        "Oncology"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [
+        "cisplatin"
+      ],
+      "orig_rxcui_pre_2026_05_01": "40048"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "alternative available",
+        "but cisplatin also in shortage"
+      ],
+      "expected_alternatives_class": "L01XA",
+      "min_confidence": "medium"
+    }
+  },
+  {
+    "case_id": "C-05",
+    "input": {
+      "rxcui": "892582",
+      "drug_name": "morphine sulfate injection",
+      "diff_bucket": "escalated",
+      "today_status": "Current",
+      "yesterday_status": "Available with limitations",
+      "active_orders_30d": 67,
+      "departments": [
+        "ICU",
+        "ER",
+        "Surgery"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [
+        "hydromorphone",
+        "fentanyl"
+      ],
+      "orig_rxcui_pre_2026_05_01": "7052"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "high order volume",
+        "ICU/ER impact",
+        "alternative opioids available"
+      ],
+      "expected_alternatives_class": "N02A opioids",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-06",
+    "input": {
+      "rxcui": "562508",
+      "drug_name": "amoxicillin IV",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 8,
+      "departments": [
+        "Med-Surg"
+      ],
+      "formulary_status": "non-preferred",
+      "route": "IV",
+      "preferred_alternatives": [
+        "ampicillin",
+        "ceftriaxone"
+      ],
+      "orig_rxcui_pre_2026_05_01": "723"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "non-preferred status",
+        "alternatives available"
+      ],
+      "expected_alternatives_class": "J01CA aminopenicillins",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-07",
+    "input": {
+      "rxcui": "2474267",
+      "drug_name": "fentanyl transdermal patch",
+      "diff_bucket": "resolved",
+      "today_status": null,
+      "yesterday_status": "Current",
+      "active_orders_30d": 4,
+      "departments": [
+        "Ambulatory"
+      ],
+      "formulary_status": "preferred",
+      "route": "Transdermal",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "73494"
+    },
+    "expected": {
+      "severity": "Resolved",
+      "must_mention_facts": [
+        "resolved",
+        "low order volume"
+      ],
+      "expected_alternatives_class": null,
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-08",
+    "input": {
+      "rxcui": "2123076",
+      "drug_name": "albuterol nebulizer solution",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 45,
+      "departments": [
+        "Pediatrics",
+        "ER"
+      ],
+      "formulary_status": "preferred",
+      "route": "Inhalation",
+      "preferred_alternatives": [
+        "levalbuterol"
+      ],
+      "orig_rxcui_pre_2026_05_01": "435"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "pediatric impact",
+        "alternative available"
+      ],
+      "expected_alternatives_class": "R03AC SABA",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-09",
+    "input": {
+      "rxcui": "2642220",
+      "drug_name": "lidocaine IV",
+      "diff_bucket": "escalated",
+      "today_status": "Current",
+      "yesterday_status": "Available with limitations",
+      "active_orders_30d": 31,
+      "departments": [
+        "ICU",
+        "Surgery"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "6387"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "IV-only",
+        "ICU impact",
+        "no alternative"
+      ],
+      "expected_alternatives_class": "C01BB1 local anesthetics",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-10",
+    "input": {
+      "rxcui": "1361226",
+      "drug_name": "heparin (unfractionated)",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 89,
+      "departments": [
+        "ICU",
+        "Cath Lab",
+        "Med-Surg"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV",
+      "preferred_alternatives": [
+        "enoxaparin"
+      ],
+      "orig_rxcui_pre_2026_05_01": "5224"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "very high order volume",
+        "cath lab impact",
+        "LMWH alternative not equivalent"
+      ],
+      "expected_alternatives_class": "B01AB heparin group",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-11",
+    "input": {
+      "rxcui": "727373",
+      "drug_name": "epinephrine injection",
+      "diff_bucket": "escalated",
+      "today_status": "Current",
+      "yesterday_status": "Available with limitations",
+      "active_orders_30d": 14,
+      "departments": [
+        "ER",
+        "ICU",
+        "Code teams"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV/IM",
+      "preferred_alternatives": [],
+      "orig_rxcui_pre_2026_05_01": "3992"
+    },
+    "expected": {
+      "severity": "Critical",
+      "must_mention_facts": [
+        "life-saving emergency drug",
+        "no alternative",
+        "code carts"
+      ],
+      "expected_alternatives_class": "C01CA adrenergic",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-12",
+    "input": {
+      "rxcui": "310965",
+      "drug_name": "ibuprofen oral",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 22,
+      "departments": [
+        "Ambulatory",
+        "Med-Surg"
+      ],
+      "formulary_status": "preferred",
+      "route": "PO",
+      "preferred_alternatives": [
+        "naproxen",
+        "acetaminophen"
+      ],
+      "orig_rxcui_pre_2026_05_01": "5640"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "multiple alternatives",
+        "non-critical indication"
+      ],
+      "expected_alternatives_class": "M01AE NSAIDs",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-13",
+    "input": {
+      "rxcui": "198052",
+      "drug_name": "ondansetron",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 38,
+      "departments": [
+        "Oncology",
+        "Surgery"
+      ],
+      "formulary_status": "preferred",
+      "route": "IV/PO",
+      "preferred_alternatives": [
+        "granisetron",
+        "metoclopramide"
+      ],
+      "orig_rxcui_pre_2026_05_01": "26225"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "alternatives available",
+        "high oncology use"
+      ],
+      "expected_alternatives_class": "A04AA 5HT3 antagonists",
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-14",
+    "input": {
+      "rxcui": "1049906",
+      "drug_name": "diphenhydramine",
+      "diff_bucket": "resolved",
+      "today_status": null,
+      "yesterday_status": "Current",
+      "active_orders_30d": 5,
+      "departments": [
+        "Med-Surg"
+      ],
+      "formulary_status": "preferred",
+      "route": "PO/IV",
+      "preferred_alternatives": [
+        "loratadine"
+      ],
+      "orig_rxcui_pre_2026_05_01": "3498"
+    },
+    "expected": {
+      "severity": "Resolved",
+      "must_mention_facts": [
+        "no longer in shortage"
+      ],
+      "expected_alternatives_class": null,
+      "min_confidence": "high"
+    }
+  },
+  {
+    "case_id": "C-15",
+    "input": {
+      "rxcui": "198440",
+      "drug_name": "acetaminophen",
+      "diff_bucket": "new",
+      "today_status": "Current",
+      "yesterday_status": null,
+      "active_orders_30d": 75,
+      "departments": [
+        "All"
+      ],
+      "formulary_status": "preferred",
+      "route": "PO/IV/PR",
+      "preferred_alternatives": [
+        "ibuprofen"
+      ],
+      "orig_rxcui_pre_2026_05_01": "161"
+    },
+    "expected": {
+      "severity": "Watch",
+      "must_mention_facts": [
+        "very common drug",
+        "ibuprofen also in shortage in C-12"
+      ],
+      "expected_alternatives_class": "N02BE non-opioid analgesics",
+      "min_confidence": "medium"
+    }
+  }
+]
