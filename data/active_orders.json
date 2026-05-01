@@ -1,0 +1,243 @@
+{
+  "customer_id": "memorial-health-450",
+  "snapshot_date": "2026-05-01",
+  "label": "SYNTHETIC",
+  "orders": [
+    {
+      "rxcui": "1724784",
+      "count_last_30_days": 4,
+      "departments": [
+        "Surgery",
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "237371",
+      "count_last_30_days": 59,
+      "departments": [
+        "Surgery",
+        "Ambulatory"
+      ]
+    },
+    {
+      "rxcui": "854830",
+      "count_last_30_days": 12,
+      "departments": [
+        "Pediatrics",
+        "Med-Surg"
+      ]
+    },
+    {
+      "rxcui": "801133",
+      "count_last_30_days": 77,
+      "departments": [
+        "Pediatrics"
+      ]
+    },
+    {
+      "rxcui": "1012396",
+      "count_last_30_days": 55,
+      "departments": [
+        "ER",
+        "Pediatrics",
+        "Surgery"
+      ]
+    },
+    {
+      "rxcui": "282486",
+      "count_last_30_days": 55,
+      "departments": [
+        "Oncology",
+        "ICU"
+      ]
+    },
+    {
+      "rxcui": "860792",
+      "count_last_30_days": 13,
+      "departments": [
+        "Med-Surg"
+      ]
+    },
+    {
+      "rxcui": "597195",
+      "count_last_30_days": 19,
+      "departments": [
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "541363",
+      "count_last_30_days": 65,
+      "departments": [
+        "Oncology",
+        "Med-Surg"
+      ]
+    },
+    {
+      "rxcui": "197527",
+      "count_last_30_days": 76,
+      "departments": [
+        "ER",
+        "Pediatrics",
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "309068",
+      "count_last_30_days": 48,
+      "departments": [
+        "ICU"
+      ]
+    },
+    {
+      "rxcui": "238100",
+      "count_last_30_days": 74,
+      "departments": [
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "1725078",
+      "count_last_30_days": 7,
+      "departments": [
+        "ER"
+      ]
+    },
+    {
+      "rxcui": "1665188",
+      "count_last_30_days": 35,
+      "departments": [
+        "Pediatrics"
+      ]
+    },
+    {
+      "rxcui": "685578",
+      "count_last_30_days": 79,
+      "departments": [
+        "Ambulatory"
+      ]
+    },
+    {
+      "rxcui": "1358510",
+      "count_last_30_days": 74,
+      "departments": [
+        "Surgery",
+        "Ambulatory",
+        "ICU"
+      ]
+    },
+    {
+      "rxcui": "1718900",
+      "count_last_30_days": 12,
+      "departments": [
+        "Med-Surg",
+        "Surgery",
+        "ER"
+      ]
+    },
+    {
+      "rxcui": "1655956",
+      "count_last_30_days": 42,
+      "departments": [
+        "Surgery",
+        "Ambulatory",
+        "Med-Surg"
+      ]
+    },
+    {
+      "rxcui": "311700",
+      "count_last_30_days": 21,
+      "departments": [
+        "Ambulatory"
+      ]
+    },
+    {
+      "rxcui": "1718906",
+      "count_last_30_days": 10,
+      "departments": [
+        "ICU",
+        "Pediatrics"
+      ]
+    },
+    {
+      "rxcui": "1731993",
+      "count_last_30_days": 34,
+      "departments": [
+        "Surgery",
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "1795477",
+      "count_last_30_days": 77,
+      "departments": [
+        "Pediatrics"
+      ]
+    },
+    {
+      "rxcui": "1358610",
+      "count_last_30_days": 14,
+      "departments": [
+        "Med-Surg",
+        "Surgery"
+      ]
+    },
+    {
+      "rxcui": "1743779",
+      "count_last_30_days": 46,
+      "departments": [
+        "Med-Surg",
+        "ICU",
+        "Ambulatory"
+      ]
+    },
+    {
+      "rxcui": "309710",
+      "count_last_30_days": 53,
+      "departments": [
+        "Ambulatory",
+        "ICU",
+        "ER"
+      ]
+    },
+    {
+      "rxcui": "1795609",
+      "count_last_30_days": 16,
+      "departments": [
+        "ICU",
+        "Surgery",
+        "Oncology"
+      ]
+    },
+    {
+      "rxcui": "1719286",
+      "count_last_30_days": 73,
+      "departments": [
+        "ICU",
+        "Surgery"
+      ]
+    },
+    {
+      "rxcui": "763028",
+      "count_last_30_days": 68,
+      "departments": [
+        "Med-Surg",
+        "Pediatrics"
+      ]
+    },
+    {
+      "rxcui": "1795607",
+      "count_last_30_days": 4,
+      "departments": [
+        "ICU"
+      ]
+    },
+    {
+      "rxcui": "311683",
+      "count_last_30_days": 13,
+      "departments": [
+        "Oncology"
+      ]
+    }
+  ]
+}

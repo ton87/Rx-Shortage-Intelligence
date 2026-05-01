@@ -1,0 +1,546 @@
+{
+  "customer_id": "memorial-health-450",
+  "label": "SYNTHETIC \u2014 for v0.1 demo only",
+  "generated_at": "2026-05-01T19:44:52.342343+00:00",
+  "drugs": [
+    {
+      "rxcui": "1724784",
+      "rxcui_list": [
+        "1724784"
+      ],
+      "name": "Bupivacaine Hydrochloride Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "SUBARACHNOID",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "237371",
+      "rxcui_list": [
+        "237371",
+        "312965"
+      ],
+      "name": "Sodium Acetate Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "854830",
+      "rxcui_list": [
+        "854830",
+        "854834",
+        "854838",
+        "854842",
+        "854846",
+        "854850",
+        "1593856",
+        "1871456",
+        "1871460",
+        "1871462",
+        "1871464",
+        "1871466",
+        "1871468"
+      ],
+      "name": "Lisdexamfetamine Dimesylate Capsule",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "ORAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "801133",
+      "rxcui_list": [
+        "801133",
+        "801136"
+      ],
+      "name": "Amino Acid Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Renal-dosed",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1012396",
+      "rxcui_list": [
+        "1012396",
+        "1012404",
+        "1724786",
+        "1724787",
+        "1724880",
+        "1724884",
+        "1725078",
+        "1725082"
+      ],
+      "name": "Bupivacaine Hydrochloride Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INFILTRATION",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "282486",
+      "rxcui_list": [
+        "282486",
+        "1727569"
+      ],
+      "name": "Bumetanide Injection",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "860792",
+      "rxcui_list": [
+        "860792",
+        "861463",
+        "861473",
+        "861493",
+        "861494",
+        "861522",
+        "861529",
+        "861617",
+        "1242106",
+        "1242503",
+        "2539186",
+        "2539188",
+        "2539191",
+        "2539192"
+      ],
+      "name": "Meperidine Hydrochloride Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "597195",
+      "rxcui_list": [
+        "597195"
+      ],
+      "name": "Carboplatin Injection",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [
+        "satraplatin",
+        "cisplatin",
+        "oxaliplatin"
+      ],
+      "alternatives_confidence": "class-member",
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "541363",
+      "rxcui_list": [
+        "541363",
+        "541878",
+        "541892",
+        "577957",
+        "577961",
+        "687043",
+        "1009145"
+      ],
+      "name": "Amphetamine Aspartate Monohydrate, Amphetamine Sulfate, Dextroamphetamine Saccharate, Dextroamphetamine Sulfate Tablet",
+      "formulary_status": "preferred",
+      "route_of_administration": "ORAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "197527",
+      "rxcui_list": [
+        "197527",
+        "197528",
+        "197529"
+      ],
+      "name": "Clonazepam Tablet",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "ORAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Renal-dosed",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "309068",
+      "rxcui_list": [
+        "309068",
+        "1656313",
+        "1656318"
+      ],
+      "name": "Cefotaxime Sodium Powder, for Solution",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "238100",
+      "rxcui_list": [
+        "238100",
+        "238101",
+        "1665188",
+        "1665326"
+      ],
+      "name": "Lorazepam Injection",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1725078",
+      "rxcui_list": [
+        "1725078",
+        "1725082",
+        "1012377",
+        "1012384",
+        "1012396",
+        "1012404",
+        "1672917",
+        "1672919",
+        "1724786",
+        "1724787",
+        "1724880",
+        "1724884",
+        "1867594",
+        "1867596"
+      ],
+      "name": "Bupivacaine Hydrochloride Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "EPIDURAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1665188",
+      "rxcui_list": [
+        "1665188"
+      ],
+      "name": "Lorazepam Injection",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Renal-dosed",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "685578",
+      "rxcui_list": [
+        "685578",
+        "706461",
+        "1737244",
+        "1737245",
+        "1737578",
+        "1737579",
+        "1737581",
+        "1737582",
+        "205964",
+        "309335",
+        "309336",
+        "309339",
+        "685574",
+        "685576"
+      ],
+      "name": "Clindamycin Phosphate Injection",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Oncology only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1358510",
+      "rxcui_list": [
+        "1358510",
+        "1358512",
+        "1358610",
+        "1358612",
+        "1358617",
+        "1358619"
+      ],
+      "name": "Methylprednisolone Acetate Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRALESIONAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1718900",
+      "rxcui_list": [
+        "1718900",
+        "1718906",
+        "1718909"
+      ],
+      "name": "Dexmedetomidine Hydrochloride Injection",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Oncology only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1655956",
+      "rxcui_list": [
+        "1655956",
+        "1946772"
+      ],
+      "name": "Methotrexate Sodium Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [
+        "raltitrexed",
+        "pralatrexate",
+        "pemetrexed"
+      ],
+      "alternatives_confidence": "class-member",
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "311700",
+      "rxcui_list": [
+        "311700",
+        "311702"
+      ],
+      "name": "Midazolam Hydrochloride Injection",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1718906",
+      "rxcui_list": [
+        "1718906",
+        "1718909"
+      ],
+      "name": "Dexmedetomidine Hydrochloride Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Oncology only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1731993",
+      "rxcui_list": [
+        "1731993",
+        "1732006",
+        "1732011",
+        "1732136",
+        "2003714"
+      ],
+      "name": "Morphine Sulfate Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [
+        "naloxone / oxycodone",
+        "naltrexone / oxycodone",
+        "dihydrocodeine",
+        "hydromorphone",
+        "opium",
+        "oxycodone",
+        "oxymorphone",
+        "papaveretum"
+      ],
+      "alternatives_confidence": "class-member",
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1795477",
+      "rxcui_list": [
+        "1795477",
+        "1795480",
+        "1795481"
+      ],
+      "name": "Dextrose Monohydrate 10% Injection",
+      "formulary_status": "non-formulary",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1358610",
+      "rxcui_list": [
+        "1358610",
+        "1358617"
+      ],
+      "name": "Methylprednisolone Acetate Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRA-ARTICULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "ICU only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1743779",
+      "rxcui_list": [
+        "1743779",
+        "1743781",
+        "1743855",
+        "1743856"
+      ],
+      "name": "Methylprednisolone Acetate Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRALESIONAL",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "309710",
+      "rxcui_list": [
+        "309710"
+      ],
+      "name": "Dexmedetomidine Hydrochloride Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Renal-dosed",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1795609",
+      "rxcui_list": [
+        "1795609",
+        "1795616"
+      ],
+      "name": "Dextrose Monohydrate 5% Injection",
+      "formulary_status": "restricted",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Age >18",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1719286",
+      "rxcui_list": [
+        "1719286",
+        "1719290",
+        "1719291"
+      ],
+      "name": "Furosemide Injection",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Renal-dosed",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "763028",
+      "rxcui_list": [
+        "763028",
+        "763029"
+      ],
+      "name": "Lorazepam Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRAMUSCULAR",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": null,
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "1795607",
+      "rxcui_list": [
+        "1795607",
+        "1795609",
+        "1795610",
+        "1795612",
+        "1795616"
+      ],
+      "name": "Dextrose Monohydrate 5% Injection",
+      "formulary_status": "non-preferred",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Oncology only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    },
+    {
+      "rxcui": "311683",
+      "rxcui_list": [
+        "311683"
+      ],
+      "name": "Metronidazole Injection",
+      "formulary_status": "preferred",
+      "route_of_administration": "INTRAVENOUS",
+      "therapeutic_class": "TBD",
+      "restriction_criteria": "Specialist only",
+      "preferred_alternatives": [],
+      "alternatives_confidence": null,
+      "last_pt_review_date": "2026-01-15"
+    }
+  ]
+}
