@@ -1,0 +1,74 @@
+{
+  "run_id": "demo-0001",
+  "run_timestamp": "2026-05-01T08:00:00Z",
+  "customer_id": "memorial-health-450",
+  "date": "2026-05-01",
+  "items_reviewed": 3,
+  "items_surfaced": 2,
+  "total_tokens_used": 0,
+  "latency_ms": 0,
+  "label": "SYNTHETIC — v0.1 demo (sample)",
+  "tool_calls": [],
+  "items": [
+    {
+      "item_id": "item-0001",
+      "rxcui": "309311",
+      "drug_name": "Cisplatin",
+      "_diff_bucket": "new",
+      "severity": "Critical",
+      "summary": "Cisplatin is currently in FDA shortage with 23 active Oncology orders and no available formulary alternative.",
+      "rationale": "Rule C2 applies: IV route, Oncology department, no available preferred alternative off shortage list. Active orders confirm clinical exposure.",
+      "alternatives": [
+        {
+          "rxcui": "40048",
+          "name": "Carboplatin",
+          "rationale": "Same ATC class L01XA (platinum compounds), IV route match. Non-formulary — requires P&T expedited review.",
+          "confidence": "medium",
+          "source_url": "https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?rxcui=309311&relaSource=ATC"
+        }
+      ],
+      "citations": [
+        {
+          "claim": "Cisplatin currently in FDA shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309311",
+          "source": "fda_shortage"
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Initiate P&T expedited review for carboplatin substitution protocol.",
+      "tool_call_log": [],
+      "user_action": null,
+      "user_action_timestamp": null
+    },
+    {
+      "item_id": "item-0002",
+      "rxcui": "41493",
+      "drug_name": "Methotrexate Injection",
+      "_diff_bucket": "unchanged",
+      "severity": "Watch",
+      "summary": "Methotrexate IV shortage ongoing. 8 active orders across Oncology and Rheumatology. One formulary alternative available.",
+      "rationale": "Rule W1 applies: formulary preferred drug, 8 active orders (1-20 range), one alternative available and not itself in shortage.",
+      "alternatives": [
+        {
+          "rxcui": "12574",
+          "name": "Pemetrexed",
+          "rationale": "ATC class L01BA antimetabolite. IV route match. Indication overlap for some oncology uses — clinical review required.",
+          "confidence": "medium",
+          "source_url": "https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?rxcui=41493&relaSource=ATC"
+        }
+      ],
+      "citations": [
+        {
+          "claim": "Methotrexate currently in FDA shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A41493",
+          "source": "fda_shortage"
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Monitor supply levels. Review pemetrexed eligibility with clinical pharmacist.",
+      "tool_call_log": [],
+      "user_action": null,
+      "user_action_timestamp": null
+    }
+  ]
+}
