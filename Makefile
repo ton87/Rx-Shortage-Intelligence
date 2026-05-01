@@ -1,10 +1,13 @@
 PY := venv/bin/python3
 PIP := venv/bin/pip
 
-.PHONY: install run briefing test eval smoke
+.PHONY: install data run briefing test eval smoke
 
 install:
 	$(PIP) install -r requirements.txt
+
+data:
+	$(PY) -m src.data_loader
 
 run:
 	venv/bin/streamlit run src/main.py

@@ -1,78 +1,82 @@
 # Rx Shortage Intelligence — v0.1
 
-AI-assisted morning briefing for hospital pharmacy directors. Cross-references live FDA drug shortages against a hospital's formulary and active orders, classifies severity (Critical / Watch / Resolved), and recommends therapeutic alternatives with citations.
+AI morning briefing for hospital pharmacy directors. Cross-references live FDA drug shortages against a hospital formulary, classifies severity (Critical / Watch / Resolved), and recommends therapeutic alternatives with citations.
 
-> **Synthetic data** — formulary and active orders are synthetic for demo purposes. FDA shortage feed, openFDA labels, and RxNorm data are live public APIs.
+> ⚠️ Formulary and active orders are **synthetic** for demo. FDA, openFDA, and RxNorm data are **live**.
 
 ---
 
-## Quick start
+## Run it — copy-paste these commands
+
+### First time only
 
 ```bash
-# 1. Clone and set up
-git clone git@github.com:ton87/Rx-Shortage-Intelligence.git
-cd Rx-Shortage-Intelligence
+# 1. Go to the project
+cd /Users/anton/Downloads/Rx-Shortage-Intelligence
 
-# 2. Create venv with Python 3.12+
-/path/to/python3.12 -m venv venv
-source venv/bin/activate           # or: use venv/bin/pip and venv/bin/python3 explicitly
+# 2. Activate the Python 3.12 environment
+source venv/bin/activate
 
-# 3. Install dependencies
-venv/bin/pip install -r requirements.txt
+# 3. Confirm you're on the right Python (should say 3.12.x)
+python3 --version
 
-# 4. Add your Anthropic API key
-cp .env.template .env
-# Edit .env and set: ANTHROPIC_API_KEY=sk-ant-...
+# 4. Install dependencies
+make install
 
-# 5. Bootstrap synthetic data (one-time)
-venv/bin/python3 -m src.data_loader
+# 5. Add your Anthropic API key
+#    Open .env in any editor and paste your key
+open .env
+#    It should contain exactly: ANTHROPIC_API_KEY=sk-ant-...
 
-# 6. Launch dashboard
-streamlit run src/main.py
+# 6. Bootstrap synthetic data (one-time)
+make data
 ```
 
-The dashboard loads a sample briefing immediately. Hit **Re-run briefing** to generate a live one (~30–60s).
-
----
-
-## Architecture
-
-```
-CLI:  python -m src.briefing
-        ↓ async — MCP servers, Anthropic SDK, tool-use loop
-        writes data/briefings/YYYY-MM-DD.json
-
-UI:   streamlit run src/main.py
-        ↓ pure sync — reads JSON, renders, no async
-        Re-run button → subprocess.run(["python", "-m", "src.briefing"])
-```
-
-**Three MCP servers** (FastMCP stdio):
-
-| Server | Tools |
-|--------|-------|
-| `fda_shortage_server` | `get_current_shortages`, `get_shortage_detail` |
-| `drug_label_server` | `get_drug_label_sections`, `search_labels_by_indication` |
-| `rxnorm_server` | `normalize_drug_name`, `get_therapeutic_alternatives` |
-
-**Agent loop** — native Anthropic SDK tool-use (`while stop_reason == "tool_use"`). No LangChain. Code is the trace.
-
----
-
-## Commands
+### Every time you want to use it
 
 ```bash
-# Smoke test — confirm 6 tools discovered across 3 servers
-venv/bin/python3 -m src.mcp_bridge
+cd /Users/anton/Downloads/Rx-Shortage-Intelligence
+source venv/bin/activate
+make run
+```
 
-# Generate a live briefing (hits real APIs, costs ~$0.10–$0.20)
-venv/bin/python3 -m src.briefing
+That opens the dashboard at **http://localhost:8501**
 
-# Run eval harness (deterministic, no API cost)
-venv/bin/python3 -m src.eval.runner
+---
 
-# Run full test suite (283 tests, ~1s)
-venv/bin/python3 -m pytest tests/ -q
+## What the dashboard does
+
+1. Opens showing a sample briefing (Cisplatin Critical, Methotrexate Watch)
+2. Click **Re-run briefing** to generate a live one — hits real FDA/RxNorm APIs, takes ~30–60s
+3. Click any item to expand agent reasoning + citations
+4. Click **✓ Accept**, **✎ Override**, or **⚠ Escalate** to log your decision
+5. Sidebar → **Eval** tab to see 15-case scoring results
+
+---
+
+## All commands
+
+```bash
+make run        # launch Streamlit dashboard  → http://localhost:8501
+make briefing   # generate a live briefing    (hits real APIs, ~$0.10–0.20)
+make test       # run 283 unit tests          (~1 second)
+make eval       # run eval harness            (no API cost, deterministic)
+make smoke      # confirm 6 MCP tools found   (quick sanity check)
+make install    # install/verify dependencies
+```
+
+---
+
+## If pip gives a Python version error
+
+Your system `pip` points to macOS Python 3.9. Always use:
+```bash
+# Option A — activate venv first (then pip works normally)
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Option B — bypass activation entirely
+make install
 ```
 
 ---
@@ -83,38 +87,50 @@ venv/bin/python3 -m pytest tests/ -q
 |-------|--------|
 | LLM | `claude-sonnet-4-6` |
 | Agent | Anthropic SDK native tool-use loop |
-| Tools | 3 FastMCP stdio servers |
-| UI | Streamlit (sync only — Pattern B) |
-| API cache | `diskcache` (1h FDA, 24h labels/RxNorm) |
-| Prompt cache | Anthropic ephemeral (5-min TTL) |
-| Data | Synthetic formulary + orders; live FDA + openFDA + RxNorm |
+| Tools | 3 FastMCP stdio servers (FDA, openFDA, RxNorm) |
+| UI | Streamlit — sync only, Pattern B |
+| API cache | diskcache (1h FDA shortages, 24h labels/RxNorm) |
+| Prompt cache | Anthropic ephemeral 5-min TTL |
 
 ---
 
-## Eval results (v0.1 deterministic)
+## Project layout
+
+```
+src/
+  main.py                  # Streamlit dashboard (streamlit run src/main.py)
+  agent.py                 # Anthropic tool-use loop
+  briefing.py              # generate_briefing(), compute_diff()
+  mcp_bridge.py            # spawns 3 servers, exposes 6 tools
+  cache.py                 # diskcache wrapper
+  servers/
+    fda_shortage_server.py
+    drug_label_server.py
+    rxnorm_server.py
+  eval/
+    runner.py              # 15-case eval harness
+    cases.json
+
+data/
+  synthetic_formulary.json
+  active_orders.json
+  yesterday_snapshot.json
+  briefings/               # YYYY-MM-DD.json written on each run
+  eval_results.json
+
+tests/                     # 283 tests
+```
+
+---
+
+## Eval results
 
 | Dimension | Score | Target |
 |-----------|-------|--------|
-| Severity accuracy | 100% | ≥90% |
+| Severity accuracy | 100% | ≥ 90% |
 | Citation accuracy | 100% | 100% |
-| Hallucination rate | 0% | <2% |
+| Hallucination rate | 0% | < 2% |
 | Recall | 100% | 100% |
-| Clinical appropriateness | 4.0/5 | ≥4 (stubbed — wire Claude-as-judge in v0.2) |
+| Clinical appropriateness | 4.0 / 5 | ≥ 4 (stubbed — Claude-as-judge in v0.2) |
 
----
-
-## Cost
-
-Modeled at **~$0.10–$0.20/briefing** (30 drugs, with Anthropic ephemeral prompt cache).  
-PRD target was $0.05 — documented honestly per Principle 7. Production v0.2 can reduce with Haiku screening pass.
-
----
-
-## Known gaps (v0.2+)
-
-- Real customer formulary (EHR integration)
-- Background scheduler + push notifications
-- Multi-tenancy + auth
-- Claude-as-judge for clinical appropriateness scoring
-- RAG over label chunks (currently full-label text passed)
-- `@st.cache_resource` for warm MCP client (faster Re-run)
+Cost: ~$0.10–0.20 per briefing (PRD target $0.05 — documented honestly).
