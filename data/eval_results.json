@@ -1,0 +1,215 @@
+{
+  "v1": {
+    "prompt_version": "v1",
+    "run_timestamp": "2026-05-01T22:02:59.484246+00:00",
+    "case_count": 15,
+    "results": [
+      {
+        "case_id": "C-01",
+        "drug_name": "cisplatin",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-02",
+        "drug_name": "methotrexate",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-03",
+        "drug_name": "vincristine",
+        "expected_severity": "Resolved",
+        "actual_severity": "Resolved",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-04",
+        "drug_name": "carboplatin",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-05",
+        "drug_name": "morphine sulfate injection",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-06",
+        "drug_name": "amoxicillin IV",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-07",
+        "drug_name": "fentanyl transdermal patch",
+        "expected_severity": "Resolved",
+        "actual_severity": "Resolved",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-08",
+        "drug_name": "albuterol nebulizer solution",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-09",
+        "drug_name": "lidocaine IV",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-10",
+        "drug_name": "heparin (unfractionated)",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-11",
+        "drug_name": "epinephrine injection",
+        "expected_severity": "Critical",
+        "actual_severity": "Critical",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-12",
+        "drug_name": "ibuprofen oral",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-13",
+        "drug_name": "ondansetron",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-14",
+        "drug_name": "diphenhydramine",
+        "expected_severity": "Resolved",
+        "actual_severity": "Resolved",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      },
+      {
+        "case_id": "C-15",
+        "drug_name": "acetaminophen",
+        "expected_severity": "Watch",
+        "actual_severity": "Watch",
+        "scores": {
+          "severity_accuracy": 1.0,
+          "citation_accuracy": 1.0,
+          "hallucination_rate": 0.0,
+          "recall": 1.0,
+          "clinical_appropriateness": 4.0
+        }
+      }
+    ],
+    "aggregate": {
+      "severity_accuracy": 1.0,
+      "citation_accuracy": 1.0,
+      "hallucination_rate": 0.0,
+      "recall": 1.0,
+      "clinical_appropriateness": 4.0,
+      "hallucination_pass": true,
+      "severity_pass": true,
+      "citation_pass": true
+    }
+  },
+  "v2": null
+}
