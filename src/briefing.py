@@ -594,7 +594,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
     from src.mcp_bridge import MCPBridge
     from src.agent import run_agent
 
-    date_str = date_str or datetime.now().strftime("%Y-%m-%d")
+    date_str = date_str or datetime.now(timezone.utc).strftime("%Y-%m-%d")
     run_id = str(uuid.uuid4())
     t_start = time.monotonic()
 
@@ -614,7 +614,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
     async with MCPBridge() as bridge:
         _log("phase=mcp_bridge_ready")
         t_fda = time.monotonic()
-        today_raw_str = await bridge.call_tool("fda_shortage_get_current_shortages", {"limit": 100})
+        today_raw_str = await bridge.call_tool("fda_shortage_get_current_shortages", {"limit": 1000})
         fetch_error = None
         try:
             today_raw = json.loads(today_raw_str)
@@ -636,9 +636,21 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
             f"unchanged={len(diff['unchanged'])}"
         )
 
-        # Surface new + escalated + improved + resolved (skip unchanged)
-        candidates = (
-            diff["new"] + diff["escalated"] + diff["improved"] + diff["resolved"]
+        # Surface new + escalated + improved + resolved (skip unchanged).
+        # Sort by clinical priority: escalated first (worsening), then new,
+        # then improved, then resolved. Within each bucket sort by active
+        # orders descending so highest-volume drugs surface first.
+        BUCKET_RANK = {"escalated": 0, "new": 1, "improved": 2, "resolved": 3}
+
+        def _candidate_sort_key(drug: dict) -> tuple:
+            bucket = drug.get("_diff_bucket", "new")
+            frxcui = drug.get("_formulary_rxcui", "")
+            orders = orders_idx.get(frxcui, {}).get("count_last_30_days", 0)
+            return (BUCKET_RANK.get(bucket, 9), -orders)
+
+        candidates = sorted(
+            diff["new"] + diff["escalated"] + diff["improved"] + diff["resolved"],
+            key=_candidate_sort_key,
         )
 
         # Cut line: cap at 5 drugs for v0.1 tier-1 latency budget.

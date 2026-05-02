@@ -212,11 +212,14 @@ def confidence_pill(conf: str) -> str:
     return f'<span class="rx-pill rx-pill-{c}">{label}</span>'
 
 def format_timestamp(iso: str) -> str:
+    """Display ISO timestamp in the user's local timezone with tz abbreviation."""
     if not iso:
         return "—"
     try:
         dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
-        return dt.strftime("%b %d, %Y · %H:%M UTC")
+        # Convert UTC-stored ISO to local; %Z yields tz abbreviation (e.g. EDT, PST)
+        local = dt.astimezone()
+        return local.strftime("%b %d, %Y · %H:%M %Z").strip()
     except (ValueError, TypeError):
         return iso
 
@@ -246,10 +249,25 @@ def primary_citation_url(item: dict) -> str | None:
 # ── Data loading ────────────────────────────────────────────────────────────
 
 def find_latest_briefing() -> Path | None:
+    """Pick newest briefing by embedded run_timestamp, not filename.
+
+    Filename uses UTC date; run_timestamp is authoritative. Prevents picking
+    a stale 'tomorrow-named' file over a real newer run. Falls back to
+    filename sort if a file is unreadable.
+    """
     if not BRIEFINGS_DIR.exists():
         return None
-    files = sorted(BRIEFINGS_DIR.glob("*.json"), reverse=True)
-    return files[0] if files else None
+    files = list(BRIEFINGS_DIR.glob("*.json"))
+    if not files:
+        return None
+
+    def _ts(p: Path) -> str:
+        try:
+            return json.loads(p.read_text()).get("run_timestamp", "") or ""
+        except (OSError, json.JSONDecodeError):
+            return ""
+
+    return max(files, key=lambda p: (_ts(p), p.name))
 
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text())
@@ -363,7 +381,8 @@ BRIEFING_LOGS_DIR = BRIEFINGS_DIR / "logs"
 
 def _new_log_path() -> Path:
     BRIEFING_LOGS_DIR.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    # Local time so file names match what user sees in `ls`
+    ts = datetime.now().strftime("%Y%m%d-%H%M%S")
     return BRIEFING_LOGS_DIR / f"briefing-{ts}.log"
 
 def run_briefing_cli() -> tuple[bool, str, Path | None]:
