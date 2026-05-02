@@ -10,6 +10,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_VENV_PYTHON = PROJECT_ROOT / "venv" / "bin" / "python"
+PYTHON = str(_VENV_PYTHON) if _VENV_PYTHON.exists() else sys.executable
+
 import streamlit as st
 
 from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TIMEOUT_S
@@ -90,13 +94,14 @@ def run_briefing_cli() -> tuple[bool, str, Path | None]:
     # Tee subprocess output: parent stdout/stderr (terminal) AND log file.
     # Use shell pipe with `tee` so streamlit container shows logs live + file persists.
     cmd = (
-        f"{sys.executable} -u -m src.briefing 2>&1 | tee {log_path}"
+        f"{PYTHON} -u -m src.briefing 2>&1 | tee {log_path}"
     )
 
     try:
         proc = subprocess.run(
             cmd, shell=True, timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
             stdout=None, stderr=None,  # inherit terminal
+            cwd=PROJECT_ROOT,
         )
     except subprocess.TimeoutExpired:
         _release_briefing_lock()
@@ -133,9 +138,10 @@ def run_eval_cli() -> tuple[bool, str, str]:
     """
     try:
         proc = subprocess.run(
-            [sys.executable, "-m", "src.eval.runner"],
+            [PYTHON, "-m", "src.eval.runner"],
             capture_output=True, text=True,
             timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
+            cwd=PROJECT_ROOT,
         )
     except subprocess.TimeoutExpired:
         return False, "", "Eval timed out (>10 min)."

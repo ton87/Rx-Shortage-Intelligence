@@ -18,6 +18,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+load_dotenv(Path(__file__).parent.parent / ".env", override=True)
+
 from src.domain.diff import compute_diff
 from src.domain.indexing import index_formulary, index_orders
 from src.domain.constants import (
@@ -36,8 +38,6 @@ from src.agent.prompts import (
     parse_briefing_item,
 )
 from src.agent.prefetch import prefetch_drug_data
-
-load_dotenv()
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
