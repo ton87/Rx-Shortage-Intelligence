@@ -1,11 +1,12 @@
 """
-Briefing generation + diff logic.
+Briefing CLI orchestrator.
 
 CLI: python -m src.briefing
   → Generates today's briefing, writes data/briefings/YYYY-MM-DD.json
 
-generate_briefing(date_str=None) → BriefingRun dict
-compute_diff(today, yesterday, formulary_rxcuis) → DiffResult dict
+Wires io_.data_loader → domain.diff → agent.prefetch → agent.loop →
+io_.briefing_store. Pure orchestration; no agent prompts, no diff math,
+no UI.
 """
 
 import asyncio
