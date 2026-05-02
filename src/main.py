@@ -20,6 +20,17 @@ import streamlit as st
 from src.domain.severity import Severity, SEVERITY_RANK
 from src.domain.confidence import Confidence, CONFIDENCE_LABELS
 from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TIMEOUT_S
+from src.domain.matching import (
+    normalize_drug_name,
+    build_shortage_index,
+    find_shortage_match,
+    primary_citation_url,
+)
+from src.io_.briefing_store import (
+    find_latest_briefing,
+    load_briefing,
+    BRIEFINGS_DIR as _BRIEFINGS_DIR,
+)
 
 # ── Config ──────────────────────────────────────────────────────────────────
 
@@ -31,7 +42,7 @@ st.set_page_config(
 )
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-BRIEFINGS_DIR = DATA_DIR / "briefings"
+BRIEFINGS_DIR = _BRIEFINGS_DIR  # re-exported from io_.briefing_store
 FORMULARY_PATH = DATA_DIR / "synthetic_formulary.json"
 ORDERS_PATH = DATA_DIR / "active_orders.json"
 
@@ -242,50 +253,19 @@ def format_latency_or_dash(latency_ms) -> str:
         return "—"
     return f"{ms // 1000}s" if ms >= 1000 else f"{ms} ms"
 
-def primary_citation_url(item: dict) -> str | None:
-    for c in item.get("citations", []) or []:
-        url = c.get("url") or c.get("source_url")
-        if url:
-            return url
-    return None
-
 # ── Data loading ────────────────────────────────────────────────────────────
-
-def find_latest_briefing() -> Path | None:
-    """Pick newest briefing by embedded run_timestamp, not filename.
-
-    Filename uses UTC date; run_timestamp is authoritative. Prevents picking
-    a stale 'tomorrow-named' file over a real newer run. Falls back to
-    filename sort if a file is unreadable.
-    """
-    if not BRIEFINGS_DIR.exists():
-        return None
-    files = list(BRIEFINGS_DIR.glob("*.json"))
-    if not files:
-        return None
-
-    def _ts(p: Path) -> str:
-        try:
-            return json.loads(p.read_text()).get("run_timestamp", "") or ""
-        except (OSError, json.JSONDecodeError):
-            return ""
-
-    return max(files, key=lambda p: (_ts(p), p.name))
-
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text())
 
 @st.cache_data(show_spinner=False)
 def load_formulary() -> list[dict]:
     if not FORMULARY_PATH.exists():
         return []
-    return load_json(FORMULARY_PATH).get("drugs", [])
+    return load_briefing(FORMULARY_PATH).get("drugs", [])
 
 @st.cache_data(show_spinner=False)
 def load_orders_index() -> dict:
     if not ORDERS_PATH.exists():
         return {}
-    data = load_json(ORDERS_PATH)
+    data = load_briefing(ORDERS_PATH)
     return {str(o["rxcui"]): o for o in data.get("orders", [])}
 
 # ── HITL action logging ─────────────────────────────────────────────────────
@@ -298,7 +278,7 @@ def log_action(briefing_path: Path, item_id: str, action: str, reason: str | Non
     Atomic write via tmp + rename so concurrent re-run can't see half-written file.
     """
     try:
-        run = load_json(briefing_path)
+        run = load_briefing(briefing_path)
     except (OSError, json.JSONDecodeError) as e:
         st.error(f"Could not read briefing: {e}. Try Re-run briefing.")
         return False
@@ -611,7 +591,7 @@ def render_briefing_tab() -> None:
         )
         return
 
-    run = load_json(path)
+    run = load_briefing(path)
     items = run.get("items", []) or []
 
     # Surface FDA fetch errors honestly — fake-clean briefings break trust.
@@ -662,71 +642,6 @@ STATUS_COLORS = {
     "non-formulary": ("#374151", "#E5E7EB"),
 }
 
-def _normalize_drug_name(name: str) -> str:
-    """Lowercase + strip + collapse whitespace + drop common dosage form words."""
-    if not name:
-        return ""
-    n = name.lower().strip()
-    # Drop dosage-form noise so 'Cefotaxime Sodium Powder, for Solution' matches
-    # 'Cefotaxime Sodium for Injection' etc. Conservative list — only formulation
-    # words, not active ingredient distinguishers.
-    for token in [",", ";", "  "]:
-        n = n.replace(token, " ")
-    while "  " in n:
-        n = n.replace("  ", " ")
-    return n.strip()
-
-def get_briefing_shortage_index() -> tuple[dict, dict]:
-    """Return (rxcui_idx, name_idx) from latest briefing items.
-
-    rxcui_idx: rxcui (str) -> match dict — primary join key
-    name_idx:  normalized full-name (str) -> list[match] — exact-name fallback only
-
-    Both keys must match exactly. No substring fallback. Multi-formulation drugs
-    (e.g. 3× bupivacaine entries in formulary) used to all match a single bupivacaine
-    briefing item via first-token substring; fixed by requiring full normalized
-    name equality OR rxcui intersection.
-    """
-    path = find_latest_briefing()
-    if not path:
-        return {}, {}
-    run = load_json(path)
-    rxcui_idx: dict = {}
-    name_idx: dict = {}
-    for item in run.get("items", []) or []:
-        match = {
-            "severity":   item.get("severity", "Watch"),
-            "summary":    item.get("summary", ""),
-            "citation":   primary_citation_url(item),
-            "item_id":    item.get("item_id", ""),
-        }
-        rxcui = str(item.get("rxcui", ""))
-        if rxcui:
-            rxcui_idx[rxcui] = match
-        norm = _normalize_drug_name(item.get("drug_name") or "")
-        if norm:
-            name_idx.setdefault(norm, []).append(match)
-    return rxcui_idx, name_idx
-
-def find_shortage_match(drug: dict, rxcui_idx: dict, name_idx: dict):
-    """Match formulary drug to briefing item by RxCUI or exact normalized name.
-
-    Order:
-    1. RxCUI intersection (drug.rxcui_list ∩ briefing item.rxcui)
-    2. Exact normalized full-name equality
-    Returns None if no exact match — UI shows '—' honestly.
-    """
-    rxcui_list = drug.get("rxcui_list") or [drug.get("rxcui")]
-    for r in rxcui_list:
-        if r and str(r) in rxcui_idx:
-            return rxcui_idx[str(r)]
-    norm = _normalize_drug_name(drug.get("name") or "")
-    matches = name_idx.get(norm) or []
-    if matches:
-        # Prefer most-severe match if duplicate names ever appear in briefing
-        return min(matches, key=lambda m: SEVERITY_RANK.get(m.get("severity", "Watch"), 1))
-    return None
-
 def render_formulary_tab() -> None:
     st.title("Formulary")
     st.markdown(
@@ -741,7 +656,9 @@ def render_formulary_tab() -> None:
         return
 
     orders_idx = load_orders_index()
-    rxcui_idx, name_idx = get_briefing_shortage_index()
+    path = find_latest_briefing()
+    items = load_briefing(path).get("items", []) if path else []
+    rxcui_idx, name_idx = build_shortage_index(items)
 
     rows = []
     for d in drugs:
@@ -902,7 +819,7 @@ def render_eval_tab() -> None:
                 status.code(err, language="text")
         return
 
-    eval_data = load_json(eval_path)
+    eval_data = load_briefing(eval_path)
     v1 = eval_data.get("v1", {})
     agg = v1.get("aggregate", {})
 

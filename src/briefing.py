@@ -28,11 +28,11 @@ from src.domain.constants import (
     PROMPT_VERSION,
     SYNTHETIC_LABEL,
 )
+from src.io_.briefing_store import write_briefing
 
 load_dotenv()
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-BRIEFINGS_DIR = DATA_DIR / "briefings"
 
 # ── System prompt blocks ──
 
@@ -746,9 +746,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         "fetch_error": fetch_error,
     }
 
-    BRIEFINGS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = BRIEFINGS_DIR / f"{date_str}.json"
-    out_path.write_text(json.dumps(run, indent=2))
+    out_path = write_briefing(run, date_str)
     _log(
         f"phase=write path={out_path.name} items={len(items)} "
         f"total_tokens={total_tokens} latency={latency_ms/1000:.1f}s"
