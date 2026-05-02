@@ -524,7 +524,7 @@ def _fallback_item(text: str, drug_name: str, rxcui: str) -> dict:
 
 async def _generate_briefing_async(date_str: str | None = None) -> dict:
     from src.mcp_bridge import MCPBridge
-    from src.agent import run_agent
+    from src.agent.loop import run_agent
 
     date_str = date_str or datetime.now(timezone.utc).strftime("%Y-%m-%d")
     run_id = str(uuid.uuid4())

@@ -288,7 +288,7 @@ class TestIndexFunctions(unittest.TestCase):
 # Tests: run_agent (mock anthropic)
 # ---------------------------------------------------------------------------
 
-from src.agent import run_agent, MAX_ITERATIONS
+from src.agent.loop import run_agent, MAX_ITERATIONS
 
 
 class TestRunAgent(unittest.IsolatedAsyncioTestCase):
