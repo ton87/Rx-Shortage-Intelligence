@@ -330,17 +330,33 @@ def generate_yesterday_snapshot(today_drugs: list[dict]) -> dict:
 
 # ── Public I/O helpers (no Streamlit — decorators live in main.py) ─────────
 
+def _yesterday_record(rec: dict) -> dict:
+    """Lift openfda.rxcui to the top level so compute_diff can index by it.
+
+    Yesterday's snapshot is the raw FDA API shape (rxcui nested under
+    `openfda`). The trim mirrors what fda_shortage_server._trim does for
+    today's records, just enough that compute_diff sees the same key shape
+    on both sides of the diff.
+    """
+    rxcui = (rec.get("openfda") or {}).get("rxcui", []) or []
+    if not isinstance(rxcui, list):
+        rxcui = [rxcui]
+    return {**rec, "rxcui": rxcui}
+
+
 def load_briefing_inputs() -> tuple[list, list, list]:
     """Return (formulary_drugs, orders, yesterday_shortages).
 
-    Moved from src/briefing.py load_data(). No streamlit decorators — stays
-    usable in both CLI and test contexts.
+    Yesterday key in the snapshot file is `results` (raw FDA API name); each
+    record is normalized so its `rxcui` field is a top-level list, matching
+    today's trimmed records.
     """
     formulary = json.loads((DATA_DIR / "synthetic_formulary.json").read_text())["drugs"]
     orders_data = json.loads((DATA_DIR / "active_orders.json").read_text())["orders"]
     yesterday_path = DATA_DIR / "yesterday_snapshot.json"
     if yesterday_path.exists():
-        yesterday = json.loads(yesterday_path.read_text()).get("shortages", [])
+        raw = json.loads(yesterday_path.read_text()).get("results", [])
+        yesterday = [_yesterday_record(r) for r in raw]
     else:
         yesterday = []
     return formulary, orders_data, yesterday
