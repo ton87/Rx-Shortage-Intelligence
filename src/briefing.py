@@ -18,6 +18,16 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from src.domain.fda import status_rank
+from src.domain.constants import (
+    DEFAULT_CANDIDATE_CAP,
+    FDA_FETCH_LIMIT,
+    PER_DRUG_TIMEOUT_S,
+    CUSTOMER_ID,
+    PROMPT_VERSION,
+    SYNTHETIC_LABEL,
+)
+
 load_dotenv()
 
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -435,10 +445,6 @@ def index_orders(orders: list[dict]) -> dict[str, dict]:
 
 # ── Diff logic ──
 
-def _status_rank(status: str) -> int:
-    return {"Resolved": 0, "Available with limitations": 1,
-            "Current": 2, "To Be Discontinued": 3, "Discontinued": 3}.get(status, 1)
-
 
 def compute_diff(today: list[dict], yesterday: list[dict], formulary_rxcuis: set) -> dict:
     """
@@ -473,7 +479,7 @@ def compute_diff(today: list[dict], yesterday: list[dict], formulary_rxcuis: set
 
     for k in today_keys & yest_keys:
         t, y = today_idx[k], yest_idx[k]
-        tr, yr = _status_rank(t.get("status", "")), _status_rank(y.get("status", ""))
+        tr, yr = status_rank(t.get("status", "")), status_rank(y.get("status", ""))
         item = dict(t); item["_formulary_rxcui"] = k
         if tr > yr:
             item["_diff_bucket"] = "escalated"; result["escalated"].append(item)
@@ -614,7 +620,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
     async with MCPBridge() as bridge:
         _log("phase=mcp_bridge_ready")
         t_fda = time.monotonic()
-        today_raw_str = await bridge.call_tool("fda_shortage_get_current_shortages", {"limit": 1000})
+        today_raw_str = await bridge.call_tool("fda_shortage_get_current_shortages", {"limit": FDA_FETCH_LIMIT})
         fetch_error = None
         try:
             today_raw = json.loads(today_raw_str)
@@ -653,8 +659,8 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
             key=_candidate_sort_key,
         )
 
-        # Cut line: cap at 5 drugs for v0.1 tier-1 latency budget.
-        cap = 5
+        # Cut line: cap at DEFAULT_CANDIDATE_CAP drugs for v0.1 tier-1 latency budget.
+        cap = DEFAULT_CANDIDATE_CAP
         if len(candidates) > cap:
             _log(f"phase=cap_applied total={len(candidates)} kept={cap}")
         candidates = candidates[:cap]
@@ -704,10 +710,10 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
                             tools=[],
                             call_tool_fn=bridge.call_tool,
                         ),
-                        timeout=90,
+                        timeout=PER_DRUG_TIMEOUT_S,
                     )
                 except asyncio.TimeoutError:
-                    _log(f"drug={drug_idx}/{total} name={drug_name!r} TIMEOUT after 90s")
+                    _log(f"drug={drug_idx}/{total} name={drug_name!r} TIMEOUT after {PER_DRUG_TIMEOUT_S}s")
                     return {
                         "rxcui": frxcui,
                         "drug_name": drug_name,
@@ -788,8 +794,8 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
     run = {
         "run_id": run_id,
         "run_timestamp": datetime.now(timezone.utc).isoformat(),
-        "customer_id": "memorial-health-450",
-        "prompt_version": "v1",
+        "customer_id": CUSTOMER_ID,
+        "prompt_version": PROMPT_VERSION,
         "date": date_str,
         "items_reviewed": len(candidates),
         "items_surfaced": len(items),
@@ -797,7 +803,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         "tool_calls": all_tool_calls,
         "total_tokens_used": total_tokens,
         "latency_ms": latency_ms,
-        "label": "SYNTHETIC — v0.1 demo",
+        "label": SYNTHETIC_LABEL,
         "fetch_error": fetch_error,
     }
 

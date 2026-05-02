@@ -17,6 +17,9 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from src.domain.severity import Severity, SEVERITY_RANK
+from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TIMEOUT_S
+
 # ── Config ──────────────────────────────────────────────────────────────────
 
 st.set_page_config(
@@ -31,7 +34,6 @@ BRIEFINGS_DIR = DATA_DIR / "briefings"
 FORMULARY_PATH = DATA_DIR / "synthetic_formulary.json"
 ORDERS_PATH = DATA_DIR / "active_orders.json"
 
-SEVERITY_RANK = {"Critical": 0, "Watch": 1, "Resolved": 2}
 ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
 
 # ── Theme tokens (injected once) ────────────────────────────────────────────
@@ -329,8 +331,8 @@ def log_action(briefing_path: Path, item_id: str, action: str, reason: str | Non
 
 # ── Re-run pipeline ─────────────────────────────────────────────────────────
 
-BRIEFING_LOCK_PATH = Path("/tmp/rx_briefing.lock")
-BRIEFING_LOCK_STALE_SECONDS = 900  # 15 min — anything older is stale
+BRIEFING_LOCK_PATH = Path(LOCK_PATH)
+BRIEFING_LOCK_STALE_SECONDS = LOCK_STALE_S
 
 def _briefing_lock_held() -> tuple[bool, str | None]:
     """Return (is_held, holder_pid_str). Stale locks (>15min, dead pid) cleared."""
@@ -409,7 +411,7 @@ def run_briefing_cli() -> tuple[bool, str, Path | None]:
 
     try:
         proc = subprocess.run(
-            cmd, shell=True, timeout=600,
+            cmd, shell=True, timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
             stdout=None, stderr=None,  # inherit terminal
         )
     except subprocess.TimeoutExpired:
@@ -721,8 +723,7 @@ def find_shortage_match(drug: dict, rxcui_idx: dict, name_idx: dict):
     matches = name_idx.get(norm) or []
     if matches:
         # Prefer most-severe match if duplicate names ever appear in briefing
-        order = {"Critical": 0, "Watch": 1, "Resolved": 2}
-        return min(matches, key=lambda m: order.get(m.get("severity", "Watch"), 1))
+        return min(matches, key=lambda m: SEVERITY_RANK.get(m.get("severity", "Watch"), 1))
     return None
 
 def render_formulary_tab() -> None:
@@ -884,7 +885,7 @@ def render_eval_tab() -> None:
                 try:
                     result = subprocess.run(
                         [sys.executable, "-m", "src.eval.runner"],
-                        capture_output=True, text=True, timeout=600,
+                        capture_output=True, text=True, timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
                     )
                 except subprocess.TimeoutExpired:
                     status.update(label="Eval timed out (>10 min).", state="error")

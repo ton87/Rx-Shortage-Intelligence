@@ -2,7 +2,7 @@
 
 # Briefing pipeline
 DEFAULT_CANDIDATE_CAP = 5          # Max drugs surfaced per briefing (latency budget)
-FDA_FETCH_LIMIT = 100              # Max records pulled from FDA shortage feed per call
+FDA_FETCH_LIMIT = 1000             # Max records pulled from FDA shortage feed per call
 PER_DRUG_TIMEOUT_S = 90            # Per-drug agent classification timeout
 BRIEFING_SUBPROCESS_TIMEOUT_S = 600  # Re-run subprocess wall clock cap
 
