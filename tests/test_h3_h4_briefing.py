@@ -43,7 +43,7 @@ def _make_response(stop_reason: str, content: list):
 
 from src.domain.diff import compute_diff
 from src.domain.indexing import index_formulary, index_orders
-from src.briefing import build_user_message, parse_briefing_item
+from src.agent.prompts import build_user_message, parse_briefing_item
 
 
 class TestComputeDiff(unittest.TestCase):
@@ -297,15 +297,16 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         """responses: list of (stop_reason, content_blocks)"""
         client_mock = MagicMock()
         side_effects = [_make_response(sr, content) for sr, content in responses]
-        client_mock.messages.create.side_effect = side_effects
+        # messages.create must be an AsyncMock because run_agent awaits it
+        client_mock.messages.create = AsyncMock(side_effect=side_effects)
         return client_mock
 
     async def test_run_agent_returns_text_on_end_turn(self):
         text_block = _make_text_block("Final answer.")
         client_mock = self._make_client_mock([("end_turn", [text_block])])
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[{"type": "text", "text": "sys"}],
                 user_msg="hello",
                 tools=[],
@@ -326,8 +327,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         ])
         call_tool = AsyncMock(return_value='{"result": "ok"}')
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[],
                 user_msg="use the tool",
                 tools=[],
@@ -346,8 +347,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         client_mock = self._make_client_mock(responses)
         call_tool = AsyncMock(return_value="{}")
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[],
                 user_msg="go",
                 tools=[],
@@ -368,8 +369,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         async def failing_tool(name, args):
             raise RuntimeError("Network failure")
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[],
                 user_msg="call bad tool",
                 tools=[],
@@ -391,8 +392,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         ])
         call_tool = AsyncMock(return_value='{"ok": true}')
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[],
                 user_msg="run two tools",
                 tools=[],
@@ -409,8 +410,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         client_mock = self._make_client_mock([("max_tokens", [])])
         call_tool = AsyncMock(return_value="{}")
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            text, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            text, log, _ = await run_agent(
                 system=[],
                 user_msg="test",
                 tools=[],
@@ -431,8 +432,8 @@ class TestRunAgent(unittest.IsolatedAsyncioTestCase):
         ])
         call_tool = AsyncMock(return_value=long_result)
 
-        with patch("src.agent.anthropic.Anthropic", return_value=client_mock):
-            _, log = await run_agent(
+        with patch("src.agent.loop.anthropic.AsyncAnthropic", return_value=client_mock):
+            _text, log, _tokens = await run_agent(
                 system=[],
                 user_msg="x",
                 tools=[],

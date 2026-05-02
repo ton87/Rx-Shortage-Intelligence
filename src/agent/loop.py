@@ -52,7 +52,7 @@ async def run_agent(
         # Capture any text emitted this turn even if not end_turn — useful when stop_reason=max_tokens
         turn_text = ""
         for block in resp.content:
-            if hasattr(block, "text"):
+            if getattr(block, "type", None) == "text":
                 turn_text += block.text
         if turn_text:
             last_text = turn_text
