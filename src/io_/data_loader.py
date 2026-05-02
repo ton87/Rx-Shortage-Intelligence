@@ -25,9 +25,11 @@ import httpx
 from src.cache import cached_get, TTL_FDA_SHORTAGES, TTL_RXNORM
 
 # ── Paths ──────────────────────────────────────────────────────────────────
-ROOT     = Path(__file__).parent.parent
+# src/io_/data_loader.py → parent.parent.parent = repo root.
+# Pre-Step 3 the file lived at src/data_loader.py and used parent.parent;
+# the move broke this and silently resolved DATA_DIR to src/data.
+ROOT     = Path(__file__).parent.parent.parent
 DATA_DIR = ROOT / "data"
-DATA_DIR.mkdir(exist_ok=True)
 
 FORMULARY_PATH = DATA_DIR / "synthetic_formulary.json"
 ORDERS_PATH    = DATA_DIR / "active_orders.json"
@@ -324,6 +326,57 @@ def generate_yesterday_snapshot(today_drugs: list[dict]) -> dict:
         "label":         "SYNTHETIC — fictional yesterday for diff seeding",
         "results":       yesterday,
     }
+
+
+# ── Public I/O helpers (no Streamlit — decorators live in main.py) ─────────
+
+def _yesterday_record(rec: dict) -> dict:
+    """Lift openfda.rxcui to the top level so compute_diff can index by it.
+
+    Yesterday's snapshot is the raw FDA API shape (rxcui nested under
+    `openfda`). The trim mirrors what fda_shortage_server._trim does for
+    today's records, just enough that compute_diff sees the same key shape
+    on both sides of the diff.
+    """
+    rxcui = (rec.get("openfda") or {}).get("rxcui", []) or []
+    if not isinstance(rxcui, list):
+        rxcui = [rxcui]
+    return {**rec, "rxcui": rxcui}
+
+
+def load_briefing_inputs() -> tuple[list, list, list]:
+    """Return (formulary_drugs, orders, yesterday_shortages).
+
+    Yesterday key in the snapshot file is `results` (raw FDA API name); each
+    record is normalized so its `rxcui` field is a top-level list, matching
+    today's trimmed records.
+    """
+    formulary = json.loads((DATA_DIR / "synthetic_formulary.json").read_text())["drugs"]
+    orders_data = json.loads((DATA_DIR / "active_orders.json").read_text())["orders"]
+    yesterday_path = DATA_DIR / "yesterday_snapshot.json"
+    if yesterday_path.exists():
+        raw = json.loads(yesterday_path.read_text()).get("results", [])
+        yesterday = [_yesterday_record(r) for r in raw]
+    else:
+        yesterday = []
+    return formulary, orders_data, yesterday
+
+
+def load_formulary() -> list[dict]:
+    """Return the drugs list from synthetic_formulary.json."""
+    formulary_path = DATA_DIR / "synthetic_formulary.json"
+    if not formulary_path.exists():
+        return []
+    return json.loads(formulary_path.read_text()).get("drugs", [])
+
+
+def load_orders_index() -> dict:
+    """Return {rxcui: order} mapping from active_orders.json."""
+    orders_path = DATA_DIR / "active_orders.json"
+    if not orders_path.exists():
+        return {}
+    data = json.loads(orders_path.read_text())
+    return {str(o["rxcui"]): o for o in data.get("orders", [])}
 
 
 # ── Entry point ────────────────────────────────────────────────────────────

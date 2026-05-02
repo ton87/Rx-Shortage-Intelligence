@@ -57,16 +57,19 @@ Tier 3 caching (`@st.cache_resource` for persistent MCP client) = v0.2 nice-to-h
 
 ```
 src/
-  main.py                streamlit entry
-  agent.py               tool-use loop
+  main.py                streamlit entry — tab dispatcher only
+  briefing.py            CLI orchestrator
   mcp_bridge.py          FastMCP Client → Anthropic schema
-  briefing.py            generate_briefing(), compute_diff()
   cache.py               diskcache wrapper
-  servers/
-    fda_shortage_server.py
-    drug_label_server.py
-    rxnorm_server.py
-  data_loader.py
+  domain/                pure logic — severity, confidence, fda, diff,
+                         indexing, matching, constants
+  agent/                 LLM concerns — loop.py, prompts.py, prefetch.py,
+                         prompts/*.md (cache-eligible system blocks)
+  io_/                   filesystem — briefing_store.py, data_loader.py
+  ui/                    streamlit — theme.css + theme.py, components,
+                         formatters, actions, runner, briefing_view,
+                         formulary_view, eval_view
+  servers/               three FastMCP stdio servers
   eval/
     runner.py
     cases.json
@@ -87,7 +90,7 @@ pip install -r requirements.txt
 # or explicit:
 # pip install anthropic "mcp[cli]" "fastmcp>=2.0" httpx diskcache streamlit python-dotenv
 
-python -m src.data_loader        # bootstrap synthetic data
+python -m src.io_.data_loader    # bootstrap synthetic data
 python -m src.mcp_bridge         # smoke test: lists 6 tools
 streamlit run src/main.py        # demo
 python -m src.eval.runner        # run 15-case eval

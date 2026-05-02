@@ -1,1576 +1,37 @@
 {
-  "run_id": "96b77a5e-1c3b-4a28-9398-f659b6e7df7e",
-  "run_timestamp": "2026-05-02T01:15:41.459950+00:00",
+  "run_id": "72301a00-65d3-4fc5-a070-d46b140e3629",
+  "run_timestamp": "2026-05-02T03:01:20.227296+00:00",
   "customer_id": "memorial-health-450",
   "prompt_version": "v1",
   "date": "2026-05-02",
-  "items_reviewed": 10,
-  "items_surfaced": 10,
+  "items_reviewed": 5,
+  "items_surfaced": 5,
   "items": [
     {
-      "rxcui": "309710",
-      "drug_name": "Dexmedetomidine Hydrochloride Injection",
-      "severity": "Critical",
-      "summary": "Dexmedetomidine Hydrochloride Injection (IV, restricted) has entered a new active FDA shortage with 53 orders in the past 30 days spanning ICU and ER \u2014 high-acuity departments with no formulary-designated preferred alternatives.",
-      "rationale": "Rule C2 is the first matching rule: today_status=Current, route=IV, departments include ICU and ER, and preferred_alternatives is empty after subtracting alts_in_shortage (none listed). This yields Critical severity. Rule C1 is not triggered because formulary_status is 'restricted' rather than 'preferred', but C2 independently fires on IV route + critical-care departments + zero available preferred alternatives. The diff bucket is 'new' (yesterday_status absent), so C3 is not applicable. The shortage record itself lists no stated shortage_reason and no estimated resolution date, increasing operational uncertainty. Active order volume of 53 over 30 days in ICU and ER confirms high patient-safety exposure.",
-      "alternatives": [
-        {
-          "rxcui": "8782",
-          "name": "propofol",
-          "rationale": "Propofol IV is a standard-of-care sedative for ICU mechanically ventilated patients and procedural sedation \u2014 the primary clinical context per dexmedetomidine's FDA-confirmed indications (ICU sedation, procedural sedation). No current FDA shortage record found for RxCUI 8782. Label data unavailable via openFDA for this RxCUI; clinical equivalence assertion is based on shared indication overlap confirmed in dexmedetomidine label, not independently label-verified for propofol in this run. Confidence capped at low due to missing alternative label data.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "6960",
-          "name": "midazolam",
-          "rationale": "Midazolam IV is a widely used benzodiazepine sedative for ICU and procedural sedation. Formulary entry for Midazolam Hydrochloride Injection (RxCUI 311700/311702) exists as non-formulary IM route; IV formulation not separately listed on this hospital's formulary. No current FDA shortage record found for RxCUI 6960. Label data unavailable via openFDA for base RxCUI in this run; confidence capped at low. P&T review required before substitution given route/formulary mismatch.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "6130",
-          "name": "ketamine",
-          "rationale": "Ketamine IV is used for procedural sedation and as an adjunct for ICU analgosedation. No current FDA shortage record found for RxCUI 6130. Label data unavailable via openFDA for base RxCUI in this run; confidence capped at low. Not on this hospital's formulary; P&T action required for any substitution.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309710",
-          "claim": "Dexmedetomidine Hydrochloride Injection RxCUI 309710 has FDA shortage status 'Current' as of update date 04/08/2026; no shortage reason or estimated resolution date provided."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A309710&limit=1",
-          "claim": "Dexmedetomidine injection is indicated for ICU sedation of intubated/mechanically ventilated patients and procedural sedation of non-intubated patients; administered IV by continuous infusion."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A309710&limit=1",
-          "claim": "Dexmedetomidine injection has no absolute contraindications per FDA label section 4."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A309710&limit=1",
-          "claim": "Dexmedetomidine injection dosing: loading infusion 1 mcg/kg over 10 min; maintenance 0.2\u20130.7 mcg/kg/hr (ICU) or 0.2\u20131 mcg/kg/hr (procedural); not indicated beyond 24 hours."
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=propofol",
-          "claim": "Propofol resolves to RxCUI 8782 in RxNorm; used as basis for shortage and label lookup."
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=midazolam",
-          "claim": "Midazolam resolves to RxCUI 6960 in RxNorm; used as basis for shortage and label lookup."
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ketamine",
-          "claim": "Ketamine resolves to RxCUI 6130 in RxNorm; used as basis for shortage and label lookup."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A8782",
-          "claim": "No active FDA shortage record found for propofol (RxCUI 8782); not currently in shortage."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A6960",
-          "claim": "No active FDA shortage record found for midazolam (RxCUI 6960); not currently in shortage."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A6130",
-          "claim": "No active FDA shortage record found for ketamine (RxCUI 6130); not currently in shortage."
-        },
-        {
-          "source": "rxclass",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309710",
-          "claim": "RxClass ATC-member alternatives returned for RxCUI 309710 included scopolamine (9601) and propiomazine (8770); neither had an active FDA shortage record, but neither was judged clinically equivalent to dexmedetomidine for ICU/procedural sedation indications and were excluded from alternatives."
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Escalate immediately to pharmacy director and ICU/ED medical leads: activate dexmedetomidine conservation protocol, evaluate propofol and midazolam IV as bridge sedation agents pending P&T emergency review, and assess current unit-level inventory to quantify days-on-hand given 53 orders/30 days.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "309710"
-          },
-          "summary": "Confirmed status=Current, update_date=04/08/2026, no shortage_reason, no estimated_resolution; RxCUI list [309710, 1718906, 1718909]."
-        },
-        {
-          "server": "drug_label",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "309710",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Label retrieved successfully. Indications: ICU sedation (intubated/ventilated) and procedural sedation. No absolute contraindications. IV continuous infusion only, max 24 hours. Dosing: 1 mcg/kg load; 0.2\u20131 mcg/kg/hr maintenance."
-        },
-        {
-          "server": "rxnorm",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "309710"
-          },
-          "summary": "Returned 10 ATC class-members: carbromal, chlormethiazole, valerian root extract, niaprazine, triclofos, ethchlorvynol, dexmedetomidine (self), methaqualone, propiomazine, scopolamine. All confidence=class-member. Most are obsolete or non-injectable; propiomazine (8770) and scopolamine (9601) checked for shortage \u2014 neither in shortage, but neither clinically equivalent to dexmedetomidine for ICU/procedural sedation. Excluded from final alternatives."
-        },
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "9601"
-          },
-          "summary": "No shortage record found for scopolamine (9601)."
-        },
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "8770"
-          },
-          "summary": "No shortage record found for propiomazine (8770)."
-        },
-        {
-          "server": "rxnorm",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "propofol"
-          },
-          "summary": "Resolved to RxCUI 8782."
-        },
-        {
-          "server": "rxnorm",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "midazolam"
-          },
-          "summary": "Resolved to RxCUI 6960."
-        },
-        {
-          "server": "rxnorm",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "ketamine"
-          },
-          "summary": "Resolved to RxCUI 6130."
-        },
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "8782"
-          },
-          "summary": "No shortage record found for propofol (8782) \u2014 not in shortage."
-        },
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "6960"
-          },
-          "summary": "No shortage record found for midazolam (6960) \u2014 not in shortage."
-        },
-        {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "6130"
-          },
-          "summary": "No shortage record found for ketamine (6130) \u2014 not in shortage."
-        },
-        {
-          "server": "drug_label",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "8782",
-            "sections": [
-              "indications_and_usage",
-              "contraindications",
-              "dosage_and_administration"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 8782 (propofol). Label data unavailable; confidence for propofol alternative capped at low."
-        },
-        {
-          "server": "drug_label",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "6960",
-            "sections": [
-              "indications_and_usage",
-              "contraindications",
-              "dosage_and_administration"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 6960 (midazolam). Label data unavailable; confidence for midazolam alternative capped at low."
-        },
-        {
-          "server": "drug_label",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "6130",
-            "sections": [
-              "indications_and_usage",
-              "contraindications",
-              "dosage_and_administration"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 6130 (ketamine). Label data unavailable; confidence for ketamine alternative capped at low."
-        }
-      ],
-      "item_id": "f29d1063-85e9-4017-9dc6-7efa3eec488b",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "1012396",
-      "drug_name": "Bupivacaine Hydrochloride Injection",
-      "severity": "Critical",
-      "summary": "Bupivacaine Hydrochloride Injection (epidural, preferred-route for Surgery/ER/Pediatrics) is in active FDA shortage with availability listed as Unavailable, no estimated resolution date, and 55 active orders in the past 30 days with no formulary-designated alternatives.",
-      "rationale": "Rule C2 is the first matching rule: today_status is Current, route is EPIDURAL (mapped to perioperative/anesthetic use equivalent to IV/IM in acuity), departments include Surgery and ER \u2014 both critical-care settings \u2014 and preferred_alternatives minus alts_in_shortage is empty. Rule C4 does not apply (status is Current, not To Be Discontinued). Rule C1 would also trigger independently: formulary_status for this entry is restricted (not preferred per schema value), so C1's preferred condition is not strictly met; however, C2 fires cleanly. The FDA record explicitly states availability is 'Unavailable' with no resolution timeline, heightening urgency. Pediatrics involvement raises an additional patient-safety flag: the openFDA label confirms indication only in adults, meaning any shortage-driven substitution in pediatric patients carries off-label risk that P&T must address.",
-      "alternatives": [
-        {
-          "rxcui": "35780",
-          "name": "ropivacaine",
-          "rationale": "Ropivacaine is an amide local anesthetic in the same ATC class as bupivacaine and is a well-established clinical substitute for epidural anesthesia and analgesia in surgical and obstetric settings. No active FDA shortage record found. openFDA label data was unavailable for this RxCUI, so absence of absolute contraindications cannot be confirmed from a cited source \u2014 clinical team must verify formulary addition eligibility and pediatric dosing.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "259453",
-          "name": "levobupivacaine",
-          "rationale": "Levobupivacaine is the S-enantiomer of bupivacaine, same ATC class, with epidural use as its primary indication and a potentially improved cardiac safety profile vs. racemic bupivacaine. No active FDA shortage record found. openFDA label data was unavailable for this RxCUI \u2014 clinical team must verify route, concentration, and pediatric suitability before use.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "6387",
-          "name": "lidocaine",
-          "rationale": "Lidocaine injection is an amide local anesthetic in the same ATC class, with established epidural use at appropriate concentrations. No active FDA shortage record found. However, epidural lidocaine has a shorter duration than bupivacaine, which may be clinically inadequate for prolonged surgical procedures. openFDA label data was unavailable for this RxCUI \u2014 clinical team must verify concentration, route compatibility, and departmental applicability.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1012396",
-          "claim": "Bupivacaine Hydrochloride Injection shortage status is Current, availability is Unavailable, no estimated resolution date, updated 04/22/2026"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1012396&limit=1",
-          "claim": "Bupivacaine HCl Injection is indicated in adults only for local/regional anesthesia including lumbar epidural block; 0.75% concentration not for obstetrical anesthesia; contraindicated for obstetrical paracervical block and IV regional anesthesia"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1012396&limit=1",
-          "claim": "Label confirms epidural route at 0.25%, 0.5%, and 0.75% concentrations for lumbar epidural block; preservative-free single-dose vials required for epidural administration"
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers?classId=N01BB&relaSource=ATC",
-          "claim": "Ropivacaine (35780), levobupivacaine (259453), and lidocaine (6387) are ATC class members of the same amide local anesthetic class as bupivacaine (1012396)"
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Escalate to P&T immediately: identify a preservative-free epidural-grade alternative (ropivacaine preferred clinically) for emergency formulary addition, establish a pediatric-specific protocol given the adult-only label indication for bupivacaine, and audit current epidural case schedule to quantify days of remaining inventory.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "1012396"
-          },
-          "summary": "Confirmed Current shortage for Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection; availability Unavailable; no resolution date; updated 04/22/2026"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "1012396",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Retrieved full label sections; confirmed adult-only indication, epidural route supported at 0.25/0.5/0.75%, preservative-free requirement for epidural, contraindications noted"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "1012396"
-          },
-          "summary": "Returned 10 ATC class members including ropivacaine (35780), levobupivacaine (259453), lidocaine (6387), mepivacaine (6759), articaine (592464), others"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "35780"
-          },
-          "summary": "No shortage record found for ropivacaine \u2014 confirmed not in active shortage"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "259453"
-          },
-          "summary": "No shortage record found for levobupivacaine \u2014 confirmed not in active shortage"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "6387"
-          },
-          "summary": "No shortage record found for lidocaine \u2014 confirmed not in active shortage"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "35780",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "ERROR: No label found for RxCUI 35780 \u2014 confidence for ropivacaine alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "259453",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "ERROR: No label found for RxCUI 259453 \u2014 confidence for levobupivacaine alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "6387",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "ERROR: No label found for RxCUI 6387 \u2014 confidence for lidocaine alternative capped at low"
-        }
-      ],
-      "item_id": "ccd2a327-3f11-463f-9439-f1f932086af1",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "854846",
-      "drug_name": "Lisdexamfetamine Dimesylate Capsule",
-      "severity": "Watch",
-      "summary": "Lisdexamfetamine Dimesylate Capsule (non-preferred, oral) has entered the FDA shortage list as Current with zero active orders at this hospital in the last 30 days, presenting low immediate operational risk but warranting monitoring.",
-      "rationale": "No severity rule C1\u2013C4 or W1\u2013W3 matched: formulary status is non-preferred, active orders are zero, route is oral (not IV/IM), yesterday status was absent (new to snapshot), and today status is Current but not To Be Discontinued. Default rule applies: Watch with confidence low due to missing prior-status data and zero active orders. Although operational impact today is minimal, the shortage is confirmed Current by FDA as of 04/17/2026; if utilization resumes, re-classification to W1 or W2 is warranted. No rule override applies.",
-      "alternatives": [
-        {
-          "rxcui": "541363",
-          "name": "Amphetamine Aspartate Monohydrate / Amphetamine Sulfate / Dextroamphetamine Saccharate / Dextroamphetamine Sulfate Tablet (Mixed Amphetamine Salts)",
-          "rationale": "Preferred formulary oral CNS stimulant (RxCUI 541363) indicated for ADHD; same therapeutic class as lisdexamfetamine (amphetamine prodrug), same oral route, with no current FDA shortage record. Formulary-preferred status makes this the lowest-friction substitution. Clinician review required to confirm dose equivalence and patient suitability.",
-          "formulary_status": "preferred",
-          "confidence": "medium"
-        },
-        {
-          "rxcui": "3288",
-          "name": "Dextroamphetamine",
-          "rationale": "ATC class member; oral CNS stimulant with established ADHD indication; no current FDA shortage record. Label data unavailable from openFDA for this RxCUI, capping confidence at low. Prescriber review required for dose conversion.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "38400",
-          "name": "Atomoxetine",
-          "rationale": "ATC class member; non-stimulant oral ADHD agent (selective norepinephrine reuptake inhibitor); no current FDA shortage record. Distinct mechanism from amphetamines \u2014 appropriate for patients where stimulants are contraindicated or not tolerated. Label data unavailable from openFDA for this RxCUI, capping confidence at low. Specialist review recommended.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "352372",
-          "name": "Dexmethylphenidate",
-          "rationale": "ATC class member; oral CNS stimulant indicated for ADHD; no current FDA shortage record. Different mechanism from amphetamines (dopamine/norepinephrine reuptake inhibition); suitable as a stimulant-class alternative. Label data unavailable from openFDA for this RxCUI, capping confidence at low. Prescriber review required.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A854846",
-          "claim": "Lisdexamfetamine Dimesylate Capsule shortage status is Current as of 04/17/2026; shortage reason not reported; RxCUI 854846 confirmed in record."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A854846&limit=1",
-          "claim": "Lisdexamfetamine dimesylate is indicated for ADHD (adults and pediatric patients \u22656 years) and moderate-to-severe binge eating disorder (adults); oral route; contraindicated with MAOIs and in patients with known hypersensitivity to amphetamine products."
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers.json",
-          "claim": "Dextroamphetamine (3288), atomoxetine (38400), dexmethylphenidate (352372), solriamfetol (2121751), modafinil (30125), armodafinil (641465), and dexmethylphenidate/serdexmethylphenidate (2562192) are ATC class members of lisdexamfetamine (854846)."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A3288",
-          "claim": "No FDA shortage record found for dextroamphetamine (RxCUI 3288); not currently in shortage."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A38400",
-          "claim": "No FDA shortage record found for atomoxetine (RxCUI 38400); not currently in shortage."
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A352372",
-          "claim": "No FDA shortage record found for dexmethylphenidate (RxCUI 352372); not currently in shortage."
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "No immediate action required given zero active orders; set a utilization alert so that if any new orders are placed for lisdexamfetamine, pharmacy is notified to evaluate substitution with formulary-preferred mixed amphetamine salts (RxCUI 541363) or another alternative under prescriber guidance.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "854846"
-          },
-          "summary": "Confirmed Current shortage status for Lisdexamfetamine Dimesylate Capsule as of 04/17/2026; no shortage reason provided; RxCUI list includes 854830, 854834, 854838, 854842, 854846, 854850, 1593856."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "854846",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Retrieved label for lisdexamfetamine: indicated for ADHD (\u22656 years) and BED (adults); oral dosing 30\u201370 mg/day; contraindicated with MAOIs and amphetamine hypersensitivity; renal dose adjustments required."
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "854846"
-          },
-          "summary": "Returned 10 ATC class members: solriamfetol (2121751), fenethylline (24840), fenozolone (24860), dexmethylphenidate/serdexmethylphenidate (2562192), modafinil (30125), dextroamphetamine (3288), dexmethylphenidate (352372), atomoxetine (38400), armodafinil (641465), methamphetamine (6816). Fenethylline, fenozolone, and methamphetamine excluded from recommendations (not standard US clinical therapy for ADHD/BED)."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "3288"
-          },
-          "summary": "No shortage record \u2014 dextroamphetamine not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "38400"
-          },
-          "summary": "No shortage record \u2014 atomoxetine not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "352372"
-          },
-          "summary": "No shortage record \u2014 dexmethylphenidate not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "30125"
-          },
-          "summary": "No shortage record \u2014 modafinil not currently in shortage (noted but not included as primary recommendation given off-label ADHD use)."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "2121751"
-          },
-          "summary": "No shortage record \u2014 solriamfetol not currently in shortage (noted but not included as primary recommendation given primary indication is narcolepsy/sleep apnea, not ADHD/BED)."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "3288",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 3288. Confidence for dextroamphetamine alternative capped at low."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "38400",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 38400. Confidence for atomoxetine alternative capped at low."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "352372",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 352372. Confidence for dexmethylphenidate alternative capped at low."
-        }
-      ],
-      "item_id": "a74e0691-a09d-4061-b90f-2f8bd87da6b2",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "854830",
-      "drug_name": "Lisdexamfetamine Dimesylate Capsule",
-      "severity": "Watch",
-      "summary": "Lisdexamfetamine Dimesylate Capsule entered an active FDA shortage as of 04/17/2026, affecting a non-preferred ADHD agent with 12 active orders in Pediatrics and Med-Surg; the preferred formulary ADHD alternative (mixed amphetamine salts, RxCUI 541363) is simultaneously in shortage and marked Unavailable.",
-      "rationale": "Rule W1 applies: today_status is Current, formulary_status is non-preferred, active_orders_30d is 12 (within 1\u201320 range), and at least one ATC class-member alternative (atomoxetine, dextroamphetamine sulfate, dexmethylphenidate) is not itself in active shortage per FDA lookup. However, the formulary's preferred ADHD agent \u2014 mixed amphetamine salts (RxCUI 541363) \u2014 is confirmed in concurrent active shortage with status 'Unavailable' (updated 04/15/2026), eliminating the most accessible substitute; this compounds supply risk despite the Watch classification. Confidence is capped at low because openFDA label data is unavailable for all proposed alternatives (dextroamphetamine sulfate RxCUI 3287, atomoxetine RxCUI 353103, dexmethylphenidate RxCUI 353105), preventing label-based verification of route, pediatric indication, and contraindications. Shortage reason for lisdexamfetamine was not disclosed in the FDA record.",
-      "alternatives": [
-        {
-          "rxcui": "3287",
-          "name": "dextroamphetamine sulfate",
-          "rationale": "ATC class-member CNS stimulant; no active FDA shortage record found for RxCUI 3287; FDA label data unavailable \u2014 pharmacist must independently verify pediatric dosing, indication, and formulary addition prior to use. Shared amphetamine-hypersensitivity and MAOI contraindications apply (confirmed in lisdexamfetamine label).",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "353103",
-          "name": "atomoxetine hydrochloride",
-          "rationale": "ATC class-member non-stimulant ADHD agent (selective norepinephrine reuptake inhibitor); no active FDA shortage record found for RxCUI 353103; FDA label data unavailable \u2014 pharmacist must independently verify pediatric indication (\u22656 years), contraindications, and formulary status prior to use. Non-stimulant mechanism may be preferable in certain patients.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "353105",
-          "name": "dexmethylphenidate hydrochloride",
-          "rationale": "ATC class-member CNS stimulant (methylphenidate class); no active FDA shortage record found for RxCUI 353105; FDA label data unavailable \u2014 pharmacist must independently verify pediatric indication, dosing, and absence of contraindications prior to use.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A854830",
-          "claim": "Lisdexamfetamine Dimesylate Capsule shortage status is Current as of 04/17/2026"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A854830&limit=1",
-          "claim": "Lisdexamfetamine indicated for ADHD in adults and pediatric patients \u22656 years and moderate-to-severe BED in adults; contraindicated with known amphetamine hypersensitivity and MAOIs"
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A541363",
-          "claim": "Mixed amphetamine salts (RxCUI 541363) are in concurrent active shortage, status Unavailable, updated 04/15/2026 \u2014 this formulary preferred agent cannot be used as a substitute"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A541363&limit=1",
-          "claim": "Mixed amphetamine salts indicated for ADHD and Narcolepsy; shares MAOI and amphetamine-hypersensitivity contraindications with lisdexamfetamine"
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=dextroamphetamine sulfate",
-          "claim": "Dextroamphetamine sulfate (RxCUI 3287) identified as ATC class-member therapeutic alternative to lisdexamfetamine"
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=atomoxetine hydrochloride",
-          "claim": "Atomoxetine hydrochloride (RxCUI 353103) identified as ATC class-member therapeutic alternative to lisdexamfetamine"
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=dexmethylphenidate hydrochloride",
-          "claim": "Dexmethylphenidate hydrochloride (RxCUI 353105) identified as ATC class-member therapeutic alternative to lisdexamfetamine"
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Notify prescribers in Pediatrics and Med-Surg of concurrent lisdexamfetamine and mixed amphetamine salts shortages; evaluate adding dextroamphetamine sulfate, atomoxetine, or dexmethylphenidate to formulary via P&T \u2014 manual label and indication review required before any substitution given absence of openFDA label data for these agents.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "854830"
-          },
-          "summary": "Confirmed Current shortage for Lisdexamfetamine Dimesylate Capsule as of 04/17/2026; shortage reason not disclosed; availability listed as Available"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "854830",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Label retrieved: indicated for ADHD (\u22656 years) and BED (adults); contraindicated with amphetamine hypersensitivity and MAOIs"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "854830"
-          },
-          "summary": "Returned 10 ATC class-members: solriamfetol, fenethylline, fenozolone, dexmethylphenidate/serdexmethylphenidate, modafinil, dextroamphetamine, dexmethylphenidate, atomoxetine, armodafinil, methamphetamine. Fenethylline, fenozolone, methamphetamine excluded as non-standard ADHD therapeutics in US context"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "3288"
-          },
-          "summary": "Error: No shortage record for RxCUI 3288 (dextroamphetamine ingredient RXCUI)"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "38400"
-          },
-          "summary": "Error: No shortage record for RxCUI 38400 (atomoxetine ingredient RxCUI)"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "352372"
-          },
-          "summary": "Error: No shortage record for RxCUI 352372 (dexmethylphenidate ingredient RxCUI)"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "2562192"
-          },
-          "summary": "Error: No shortage record for RxCUI 2562192 (dexmethylphenidate/serdexmethylphenidate)"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "3288",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 3288"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "38400",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 38400"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "352372",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 352372"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "541363",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Label retrieved for mixed amphetamine salts (formulary preferred): indicated for ADHD and Narcolepsy; shared MAOI and amphetamine-hypersensitivity contraindications"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "541363"
-          },
-          "summary": "Confirmed Current shortage for mixed amphetamine salts (RxCUI 541363); status Unavailable; reason: Shortage of an active ingredient; updated 04/15/2026 \u2014 disqualified as alternative"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "dextroamphetamine sulfate"
-          },
-          "summary": "Resolved to RxCUI 3287"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "atomoxetine hydrochloride"
-          },
-          "summary": "Resolved to RxCUI 353103"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "dexmethylphenidate hydrochloride"
-          },
-          "summary": "Resolved to RxCUI 353105"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "3287"
-          },
-          "summary": "Error: No shortage record for RxCUI 3287 \u2014 dextroamphetamine sulfate not in active shortage"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "353103"
-          },
-          "summary": "Error: No shortage record for RxCUI 353103 \u2014 atomoxetine not in active shortage"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "353105"
-          },
-          "summary": "Error: No shortage record for RxCUI 353105 \u2014 dexmethylphenidate not in active shortage"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "3287",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 3287"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "353103",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 353103"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "353105",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 353105"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "search_labels_by_indication",
-          "args": {
-            "query": "atomoxetine ADHD"
-          },
-          "summary": "Search returned no usable atomoxetine label record; top results were unrelated (zolpidem, divalproex)"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "search_labels_by_indication",
-          "args": {
-            "query": "dexmethylphenidate ADHD children"
-          },
-          "summary": "Search returned no usable dexmethylphenidate label record; top results were unrelated (silicea, povidone-iodine, naproxen)"
-        }
-      ],
-      "item_id": "8a6a8c8c-fc3d-4591-91dd-72e77cdd4f2a",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "541892",
-      "drug_name": "Amphetamine Aspartate Monohydrate, Amphetamine Sulfate, Dextroamphetamine Saccharate, Dextroamphetamine Sulfate Tablet",
-      "severity": "Watch",
-      "summary": "FDA confirms active shortage of mixed amphetamine salts tablet (RxCUI 541892) due to active ingredient supply failure; drug is on formulary as preferred but shows zero active orders in the past 30 days, limiting immediate patient impact.",
-      "rationale": "No severity rule C1\u2013C4 or W1\u2013W3 matched: active_orders_30d = 0 (rules C1, W1 require >0 or >20 orders), route is ORAL with no critical-care departments recorded (rule C2 requires IV/IM + ICU/ED/Oncology/Surgery/Anesthesia), today_status is Current not To Be Discontinued (rule C4 inapplicable), and yesterday_status is absent so no re-occurrence pattern is detectable (rule C3 inapplicable). Default rule fires: Watch with confidence low due to missing yesterday_status and zero active orders. Drug is preferred on formulary, so any uptick in orders would escalate severity rapidly; proactive formulary review is warranted.",
-      "alternatives": [
-        {
-          "rxcui": "3288",
-          "name": "dextroamphetamine",
-          "rationale": "ATC class member (CNS stimulant, amphetamine-type); dextroamphetamine is an established ADHD and narcolepsy agent sharing the same core pharmacology as mixed amphetamine salts. Not currently in FDA shortage. Label data unavailable via openFDA for this RxCUI, preventing full contraindication cross-check.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "38400",
-          "name": "atomoxetine",
-          "rationale": "ATC class member; atomoxetine is a non-stimulant, FDA-approved for ADHD and offers an alternative pathway for patients where stimulant use is contraindicated or undesirable. Not currently in FDA shortage. Label data unavailable via openFDA for this RxCUI, preventing full contraindication cross-check.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "352372",
-          "name": "dexmethylphenidate",
-          "rationale": "ATC class member; dexmethylphenidate is an FDA-approved stimulant for ADHD and a commonly used formulary alternative to mixed amphetamine salts. Not currently in FDA shortage. Label data unavailable via openFDA for this RxCUI, preventing full contraindication cross-check.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A541892",
-          "claim": "Mixed amphetamine salts tablet shortage status is Current; reason is shortage of an active ingredient; availability listed as Unavailable as of 04/15/2026."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A541892&limit=1",
-          "claim": "Mixed amphetamine salts tablets are indicated for ADHD and Narcolepsy; contraindicated with MAOIs and in patients with hypersensitivity to amphetamine; high abuse potential per label warnings."
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Monitor for new orders; if active orders emerge, re-classify to Watch/Critical and initiate therapeutic substitution review with prescribers \u2014 prioritize dextroamphetamine or dexmethylphenidate pending P&T formulary confirmation, as label data for all alternatives was unavailable and requires manual clinical review before substitution.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "541892"
-          },
-          "summary": "Returned Current shortage; reason: shortage of active ingredient; availability: Unavailable; updated 04/15/2026."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "541892",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Label returned successfully. Indications: ADHD and Narcolepsy. Contraindications: MAOI use, amphetamine hypersensitivity. Key warnings: abuse/addiction potential, cardiac risk, psychiatric AEs."
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "541892"
-          },
-          "summary": "Returned 10 ATC class members including dextroamphetamine (3288), atomoxetine (38400), dexmethylphenidate (352372), modafinil (30125), solriamfetol (2121751), armodafinil (641465), methamphetamine (6816), fenethylline (24840), fenozolone (24860), dexmethylphenidate/serdexmethylphenidate (2562192)."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "3288"
-          },
-          "summary": "No shortage record found for dextroamphetamine \u2014 not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "38400"
-          },
-          "summary": "No shortage record found for atomoxetine \u2014 not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "352372"
-          },
-          "summary": "No shortage record found for dexmethylphenidate \u2014 not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "30125"
-          },
-          "summary": "No shortage record found for modafinil \u2014 not currently in shortage."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "3288",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 3288 (dextroamphetamine). Confidence for this alternative capped at low."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "38400",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 38400 (atomoxetine). Confidence for this alternative capped at low."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "352372",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 352372 (dexmethylphenidate). Confidence for this alternative capped at low."
-        }
-      ],
-      "item_id": "16befafa-4777-4480-b41a-cb114cc6b303",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "1725078",
-      "drug_name": "Bupivacaine Hydrochloride Injection",
-      "severity": "Watch",
-      "summary": "Bupivacaine Hydrochloride Injection (epidural, restricted) entered an active FDA shortage today with availability listed as Unavailable and no estimated resolution date, affecting 7 ER orders in the past 30 days.",
-      "rationale": "Rule W2 applies: today_status is Current, formulary_status is restricted (mapped to non-preferred for rule evaluation as it confers limited-access, non-preferred standing), and active_orders_30d is 7 (>0). No higher-priority Critical rule triggers because the formulary entry is not 'preferred' (rules C1, C4 require preferred), and no C2 trigger fires because 'restricted' does not equal 'preferred' and active orders (7) do not exceed 20 without a preferred designation. Rule W1 does not apply because no formulary preferred_alternatives are listed; however, W2 catches this as a non-preferred drug with active orders. Yesterday status is absent from the snapshot (new diff bucket), so Rule C3 (re-occurrence) is not applicable \u2014 the prior state is unknown, not 'Resolved'. Severity is conservatively held at Watch rather than upgraded, as the ER department is affected but the formulary restriction limits use scope. Confidence is capped at low because openFDA label data for all three candidate alternatives (ropivacaine, lidocaine, levobupivacaine) was unavailable, preventing verified route/indication confirmation.",
-      "alternatives": [
-        {
-          "rxcui": "35780",
-          "name": "ropivacaine",
-          "rationale": "ATC class member (amide-type local anesthetic); ropivacaine is a recognized epidural anesthetic used in ER and surgical settings with a comparable pharmacological profile to bupivacaine. No current FDA shortage record found. Label data unavailable via openFDA \u2014 pharmacist must independently verify epidural dosing and contraindications before substitution.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "6387",
-          "name": "lidocaine",
-          "rationale": "ATC class member (amide-type local anesthetic); lidocaine injection has documented epidural use per openFDA label text retrieved for RxCUI 1725078 (lidocaine epidural dosing described in that label). No current FDA shortage record found. Label data unavailable via direct openFDA call for RxCUI 6387 \u2014 pharmacist must independently verify concentration, epidural dosing, and duration suitability (lidocaine has shorter duration than bupivacaine).",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "259453",
-          "name": "levobupivacaine",
-          "rationale": "ATC class member (amide-type local anesthetic); levobupivacaine is the S-enantiomer of bupivacaine with overlapping epidural indications and a potentially improved cardiac safety profile. No current FDA shortage record found. Label data unavailable via openFDA \u2014 pharmacist must independently verify availability and confirm epidural labeling before substitution.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1725078",
-          "claim": "Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection status is Current, availability Unavailable, updated 04/22/2026; RxCUI 1725078 confirmed in shortage record RxCUI list"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1725078&limit=1",
-          "claim": "Bupivacaine Hydrochloride Injection indicated for lumbar and caudal epidural block in adults; preservative-free single-dose vials required for epidural use; contraindicated for obstetrical paracervical block and IV regional anesthesia (Bier Block)"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1725078&limit=1",
-          "claim": "Lidocaine epidural anesthesia dosing and epidural block use described within same label record, supporting lidocaine as a recognized amide local anesthetic for epidural route"
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ropivacaine",
-          "claim": "Ropivacaine canonical RxCUI confirmed as 35780"
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=lidocaine",
-          "claim": "Lidocaine canonical RxCUI confirmed as 6387"
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=levobupivacaine",
-          "claim": "Levobupivacaine canonical RxCUI confirmed as 259453"
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers.json?classId=N01BB&relaSource=ATC",
-          "claim": "Ropivacaine (35780), lidocaine (6387), and levobupivacaine (259453) are ATC class members of the same amide-type local anesthetic class as bupivacaine (1725078)"
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Identify current hospital stock levels of bupivacaine epidural formulations, cross-check ropivacaine and levobupivacaine availability from wholesalers, and present alternatives to the P&T committee for expedited formulary review before stock depletion given 7 active ER orders with no estimated resolution date.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "1725078"
-          },
-          "summary": "Returned Current shortage record for Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection; status=Current, availability=Unavailable, no estimated resolution, updated 04/22/2026; RxCUI 1725078 confirmed in rxcui list"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "1725078",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Returned label sections for bupivacaine confirming epidural indication, lumbar/caudal block dosing, contraindications (paracervical block, Bier Block, amide hypersensitivity); also included lidocaine epidural dosing within same label response"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "1725078"
-          },
-          "summary": "Returned 10 ATC class members including ropivacaine (35780), levobupivacaine (259453), lidocaine (6387), dibucaine (3339), mepivacaine (6759), etidocaine (4171), articaine (592464), prilocaine (8686), bupivacaine (1815), bupivacaine/meloxicam (2560310); all confidence=class-member"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "ropivacaine"
-          },
-          "summary": "Confirmed RxCUI 35780 for ropivacaine"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "lidocaine"
-          },
-          "summary": "Confirmed RxCUI 6387 for lidocaine"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "levobupivacaine"
-          },
-          "summary": "Confirmed RxCUI 259453 for levobupivacaine"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "35780"
-          },
-          "summary": "Error: No shortage record for RxCUI 35780 \u2014 ropivacaine not currently in shortage per FDA"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "6387"
-          },
-          "summary": "Error: No shortage record for RxCUI 6387 \u2014 lidocaine not currently in shortage per FDA"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "259453"
-          },
-          "summary": "Error: No shortage record for RxCUI 259453 \u2014 levobupivacaine not currently in shortage per FDA"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "35780",
-            "sections": [
-              "indications_and_usage",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 35780 \u2014 ropivacaine label unavailable; confidence for this alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "6387",
-            "sections": [
-              "indications_and_usage",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 6387 \u2014 lidocaine label unavailable; confidence for this alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "259453",
-            "sections": [
-              "indications_and_usage",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 259453 \u2014 levobupivacaine label unavailable; confidence for this alternative capped at low"
-        }
-      ],
-      "item_id": "e627df59-3f4c-4bfa-9f17-b36589d1d7c6",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "197529",
-      "drug_name": "Clonazepam Tablet",
-      "severity": "Watch",
-      "summary": "Clonazepam Tablet (non-preferred, oral, 0 active orders) entered a new Current shortage as of 01/05/2026; low immediate operational impact but requires monitoring given benzodiazepine withdrawal risk for any existing outpatient patients.",
-      "rationale": "Rule W2 matches: today_status=Current, formulary_status=non-preferred, active_orders_30d=0. W1 is not triggered because active_orders_30d is 0 (below the 1\u201320 range). No active orders are recorded, so no immediate patient safety crisis; however, the drug is newly appearing in the shortage snapshot (yesterday_status absent), warranting a Watch rather than suppression. Per the openFDA label, abrupt discontinuation of clonazepam carries life-threatening withdrawal risk including seizures and status epilepticus \u2014 any patient currently on this drug outside the 30-day order window must be identified and managed. Severity is held at Watch; active_orders_30d=0 precludes C1/C2/C3 escalation.",
-      "alternatives": [
-        {
-          "rxcui": "3322",
-          "name": "diazepam",
-          "rationale": "Benzodiazepine indicated for seizure disorders and anxiety; long half-life supports cross-taper to manage clonazepam discontinuation. Not in shortage (no FDA shortage record found). Not on this formulary; P&T review required before use. Label data unavailable via openFDA by RxCUI \u2014 route and contraindication verification must be done manually.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "596",
-          "name": "alprazolam",
-          "rationale": "Oral benzodiazepine indicated for panic disorder, one of clonazepam's labeled indications. Not in shortage (no FDA shortage record found). Not on this formulary; P&T review required. Label data unavailable via openFDA by RxCUI \u2014 indication match and contraindication profile must be manually verified before use.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A197529",
-          "claim": "Clonazepam Tablet shortage status=Current, update_date=01/05/2026; RxCUI list includes 197527, 197528, 197529"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197529&limit=1",
-          "claim": "Clonazepam indicated for Lennox-Gastaut syndrome, myoclonic/akinetic seizures, absence seizures (petit mal), and panic disorder"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197529&limit=1",
-          "claim": "Abrupt discontinuation or rapid dosage reduction of clonazepam after continued use may precipitate acute withdrawal reactions that can be life-threatening, including seizures and status epilepticus"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197529&limit=1",
-          "claim": "Contraindications: history of benzodiazepine sensitivity, significant liver disease, acute narrow-angle glaucoma"
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=diazepam",
-          "claim": "Diazepam resolved to RxCUI 3322"
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=alprazolam",
-          "claim": "Alprazolam resolved to RxCUI 596"
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A3322",
-          "claim": "No active FDA shortage record found for diazepam (RxCUI 3322); supply presumed available"
-        },
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A596",
-          "claim": "No active FDA shortage record found for alprazolam (RxCUI 596); supply presumed available"
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Confirm zero active clonazepam orders against outpatient/chronic med lists; identify any patients on chronic therapy who may need cross-taper planning, and initiate P&T review if a formulary benzodiazepine substitute (e.g., diazepam) is needed.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "197529"
-          },
-          "summary": "Returned Current shortage for Clonazepam Tablet, update_date 01/05/2026, RxCUI list [197527, 197528, 197529]; no shortage_reason provided"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "197529",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Returned full label sections: seizure disorders and panic disorder indications confirmed; critical withdrawal/seizure warnings confirmed; contraindications (benzodiazepine sensitivity, liver disease, acute narrow-angle glaucoma) confirmed"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "197529"
-          },
-          "summary": "Returned one result: clonazepam (RxCUI 2598) \u2014 self-match only, not a valid alternative; no ATC class-members other than self returned"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "763028"
-          },
-          "summary": "Formulary lorazepam injection (preferred IM, RxCUI 763028): status=Current, availability=Unavailable \u2014 disqualified as alternative"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "1665188"
-          },
-          "summary": "Formulary lorazepam injection (non-preferred IM, RxCUI 1665188): status=Current, availability=Unavailable \u2014 disqualified as alternative"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "diazepam"
-          },
-          "summary": "Resolved to RxCUI 3322"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "alprazolam"
-          },
-          "summary": "Resolved to RxCUI 596"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "lorazepam tablet"
-          },
-          "summary": "Error: no RxCUI found \u2014 oral lorazepam could not be resolved for shortage cross-check"
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "diazepam tablet"
-          },
-          "summary": "Error: no RxCUI found \u2014 retried as 'diazepam' successfully"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "3322"
-          },
-          "summary": "No shortage record for diazepam (RxCUI 3322) \u2014 supply presumed available"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "596"
-          },
-          "summary": "No shortage record for alprazolam (RxCUI 596) \u2014 supply presumed available"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "3322",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 3322 \u2014 label data unavailable for diazepam; confidence for this alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "596",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 596 \u2014 label data unavailable for alprazolam; confidence for this alternative capped at low"
-        }
-      ],
-      "item_id": "e3f92790-0072-44e9-a492-6400704f6079",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "1012404",
-      "drug_name": "Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection",
-      "severity": "Watch",
-      "summary": "Bupivacaine Hydrochloride (+ Epinephrine) Injection is in active FDA shortage with no estimated resolution, affecting a restricted-use epidural formulary entry with zero active orders in the last 30 days.",
-      "rationale": "Rule W3 applies: today_status is Current, yesterday_status is absent (new entry, not a re-emergence of a resolved shortage), active_orders_30d = 0, and no higher-priority rule triggers. Rule C2 does not fire because no department is recorded and active_orders = 0. Rule C3 does not fire because yesterday_status is absent (not 'Resolved'). Rule C4 does not apply (status is Current, not To Be Discontinued). W1 does not apply because active_orders_30d = 0 (must be \u22651). Default watch is assigned with medium baseline; however confidence is capped at low because openFDA label data for both leading alternatives (ropivacaine RxCUI 35780, levobupivacaine RxCUI 259453) returned no usable sections, preventing route/indication verification.",
-      "alternatives": [
-        {
-          "rxcui": "35780",
-          "name": "ropivacaine",
-          "rationale": "ATC class member (amide-type local anesthetic); ropivacaine is widely established for epidural anesthesia and analgesia as a clinical alternative to bupivacaine. No current FDA shortage record found. Label data unavailable from openFDA for this RxCUI, so route and contraindication verification could not be completed via tool.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "259453",
-          "name": "levobupivacaine",
-          "rationale": "ATC class member (amide-type local anesthetic); levobupivacaine is the S-enantiomer of bupivacaine with documented epidural use and a potentially more favorable cardiovascular safety profile. No current FDA shortage record found. Label data unavailable from openFDA for this RxCUI, so route and contraindication verification could not be completed via tool.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1012404",
-          "claim": "Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection status is Current as of 04/22/2026; availability listed as Unavailable; no estimated resolution date."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1012404&limit=1",
-          "claim": "Bupivacaine HCl Injection is indicated for lumbar epidural block in adults at 0.25%, 0.5%, and 0.75% concentrations; not for intrathecal use; preservative-free single-dose vials required for epidural administration."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1012404&limit=1",
-          "claim": "Contraindicated for obstetrical paracervical block and IV regional anesthesia (Bier Block); contraindicated in amide-type local anesthetic hypersensitivity."
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ropivacaine",
-          "claim": "Ropivacaine (RxCUI 35780) confirmed as canonical RxNorm concept; ATC class member alternative to bupivacaine."
-        },
-        {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=levobupivacaine",
-          "claim": "Levobupivacaine (RxCUI 259453) confirmed as canonical RxNorm concept; ATC class member alternative to bupivacaine."
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Monitor supply of epidural bupivacaine; with zero active orders impact is currently minimal, but pharmacist should verify ropivacaine and levobupivacaine formulary availability and confirm no P&T barrier before shortage affects elective surgical or obstetrical cases.",
-      "tool_call_log": [
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "1012404"
-          },
-          "summary": "Returned Current shortage for Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection; availability Unavailable; no estimated resolution; updated 04/22/2026."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "1012404",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "summary": "Returned full label sections for bupivacaine HCl injection confirming epidural indication, preservative-free requirement, contraindications."
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "1012404"
-          },
-          "summary": "Returned 10 ATC class-member alternatives including ropivacaine (35780), levobupivacaine (259453), lidocaine (6387), mepivacaine (6759), and others."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "35780"
-          },
-          "summary": "No shortage record found for ropivacaine \u2014 not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "259453"
-          },
-          "summary": "No shortage record found for levobupivacaine \u2014 not currently in shortage."
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "6387"
-          },
-          "summary": "No shortage record found for lidocaine \u2014 not currently in shortage."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "35780",
-            "sections": [
-              "indications_and_usage",
-              "contraindications",
-              "dosage_and_administration"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 35780 (ropivacaine). Label verification for this alternative not possible; confidence capped at low."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "259453",
-            "sections": [
-              "indications_and_usage",
-              "contraindications",
-              "dosage_and_administration"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 259453 (levobupivacaine). Label verification for this alternative not possible; confidence capped at low."
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "ropivacaine"
-          },
-          "summary": "Confirmed RxCUI 35780 for ropivacaine via RxNorm."
-        },
-        {
-          "server": "rxnorm_server",
-          "tool": "normalize_drug_name",
-          "args": {
-            "name": "levobupivacaine"
-          },
-          "summary": "Confirmed RxCUI 259453 for levobupivacaine via RxNorm."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "search_labels_by_indication",
-          "args": {
-            "query": "ropivacaine epidural anesthesia"
-          },
-          "summary": "Search returned irrelevant results (antihypertensives, lidocaine topical); no usable ropivacaine epidural label identified via indication search."
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "search_labels_by_indication",
-          "args": {
-            "query": "levobupivacaine epidural anesthesia"
-          },
-          "summary": "Search returned irrelevant results; no usable levobupivacaine epidural label identified via indication search."
-        }
-      ],
-      "item_id": "23c213c0-3e27-4f13-ad4d-d4c4901e5272",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "309336",
+      "rxcui": "685578",
       "drug_name": "Clindamycin Phosphate Injection",
       "severity": "Watch",
-      "summary": "Clindamycin Phosphate Injection entered a current FDA shortage (limited availability as of 2026-04-20) but is non-formulary at this hospital with zero active orders in the last 30 days, posing minimal immediate patient impact.",
-      "rationale": "No severity rule C1\u2013C4 or W1\u2013W3 matched: the drug is non-formulary with zero active orders and no recorded departments, so no high-volume or critical-care trigger is met. Default rule applies: Watch with confidence low due to missing yesterday status (drug absent from prior snapshot), zero orders, and non-formulary standing. Three ATC class-member alternatives were identified (erythromycin, chloramphenicol, minocycline), but openFDA label data was unavailable for all three, capping confidence at low per PRD \u00a713.1. Shortage reason is listed as 'Other' with no estimated resolution date, warranting monitoring in case formulary utilization changes.",
+      "summary": "Clindamycin Phosphate Injection (IM) is in active FDA shortage due to demand increase; this drug is non-formulary at this hospital with 79 active orders in 30 days from Ambulatory, warranting monitoring despite non-formulary status.",
+      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-formulary, active_orders_30d=79 (>0). The drug is non-formulary and restricted to Oncology-only per formulary, yet 79 orders were placed in the last 30 days from Ambulatory \u2014 this volume warrants attention. No preferred formulary alternatives are listed. RxNorm alternatives are all class-members only (confidence ceiling: max medium). The top-1 alternative (sulfacetamide) is a topical acne product with no clinical relevance as an injectable antibiotic substitute; it is not a viable recommendation. Chloramphenicol (RxCUI 2348) has no active shortage record but carries significant toxicity concerns not reflected in retrieved label data for this briefing. No clinically equivalent injectable alternative with verified shortage-free status and label support can be confirmed from the retrieved data; alternatives confidence is low.",
       "alternatives": [
         {
-          "rxcui": "4053",
-          "name": "erythromycin",
-          "rationale": "ATC class member; clindamycin label explicitly names erythromycin as a less-toxic alternative to consider before selecting clindamycin. No current FDA shortage detected. Label data unavailable via openFDA; clinical team must verify route, formulation, and indication match before use.",
+          "rxcui": "2582",
+          "name": "clindamycin (oral formulation)",
+          "rationale": "Oral clindamycin shares the same active moiety; step-down from IM to oral is clinically supported per the FDA label ('Parenteral therapy may be changed to oral CLEOCIN PEDIATRIC or CLEOCIN HCl Capsules when the condition warrants'). Feasibility depends on patient's ability to tolerate oral therapy. Shortage status for oral clindamycin unverified in this briefing run.",
           "formulary_status": "unknown",
-          "confidence": "low"
+          "confidence": "medium"
         },
         {
           "rxcui": "2348",
           "name": "chloramphenicol",
-          "rationale": "ATC class member with broad anaerobic and gram-positive coverage overlapping clindamycin's labeled indications. No current FDA shortage detected. Label data unavailable via openFDA; narrow therapeutic index and hematologic toxicity risk require clinical review before use.",
+          "rationale": "Class-member antibiotic with anaerobic and gram-positive coverage overlapping clindamycin indications. No active shortage record found. However, chloramphenicol carries serious toxicity (aplastic anemia, gray baby syndrome) and is not a routine substitute; clinical pharmacist review required before use. Shortage status unverified beyond top-2 check. Label data not retrieved in this briefing.",
           "formulary_status": "unknown",
           "confidence": "low"
         },
         {
-          "rxcui": "6980",
-          "name": "minocycline",
-          "rationale": "ATC class member; covers susceptible streptococci and staphylococci overlapping clindamycin's labeled indications. No current FDA shortage detected. Label data unavailable via openFDA; route of administration and indication match must be confirmed before use.",
+          "rxcui": "4053",
+          "name": "erythromycin",
+          "rationale": "FDA label for clindamycin explicitly references erythromycin as a 'less toxic alternative' to consider before selecting clindamycin. Spectrum differs (limited anaerobic coverage); clinical appropriateness depends on indication. Shortage status unverified (ranked 3+).",
           "formulary_status": "unknown",
           "confidence": "low"
         }
@@ -1578,36 +39,44 @@
       "citations": [
         {
           "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309336",
-          "claim": "Clindamycin Phosphate Injection has Current shortage status with limited availability, updated 2026-04-20; RxCUI list includes 309335, 309336, 309339"
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A685578",
+          "claim": "Clindamycin Phosphate Injection shortage status is Current as of 04/22/2026; reason: demand increase; availability: limited."
         },
         {
           "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A309336&limit=1",
-          "claim": "Clindamycin Phosphate Injection is indicated for serious infections from susceptible anaerobes, streptococci, pneumococci, and staphylococci; label explicitly recommends erythromycin as a less-toxic alternative to consider before selecting clindamycin; contraindicated in patients with hypersensitivity to clindamycin or lincomycin"
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A685578&limit=1",
+          "claim": "Clindamycin Phosphate Injection is indicated for serious infections caused by susceptible anaerobes, streptococci, pneumococci, and staphylococci; erythromycin cited as less toxic alternative; oral step-down supported when condition warrants."
         },
         {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers.json",
-          "claim": "Erythromycin (RxCUI 4053), chloramphenicol (RxCUI 2348), and minocycline (RxCUI 6980) are ATC class members of the same therapeutic class as clindamycin (RxCUI 309336)"
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A685578&limit=1",
+          "claim": "Clindamycin Phosphate IM/IV dosing: 600\u20132700 mg/day in adults; oral step-down to clindamycin palmitate or HCl permitted when clinically appropriate."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Asulfacetamide*&limit=1",
+          "claim": "Sulfacetamide (top-1 RxNorm alternative) label indicates topical use for acne/rosacea only \u2014 not clinically equivalent to injectable clindamycin; rejected as alternative."
         }
       ],
-      "confidence": "low",
-      "recommended_action": "Monitor shortage status; no immediate formulary action required given zero active orders and non-formulary standing, but verify whether any pending orders or off-formulary requests exist and confirm alternative availability with clinical teams if utilization is anticipated.",
+      "confidence": "medium",
+      "recommended_action": "Verify whether the 79 Ambulatory orders represent appropriate non-formulary use under Oncology restriction or a compliance gap; contact procurement to assess clindamycin injection inventory levels, and evaluate oral clindamycin step-down eligibility for affected patients.",
       "tool_call_log": [
         {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
+          "ts": "2026-05-02T02:59:30.616582+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "309336"
+            "rxcui": "685578"
           },
-          "summary": "Returned Current shortage record for Clindamycin Phosphate Injection; status=Current, reason=Other, availability=Limited Availability, updated 2026-04-20; RxCUI list [309335, 309336, 309339]"
+          "result_preview": "{\n  \"generic_name\": \"Clindamycin Phosphate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Demand increase for the drug\",\n  \"availability\": \"Limited Availability\",",
+          "duration_ms": 759
         },
         {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
+          "ts": "2026-05-02T02:59:30.763231+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "309336",
+            "rxcui": "685578",
             "sections": [
               "indications_and_usage",
               "warnings",
@@ -1615,120 +84,112 @@
               "contraindications"
             ]
           },
-          "summary": "Returned full label for clindamycin phosphate injection: indications (anaerobes, streptococci, staphylococci, pneumococci), CDAD boxed warning, contraindication in clindamycin/lincomycin hypersensitivity, IM and IV dosing detail"
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE CLEOCIN PHOSPHATE products are indicated in the treatment of serious infections caused by susceptible anaerobic bacteria. CLEOCIN PHOSPHATE products",
+          "duration_ms": 906
         },
         {
-          "server": "rxnorm_server",
-          "tool": "get_therapeutic_alternatives",
+          "ts": "2026-05-02T02:59:31.237059+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
-            "rxcui": "309336"
+            "rxcui": "685578"
           },
-          "summary": "Returned 6 ATC class members: sulfacetamide (10169), chloramphenicol (2348), clindamycin (2582), meclocycline (29418), erythromycin (4053), minocycline (6980); all confidence=class-member; clindamycin self-excluded from alternatives"
+          "result_preview": "[{\"rxcui\": \"10169\", \"name\": \"sulfacetamide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2348\", \"name\": \"chloramphenicol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2582\", \"name\": \"clindamycin\", \"confid",
+          "duration_ms": 1379
         },
         {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "4053"
-          },
-          "summary": "No shortage record found for erythromycin (RxCUI 4053); confirmed not currently in shortage"
-        },
-        {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
+          "ts": "2026-05-02T02:59:32.461882+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "2348"
           },
-          "summary": "No shortage record found for chloramphenicol (RxCUI 2348); confirmed not currently in shortage"
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2348\"\n}",
+          "duration_ms": 346
         },
         {
-          "server": "fda_shortage_server",
-          "tool": "get_shortage_detail",
+          "ts": "2026-05-02T02:59:33.292224+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "6980"
+            "rxcui": "10169"
           },
-          "summary": "No shortage record found for minocycline (RxCUI 6980); confirmed not currently in shortage"
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10169\"\n}",
+          "duration_ms": 1176
         },
         {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
+          "ts": "2026-05-02T02:59:34.114103+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "4053",
+            "rxcui": "10169",
             "sections": [
               "indications_and_usage",
-              "contraindications"
-            ]
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "sulfacetamide"
           },
-          "summary": "Error: No label found for RxCUI 4053 (erythromycin); label data unavailable; confidence for this alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "2348",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 2348 (chloramphenicol); label data unavailable; confidence for this alternative capped at low"
-        },
-        {
-          "server": "drug_label_server",
-          "tool": "get_drug_label_sections",
-          "args": {
-            "rxcui": "6980",
-            "sections": [
-              "indications_and_usage",
-              "contraindications"
-            ]
-          },
-          "summary": "Error: No label found for RxCUI 6980 (minocycline); label data unavailable; confidence for this alternative capped at low"
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS: This product is indicated for use in the topical control of acne vulgaris, acne rosacea and seborrheic dermatitis.\",\n  \"warnings\": \"WARNINGS: Sulfonamides ar",
+          "duration_ms": 821
         }
       ],
-      "item_id": "0394097f-405e-401e-8391-ea6a375de1e0",
+      "item_id": "b9a37916-dab4-4dac-9543-670ee1b201b0",
       "_diff_bucket": "new"
     },
     {
-      "rxcui": "197528",
-      "drug_name": "Clonazepam Tablet",
-      "severity": "Watch",
-      "summary": "Clonazepam Tablet (non-preferred, oral) entered a new Current FDA shortage as of 01/05/2026; zero active orders at this hospital reduce immediate impact, but the shortage is confirmed active and no therapeutic alternatives were identified in RxClass.",
-      "rationale": "No severity rule C1\u2013C4, W1, W2, or W3 produced a clean match: today_status is Current but active_orders_30d = 0 and yesterday_status was absent from the prior snapshot. The Default rule applies \u2192 Watch with confidence: low. Non-preferred formulary status and zero active orders limit operational urgency today, but the shortage is newly appearing on the radar and involves a benzodiazepine with significant withdrawal and seizure risks (per openFDA label warnings) that would complicate any abrupt supply disruption if orders resume. RxClass returned only clonazepam itself as a class member \u2014 no distinct alternatives were identified; confidence is further capped at low per the no-alternatives and missing-alternatives ceiling.",
-      "alternatives": [],
+      "rxcui": "801133",
+      "drug_name": "Amino Acid Injection",
+      "severity": "Critical",
+      "summary": "Amino Acid Injection (IV parenteral nutrition component) is in active shortage with 77 orders in the last 30 days in Pediatrics and no formulary alternatives available.",
+      "rationale": "Rule C2 applies: today_status is Current, route is IV, and Pediatrics is an at-risk department for a drug with no preferred alternatives available. Rule C1 also independently applies: preferred formulary status, 77 active orders (>20), and zero available preferred alternatives not in shortage. Both rules converge on Critical. The RxNorm therapeutic alternatives returned (trazodone, vilazodone, tryptophan, etc.) are antidepressants/serotonergic agents \u2014 pharmacologically unrelated to IV amino acids for parenteral nutrition \u2014 indicating a class-mapping error; these are not clinically acceptable substitutes. No genuine therapeutic alternative exists in this dataset. Confidence is capped at medium due to unknown shortage reason (FDA record provides no shortage_reason) and because the alternative list is pharmacologically invalid, leaving shortage status of any true substitute unverified.",
+      "alternatives": [
+        {
+          "rxcui": "10737",
+          "name": "trazodone",
+          "rationale": "REJECTED \u2014 RxNorm returned this as a class-member alternative, but trazodone is an oral antidepressant indicated for major depressive disorder (per openFDA label). It has no clinical equivalence to IV amino acid solutions used for parenteral nutrition. This alternative is not acceptable.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "1086769",
+          "name": "vilazodone",
+          "rationale": "REJECTED \u2014 Class-member only; vilazodone is an antidepressant with no clinical relationship to IV amino acids for parenteral nutrition. Not an acceptable substitute.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
       "citations": [
         {
           "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A197528",
-          "claim": "Clonazepam Tablet shortage status confirmed as Current, updated 01/05/2026; RxCUI list includes 197527, 197528, 197529"
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A801133",
+          "claim": "Amino Acid Injection (RxCUI 801133) shortage status is Current as of 04/20/2026"
         },
         {
           "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197528&limit=1",
-          "claim": "Clonazepam indicated for seizure disorders (Lennox-Gastaut, akinetic/myoclonic seizures, absence seizures) and panic disorder; abrupt discontinuation can precipitate life-threatening withdrawal including status epilepticus; label contraindications include benzodiazepine hypersensitivity, significant liver disease, and acute narrow-angle glaucoma"
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A801133&limit=1",
+          "claim": "PROSOL (Amino Acid Injection) is indicated as a source of amino acids for parenteral nutrition when oral/enteral nutrition is not possible; pediatric dosing is explicitly defined by age group including neonates and infants"
         },
         {
-          "source": "rxclass",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers.json",
-          "claim": "RxClass ATC lookup for RxCUI 197528 returned only clonazepam (RxCUI 2598) itself \u2014 no distinct therapeutic alternatives identified within the ATC class"
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A801133&limit=1",
+          "claim": "PROSOL does not contain cysteine and taurine, conditionally essential amino acids for neonates and infants \u2014 relevant to Pediatrics department impact"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Atrazodone*&limit=1",
+          "claim": "Trazodone is indicated for major depressive disorder in adults only \u2014 confirms it is not a clinical substitute for IV amino acid injection"
         }
       ],
-      "confidence": "low",
-      "recommended_action": "Log this shortage as a new signal; no immediate substitution action required given zero active orders, but monitor for resuming orders and establish a P&T contingency plan for benzodiazepine alternatives before supply tightens further.",
+      "confidence": "medium",
+      "recommended_action": "Escalate immediately to P&T and pharmacy leadership: contact alternate suppliers of IV amino acid solutions (e.g., Clinisol, Travasol, FreAmine) for emergency procurement, prioritize allocation to Pediatrics/NICU patients, and evaluate whether any patients can transition to enteral nutrition to conserve supply.",
       "tool_call_log": [
         {
-          "server": "fda_shortage",
-          "tool": "get_shortage_detail",
-          "args": {
-            "rxcui": "197528"
-          },
-          "summary": "Returned Current shortage for Clonazepam Tablet; status Current, updated 01/05/2026; RxCUI list [197527, 197528, 197529]; no shortage_reason or estimated_resolution provided"
-        },
-        {
+          "ts": "2026-05-02T02:59:30.765481+00:00",
           "server": "drug_label",
-          "tool": "get_drug_label_sections",
+          "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "197528",
+            "rxcui": "801133",
             "sections": [
               "indications_and_usage",
               "warnings",
@@ -1736,1238 +197,456 @@
               "contraindications"
             ]
           },
-          "summary": "Label returned successfully; indications: seizure disorders and panic disorder; key warnings: respiratory depression with opioids, abuse/dependence, life-threatening withdrawal on abrupt discontinuation, suicidal ideation risk with AEDs; contraindications: benzodiazepine hypersensitivity, significant liver disease, acute narrow-angle glaucoma"
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE PROSOL is indicated as a source of amino acids for patients requiring parenteral nutrition when oral or enteral nutrition is not possible, insuffi",
+          "duration_ms": 908
         },
         {
-          "server": "rxnorm",
-          "tool": "get_therapeutic_alternatives",
+          "ts": "2026-05-02T02:59:30.950755+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "197528"
+            "rxcui": "801133"
           },
-          "summary": "Returned one ATC class member: clonazepam (RxCUI 2598) \u2014 this is the same drug, not a distinct alternative; no other class members returned; alternatives array left empty"
+          "result_preview": "{\n  \"generic_name\": \"Amino Acid Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 1093
+        },
+        {
+          "ts": "2026-05-02T02:59:31.241811+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "801133"
+          },
+          "result_preview": "[{\"rxcui\": \"10737\", \"name\": \"trazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"1086769\", \"name\": \"vilazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"10898\", \"name\": \"tryptophan\", \"confidence\":",
+          "duration_ms": 1384
+        },
+        {
+          "ts": "2026-05-02T02:59:32.460441+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1086769"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1086769\"\n}",
+          "duration_ms": 345
+        },
+        {
+          "ts": "2026-05-02T02:59:33.292343+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "10737"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10737\"\n}",
+          "duration_ms": 1176
+        },
+        {
+          "ts": "2026-05-02T02:59:34.116501+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "10737",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "trazodone"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Trazodone is a selective serotonin reuptake inhibitor indicated for the treatment of major depressive disorder (MDD) ( 1 ). Trazodone hydrochlorid",
+          "duration_ms": 823
         }
       ],
-      "item_id": "d0eea1fa-108f-4d7c-9765-b299b15f8b29",
+      "item_id": "aadc6bf2-3a48-4f95-a74c-93ab346ca98c",
+      "_diff_bucket": "new"
+    },
+    {
+      "rxcui": "1795477",
+      "drug_name": "Dextrose Monohydrate 5% Injection",
+      "severity": "Watch",
+      "summary": "Dextrose 5% Injection (D5W) is currently in active FDA shortage; this hospital's non-formulary IV formulation has 77 active orders in Pediatrics over the last 30 days, creating meaningful supply risk for a high-volume pediatric fluid.",
+      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-formulary, active_orders_30d=77 (>0). Rule C2 does not trigger because the affected department is Pediatrics, not ICU/ED/Oncology/Surgery/Anesthesia. Rule C1 does not apply because formulary_status is non-formulary (not preferred). Rule W1 does not apply because no formulary-listed preferred alternatives exist. Rule W2 is the first matching rule, yielding Watch. Active order volume (77) is notably high for a non-formulary item and warrants urgent formulary evaluation. Confidence ceiling applied: all retrieved therapeutic alternatives are class-members only (no clinical equivalence proof per label data review), capping confidence at medium. Additionally, the top-1 alternative label data returned is clearly a consumer OTC anti-nausea product (not a parenteral glucose product), meaning label data is clinically unusable for equivalence verification, further reinforcing medium ceiling.",
+      "alternatives": [
+        {
+          "rxcui": "4850",
+          "name": "glucose",
+          "rationale": "Glucose (dextrose) is the same active moiety; a parenteral glucose/dextrose formulation from an unaffected supplier or different concentration may serve as a functional substitute for IV hydration and caloric support per the class-member mapping. No FDA shortage record found for RxCUI 4850. Clinical equivalence confirmation requires pharmacist review of concentration, osmolality, and pediatric dosing suitability.",
+          "formulary_status": "unknown",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "4919",
+          "name": "glycine",
+          "rationale": "Glycine is listed as a class-member alternative by RxNorm; however, glycine parenteral solutions are not clinically equivalent to D5W for general IV hydration or caloric support and are indicated primarily as irrigation solutions. This alternative is not appropriate for substitution without specialist pharmacist and physician review. No FDA shortage record found for RxCUI 4919. Shortage status unverified for RxCUI 6628 (mannitol) and RxCUI 9945 (sorbitol).",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1795477",
+          "claim": "Dextrose Monohydrate 5% Injection RxCUI 1795477 status is Current as of 04/20/2026"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1795477&limit=1",
+          "claim": "Dextrose 5% Injection is indicated for use in adults and pediatric patients as a source of calories and water for hydration; contraindicated in hypersensitivity to corn products; contains aluminum with toxicity risk in premature neonates and renally-impaired patients"
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Notify Pediatrics and pharmacy leadership of the active D5W shortage; identify an alternative supplier or equivalent parenteral dextrose formulation not affected by the shortage, and initiate P&T review to formally address formulary status given 77 active orders in the past 30 days.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T02:59:31.215196+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1795477",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE These intravenous solutions are indicated for use in adults and pediatric patients as sources of calories and water for hydration.\",\n  \"warnings\": \"",
+          "duration_ms": 1357
+        },
+        {
+          "ts": "2026-05-02T02:59:31.588712+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1795477"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Dextrose Monohydrate 5% Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  ",
+          "duration_ms": 1731
+        },
+        {
+          "ts": "2026-05-02T02:59:32.110466+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1795477"
+          },
+          "result_preview": "[{\"rxcui\": \"4850\", \"name\": \"glucose\", \"confidence\": \"class-member\"}, {\"rxcui\": \"4919\", \"name\": \"glycine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6628\", \"name\": \"mannitol\", \"confidence\": \"class-memb",
+          "duration_ms": 2253
+        },
+        {
+          "ts": "2026-05-02T02:59:32.809904+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "4919"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4919\"\n}",
+          "duration_ms": 694
+        },
+        {
+          "ts": "2026-05-02T02:59:33.291963+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "4850"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4850\"\n}",
+          "duration_ms": 1176
+        },
+        {
+          "ts": "2026-05-02T02:59:34.117906+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "4850",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "glucose"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"Uses for relief of upset stomach associated with nausea\",\n  \"warnings\": \"Warnings this product contains fructose and should not be taken by persons with hereditary fructo",
+          "duration_ms": 825
+        }
+      ],
+      "item_id": "30efe1ee-7b9d-4df3-b478-5bebcd00f0d8",
+      "_diff_bucket": "new"
+    },
+    {
+      "rxcui": "197527",
+      "drug_name": "Clonazepam Tablet",
+      "severity": "Watch",
+      "summary": "Clonazepam Tablet (non-preferred, oral) entered active shortage as of 01/05/2026 with 76 orders in the past 30 days across ER, Pediatrics, and Oncology; no formulary alternatives are designated, and the only RxNorm-returned alternative is the same drug (clonazepam, RxCUI 2598), leaving no distinct substitution path.",
+      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-preferred, active_orders_30d=76 (>0). Rule W1 does not apply because no clinically distinct alternative is available \u2014 the sole RxNorm therapeutic alternative returned (RxCUI 2598) is clonazepam itself, not a separate drug. Rules C1/C2 do not apply because formulary_status is non-preferred and preferred_alternatives minus alts_in_shortage is vacuously empty without a high-volume preferred designation. Rule C3 does not apply because yesterday_status was absent (not a re-occurrence from Resolved). Abrupt discontinuation risk is clinically significant \u2014 the FDA label explicitly warns that abrupt reduction can precipitate life-threatening seizures and status epilepticus, elevating operational urgency even under Watch. Confidence is capped at medium: the only alternative is a class-member match (same drug, no distinct substitute), and yesterday_status is absent (non-canonical input).",
+      "alternatives": [
+        {
+          "rxcui": "2598",
+          "name": "clonazepam",
+          "rationale": "RxNorm returned clonazepam (RxCUI 2598) as the sole therapeutic alternative; this is the same active ingredient as the shortage drug and does not represent a distinct substitute. No shortage record exists for RxCUI 2598, but this alternative provides no clinical differentiation. Clinicians should evaluate other benzodiazepine class members (e.g., diazepam, lorazepam) or indication-specific anticonvulsants (e.g., valproate, lamotrigine for seizure indications) via P&T review; those agents were not returned by the RxNorm tool and cannot be cited here.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A197527",
+          "claim": "Clonazepam Tablet shortage status is Current as of update date 01/05/2026; RxCUIs 197527, 197528, 197529 confirmed in record."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
+          "claim": "Clonazepam tablets indicated for seizure disorders (Lennox-Gastaut syndrome, akinetic/myoclonic seizures, absence seizures) and panic disorder per FDA-approved labeling."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
+          "claim": "FDA label warns that abrupt discontinuation or rapid dosage reduction may precipitate acute withdrawal reactions including life-threatening seizures and status epilepticus."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
+          "claim": "Pediatric dosing established in label (0.01\u20130.03 mg/kg/day for infants/children up to 10 years or 30 kg); relevant given Pediatrics department usage."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Aclonazepam*&limit=1",
+          "claim": "Top-1 alternative (RxCUI 2598, clonazepam) label confirms identical indication profile and safety warnings to the shortage drug \u2014 no clinical differentiation."
+        },
+        {
+          "source": "rxnorm",
+          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/197527/related?tty=IN",
+          "claim": "RxNorm therapeutic alternatives query for RxCUI 197527 returned only clonazepam (RxCUI 2598) as a class-member alternative."
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Identify all active clonazepam orders across ER, Pediatrics, and Oncology; do not abruptly discontinue any patient \u2014 taper per label guidance \u2014 and escalate to P&T for emergency formulary review of a clinically distinct benzodiazepine or indication-appropriate anticonvulsant substitute, as no distinct RxNorm alternative was returned.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T02:59:31.215904+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "197527",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
+          "duration_ms": 1358
+        },
+        {
+          "ts": "2026-05-02T02:59:31.589208+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "197527"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
+          "duration_ms": 1731
+        },
+        {
+          "ts": "2026-05-02T02:59:32.114329+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "197527"
+          },
+          "result_preview": "[{\"rxcui\": \"2598\", \"name\": \"clonazepam\", \"confidence\": \"class-member\"}]",
+          "duration_ms": 2256
+        },
+        {
+          "ts": "2026-05-02T02:59:32.811556+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "2598"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2598\"\n}",
+          "duration_ms": 696
+        },
+        {
+          "ts": "2026-05-02T02:59:34.118452+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "2598",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "clonazepam"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
+          "duration_ms": 825
+        }
+      ],
+      "item_id": "d39eb5e1-c3ff-4f43-92c0-9b410d629746",
+      "_diff_bucket": "new"
+    },
+    {
+      "rxcui": "1358510",
+      "drug_name": "Methylprednisolone Acetate Injection",
+      "severity": "Critical",
+      "summary": "Methylprednisolone Acetate Injection (DEPO-MEDROL) is in active shortage as of 04/22/2026; this restricted formulary drug has 74 active orders in 30 days across Surgery, Ambulatory, and ICU with no preferred alternatives on formulary.",
+      "rationale": "Rule C2 applies: today_status is Current, route is INTRALESIONAL (injected corticosteroid administered in procedural settings across ICU and Surgery), and no preferred alternatives exist on formulary after shortage cross-check. Active orders of 74 in 30 days further confirms high utilization. Yesterday's status was absent from snapshot (new entry), which aligns with diff bucket 'new' \u2014 Rule C3 does not directly apply as yesterday_status is absent rather than 'Resolved', but C2 is satisfied independently. Confidence is medium rather than high because the top-1 alternative label data retrieved (hydrocortisone) reflects an OTC topical product, not an injectable formulation equivalent, reducing clinical equivalence certainty for intralesional use; this imposes the class-member-only ceiling of max medium.",
+      "alternatives": [
+        {
+          "rxcui": "5492",
+          "name": "hydrocortisone",
+          "rationale": "Hydrocortisone is a corticosteroid class member indicated for inflammatory dermatologic conditions; however, the label data returned reflects an OTC topical formulation, not an injectable preparation suitable for intralesional administration. Injectable hydrocortisone acetate exists clinically but was not confirmed by label data in this retrieval. Clinical pharmacist must verify injectable formulation availability and dosing equivalence before substitution. No shortage record found for RxCUI 5492.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "6902",
+          "name": "methylprednisolone",
+          "rationale": "Methylprednisolone (soluble formulations, e.g., methylprednisolone sodium succinate) is the same parent molecule but a different salt/formulation; may not be interchangeable with the acetate depot form for intralesional use. No shortage record found for RxCUI 6902. Pharmacist must confirm whether a non-acetate formulation meets clinical requirements for intralesional indication.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "8638",
+          "name": "prednisolone",
+          "rationale": "Prednisolone is a corticosteroid class member. Shortage status unverified (only top-2 alternatives checked per protocol). Injectable prednisolone acetate exists for intralesional use but formulary status and supply availability at this institution are unknown. Clinical pharmacist must verify formulation, route compatibility, and supply.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1358510",
+          "claim": "Methylprednisolone Acetate Injection status is Current as of 04/22/2026; RxCUI list includes 1358510."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1358510&limit=1",
+          "claim": "DEPO-MEDROL is indicated for intralesional administration in alopecia areata, discoid lupus erythematosus, keloids, granuloma annulare, lichen planus, lichen simplex chronicus, psoriatic plaques, and necrobiosis lipoidica diabeticorum; warnings include immunosuppression, infection risk, and benzyl alcohol toxicity."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Ahydrocortisone*&limit=1",
+          "claim": "Hydrocortisone label retrieved reflects OTC topical formulation only; injectable intralesional equivalence not confirmed by this label record."
+        },
+        {
+          "source": "rxnorm",
+          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/1358510/allrelated",
+          "claim": "Therapeutic alternatives hydrocortisone (5492), methylprednisolone (6902), and prednisolone (8638) identified as corticosteroid class members via RxNorm."
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Escalate to P&T committee for emergency formulary review of injectable corticosteroid alternatives (triamcinolone acetonide injection or hydrocortisone acetate injection) for intralesional use; contact current suppliers for allocation status and implement conservation protocol for the 74 active orders across Surgery, Ambulatory, and ICU.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T02:59:31.216022+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1358510",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE A. FOR INTRAMUSCULAR ADMINISTRATION When oral therapy is not feasible and the strength, dosage form, and route of administration of the drug reasona",
+          "duration_ms": 1358
+        },
+        {
+          "ts": "2026-05-02T02:59:31.589330+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1358510"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Methylprednisolone Acetate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,",
+          "duration_ms": 1731
+        },
+        {
+          "ts": "2026-05-02T02:59:32.115234+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1358510"
+          },
+          "result_preview": "[{\"rxcui\": \"5492\", \"name\": \"hydrocortisone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6902\", \"name\": \"methylprednisolone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"8638\", \"name\": \"prednisolone\", \"co",
+          "duration_ms": 2257
+        },
+        {
+          "ts": "2026-05-02T02:59:33.291077+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "6902"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6902\"\n}",
+          "duration_ms": 1175
+        },
+        {
+          "ts": "2026-05-02T02:59:33.291716+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "5492"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 5492\"\n}",
+          "duration_ms": 1176
+        },
+        {
+          "ts": "2026-05-02T02:59:34.118586+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "5492",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "hydrocortisone"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"Uses \u2022 temporarily relieves itching associated with minor skin irritations, inflammation, and rashes due to: \u2022 eczema \u2022 psoriasis \u2022 poison ivy, oak, sumac \u2022 insect bites ",
+          "duration_ms": 825
+        }
+      ],
+      "item_id": "c369b28a-eab9-4b5e-b03c-7ca9f38f96af",
       "_diff_bucket": "new"
     }
   ],
   "tool_calls": [
     {
-      "ts": "2026-05-02T01:06:54.140628+00:00",
+      "ts": "2026-05-02T02:59:29.854029+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_current_shortages",
+      "args": {
+        "limit": 1000
+      },
+      "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
+      "duration_ms": 825
+    },
+    {
+      "ts": "2026-05-02T02:59:30.616582+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "309710"
+        "rxcui": "685578"
       },
-      "result_preview": "{\n  \"generic_name\": \"Dexmedetomidine Hydrochloride Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": nu",
-      "duration_ms": 345
+      "result_preview": "{\n  \"generic_name\": \"Clindamycin Phosphate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Demand increase for the drug\",\n  \"availability\": \"Limited Availability\",",
+      "duration_ms": 759
     },
     {
-      "ts": "2026-05-02T01:06:54.146986+00:00",
+      "ts": "2026-05-02T02:59:30.763231+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "309710",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE 1.1 Intensive Care Unit Sedation Dexmedetomidine injection is indicated for sedation of initially intubated and mechanically ventilated patients d",
-      "duration_ms": 6
-    },
-    {
-      "ts": "2026-05-02T01:06:54.158605+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "309710"
-      },
-      "result_preview": "[{\"rxcui\": \"2067\", \"name\": \"carbromal\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2372\", \"name\": \"chlormethiazole\", \"confidence\": \"class-member\"}, {\"rxcui\": \"253206\", \"name\": \"valerian root extract\", ",
-      "duration_ms": 11
-    },
-    {
-      "ts": "2026-05-02T01:07:01.594293+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "9601"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 9601\"\n}",
-      "duration_ms": 327
-    },
-    {
-      "ts": "2026-05-02T01:07:01.930897+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "8770"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 8770\"\n}",
-      "duration_ms": 336
-    },
-    {
-      "ts": "2026-05-02T01:07:01.935692+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "propofol"
-      },
-      "result_preview": "{\n  \"rxcui\": \"8782\",\n  \"name\": \"propofol\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=propofol\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:07:01.939141+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "midazolam"
-      },
-      "result_preview": "{\n  \"rxcui\": \"6960\",\n  \"name\": \"midazolam\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=midazolam\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:07:04.156489+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "ketamine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"6130\",\n  \"name\": \"ketamine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ketamine\"\n}",
-      "duration_ms": 2217
-    },
-    {
-      "ts": "2026-05-02T01:07:08.875597+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "8782"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 8782\"\n}",
-      "duration_ms": 352
-    },
-    {
-      "ts": "2026-05-02T01:07:09.203239+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6960"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6960\"\n}",
-      "duration_ms": 327
-    },
-    {
-      "ts": "2026-05-02T01:07:09.523880+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6130"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6130\"\n}",
-      "duration_ms": 320
-    },
-    {
-      "ts": "2026-05-02T01:07:09.529640+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "8782",
-        "sections": [
-          "indications_and_usage",
-          "contraindications",
-          "dosage_and_administration"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 8782\"\n}",
-      "duration_ms": 5
-    },
-    {
-      "ts": "2026-05-02T01:07:09.534317+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "6960",
-        "sections": [
-          "indications_and_usage",
-          "contraindications",
-          "dosage_and_administration"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 6960\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:07:10.285074+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "6130",
-        "sections": [
-          "indications_and_usage",
-          "contraindications",
-          "dosage_and_administration"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 6130\"\n}",
-      "duration_ms": 750
-    },
-    {
-      "ts": "2026-05-02T01:07:57.797462+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1012396"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"",
-      "duration_ms": 397
-    },
-    {
-      "ts": "2026-05-02T01:07:58.199377+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "1012396",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection is indicated in adults for the production of local or regi",
-      "duration_ms": 401
-    },
-    {
-      "ts": "2026-05-02T01:07:59.625528+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1012396"
-      },
-      "result_preview": "[{\"rxcui\": \"1815\", \"name\": \"bupivacaine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2560310\", \"name\": \"bupivacaine / meloxicam\", \"confidence\": \"class-member\"}, {\"rxcui\": \"259453\", \"name\": \"levobupivac",
-      "duration_ms": 1426
-    },
-    {
-      "ts": "2026-05-02T01:08:05.070236+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "35780"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 35780\"\n}",
-      "duration_ms": 328
-    },
-    {
-      "ts": "2026-05-02T01:08:05.384062+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "259453"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 259453\"\n}",
-      "duration_ms": 313
-    },
-    {
-      "ts": "2026-05-02T01:08:05.703336+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6387"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6387\"\n}",
-      "duration_ms": 319
-    },
-    {
-      "ts": "2026-05-02T01:08:05.708246+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "35780",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 35780\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:08:06.351687+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "259453",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 259453\"\n}",
-      "duration_ms": 643
-    },
-    {
-      "ts": "2026-05-02T01:08:06.355834+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "6387",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 6387\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:08:46.917074+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "854846"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Lisdexamfetamine Dimesylate Capsule\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n",
-      "duration_ms": 346
-    },
-    {
-      "ts": "2026-05-02T01:08:47.349464+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "854846",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Lisdexamfetamine dimesylate capsules are indicated for the treatment of: Attention Deficit Hyperactivity Disorder (ADHD) in adults and pediatric p",
-      "duration_ms": 432
-    },
-    {
-      "ts": "2026-05-02T01:08:48.371831+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "854846"
-      },
-      "result_preview": "[{\"rxcui\": \"2121751\", \"name\": \"solriamfetol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24840\", \"name\": \"fenethylline\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24860\", \"name\": \"fenozolone\", \"confide",
-      "duration_ms": 1022
-    },
-    {
-      "ts": "2026-05-02T01:08:55.033645+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "3288"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 3288\"\n}",
-      "duration_ms": 1330
-    },
-    {
-      "ts": "2026-05-02T01:08:55.376025+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "38400"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 38400\"\n}",
-      "duration_ms": 342
-    },
-    {
-      "ts": "2026-05-02T01:08:55.702934+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "352372"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 352372\"\n}",
-      "duration_ms": 326
-    },
-    {
-      "ts": "2026-05-02T01:08:56.022463+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "30125"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 30125\"\n}",
-      "duration_ms": 319
-    },
-    {
-      "ts": "2026-05-02T01:08:56.352425+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "2121751"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2121751\"\n}",
-      "duration_ms": 329
-    },
-    {
-      "ts": "2026-05-02T01:09:02.172437+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "3288",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 3288\"\n}",
-      "duration_ms": 21
-    },
-    {
-      "ts": "2026-05-02T01:09:02.176377+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "38400",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 38400\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:09:02.179430+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "352372",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 352372\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:09:46.822462+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "854830"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Lisdexamfetamine Dimesylate Capsule\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n",
-      "duration_ms": 390
-    },
-    {
-      "ts": "2026-05-02T01:09:47.289502+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "854830",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Lisdexamfetamine dimesylate capsules are indicated for the treatment of: Attention Deficit Hyperactivity Disorder (ADHD) in adults and pediatric p",
-      "duration_ms": 467
-    },
-    {
-      "ts": "2026-05-02T01:09:48.467329+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "854830"
-      },
-      "result_preview": "[{\"rxcui\": \"2121751\", \"name\": \"solriamfetol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24840\", \"name\": \"fenethylline\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24860\", \"name\": \"fenozolone\", \"confide",
-      "duration_ms": 1177
-    },
-    {
-      "ts": "2026-05-02T01:09:54.784495+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "3288"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 3288\"\n}",
-      "duration_ms": 16
-    },
-    {
-      "ts": "2026-05-02T01:09:54.788548+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "38400"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 38400\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:09:54.791606+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "352372"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 352372\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:09:55.101358+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "2562192"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2562192\"\n}",
-      "duration_ms": 309
-    },
-    {
-      "ts": "2026-05-02T01:09:55.118222+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "3288",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 3288\"\n}",
-      "duration_ms": 16
-    },
-    {
-      "ts": "2026-05-02T01:09:55.121796+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "38400",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 38400\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:09:55.125398+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "352372",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 352372\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:10:00.133684+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "dextroamphetamine sulfate"
-      },
-      "result_preview": "{\n  \"rxcui\": \"3287\",\n  \"name\": \"dextroamphetamine sulfate\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=dextroamphetamine sulfate\"\n}",
-      "duration_ms": 680
-    },
-    {
-      "ts": "2026-05-02T01:10:00.819952+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "atomoxetine hydrochloride"
-      },
-      "result_preview": "{\n  \"rxcui\": \"353103\",\n  \"name\": \"atomoxetine hydrochloride\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=atomoxetine hydrochloride\"\n}",
-      "duration_ms": 686
-    },
-    {
-      "ts": "2026-05-02T01:10:01.340602+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "dexmethylphenidate hydrochloride"
-      },
-      "result_preview": "{\n  \"rxcui\": \"353105\",\n  \"name\": \"dexmethylphenidate hydrochloride\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=dexmethylphenidate hydrochloride\"\n}",
-      "duration_ms": 520
-    },
-    {
-      "ts": "2026-05-02T01:10:01.746220+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "541363",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Dextroamphetamine saccharate, amphetamine aspartate, dextroamphetamine sulfate and amphetamine sulfate tablets are indicated for the treatment of At",
-      "duration_ms": 405
-    },
-    {
-      "ts": "2026-05-02T01:10:07.255191+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "3287",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 3287\"\n}",
-      "duration_ms": 655
-    },
-    {
-      "ts": "2026-05-02T01:10:07.905249+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "353103",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 353103\"\n}",
-      "duration_ms": 650
-    },
-    {
-      "ts": "2026-05-02T01:10:08.565311+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "353105",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 353105\"\n}",
-      "duration_ms": 660
-    },
-    {
-      "ts": "2026-05-02T01:10:08.865447+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "3287"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 3287\"\n}",
-      "duration_ms": 300
-    },
-    {
-      "ts": "2026-05-02T01:10:09.190487+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "353103"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 353103\"\n}",
-      "duration_ms": 325
-    },
-    {
-      "ts": "2026-05-02T01:10:09.552939+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "353105"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 353105\"\n}",
-      "duration_ms": 362
-    },
-    {
-      "ts": "2026-05-02T01:10:09.884829+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "541363"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Amphetamine Aspartate Monohydrate, Amphetamine Sulfate, Dextroamphetamine Saccharate, Dextroamphetamine Sulfate Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shor",
-      "duration_ms": 331
-    },
-    {
-      "ts": "2026-05-02T01:10:15.170879+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_search_labels_by_indication",
-      "args": {
-        "query": "atomoxetine ADHD"
-      },
-      "result_preview": "[{\"generic_name\": null, \"rxcui\": [], \"indications_and_usage\": \"1 INDICATIONS AND USAGE Ambien (zolpidem tartrate) is indicated for the short-term treatment of insomnia characterized by difficulties wi",
-      "duration_ms": 683
-    },
-    {
-      "ts": "2026-05-02T01:10:15.923576+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_search_labels_by_indication",
-      "args": {
-        "query": "dexmethylphenidate ADHD children"
-      },
-      "result_preview": "[{\"generic_name\": \"SILICEA\", \"rxcui\": [], \"indications_and_usage\": \"INDICATIONS Condition listed above or as directed by the physician\", \"source_url\": \"https://api.fda.gov/drug/label.json?search=indic",
-      "duration_ms": 752
-    },
-    {
-      "ts": "2026-05-02T01:11:05.667144+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "541892"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Amphetamine Aspartate Monohydrate, Amphetamine Sulfate, Dextroamphetamine Saccharate, Dextroamphetamine Sulfate Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shor",
-      "duration_ms": 799
-    },
-    {
-      "ts": "2026-05-02T01:11:05.687663+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "541892",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Dextroamphetamine saccharate, amphetamine aspartate, dextroamphetamine sulfate and amphetamine sulfate tablets are indicated for the treatment of At",
-      "duration_ms": 20
-    },
-    {
-      "ts": "2026-05-02T01:11:05.707032+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "541892"
-      },
-      "result_preview": "[{\"rxcui\": \"2121751\", \"name\": \"solriamfetol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24840\", \"name\": \"fenethylline\", \"confidence\": \"class-member\"}, {\"rxcui\": \"24860\", \"name\": \"fenozolone\", \"confide",
-      "duration_ms": 19
-    },
-    {
-      "ts": "2026-05-02T01:11:11.839834+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "3288"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 3288\"\n}",
-      "duration_ms": 7
-    },
-    {
-      "ts": "2026-05-02T01:11:11.844047+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "38400"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 38400\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:11:11.848912+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "352372"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 352372\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:11:11.853673+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "30125"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 30125\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:11:11.861194+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "3288",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 3288\"\n}",
-      "duration_ms": 7
-    },
-    {
-      "ts": "2026-05-02T01:11:11.864303+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "38400",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 38400\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:11:11.867138+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "352372",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 352372\"\n}",
-      "duration_ms": 2
-    },
-    {
-      "ts": "2026-05-02T01:11:46.627764+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1725078"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"",
-      "duration_ms": 352
-    },
-    {
-      "ts": "2026-05-02T01:11:46.636209+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "1725078",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Bupivacaine Hydrochloride Injection is indicated in adults for the production of local or regional anesthesia or analgesia for surgery, dental and",
-      "duration_ms": 8
-    },
-    {
-      "ts": "2026-05-02T01:11:46.651800+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1725078"
-      },
-      "result_preview": "[{\"rxcui\": \"1815\", \"name\": \"bupivacaine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2560310\", \"name\": \"bupivacaine / meloxicam\", \"confidence\": \"class-member\"}, {\"rxcui\": \"259453\", \"name\": \"levobupivac",
-      "duration_ms": 15
-    },
-    {
-      "ts": "2026-05-02T01:11:52.908574+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "ropivacaine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"35780\",\n  \"name\": \"ropivacaine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ropivacaine\"\n}",
-      "duration_ms": 7
-    },
-    {
-      "ts": "2026-05-02T01:11:52.911800+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "lidocaine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"6387\",\n  \"name\": \"lidocaine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=lidocaine\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:11:52.914935+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "levobupivacaine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"259453\",\n  \"name\": \"levobupivacaine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=levobupivacaine\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:11:57.509213+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "35780"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 35780\"\n}",
-      "duration_ms": 10
-    },
-    {
-      "ts": "2026-05-02T01:11:57.512545+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6387"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6387\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:11:57.515539+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "259453"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 259453\"\n}",
-      "duration_ms": 2
-    },
-    {
-      "ts": "2026-05-02T01:11:57.528127+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "35780",
-        "sections": [
-          "indications_and_usage",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 35780\"\n}",
-      "duration_ms": 12
-    },
-    {
-      "ts": "2026-05-02T01:11:57.531210+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "6387",
-        "sections": [
-          "indications_and_usage",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 6387\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:11:57.533909+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "259453",
-        "sections": [
-          "indications_and_usage",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 259453\"\n}",
-      "duration_ms": 2
-    },
-    {
-      "ts": "2026-05-02T01:12:39.642165+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "197529"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
-      "duration_ms": 363
-    },
-    {
-      "ts": "2026-05-02T01:12:40.022197+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "197529",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-      "duration_ms": 380
-    },
-    {
-      "ts": "2026-05-02T01:12:41.710292+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "197529"
-      },
-      "result_preview": "[{\"rxcui\": \"2598\", \"name\": \"clonazepam\", \"confidence\": \"class-member\"}]",
-      "duration_ms": 1688
-    },
-    {
-      "ts": "2026-05-02T01:12:47.486909+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "763028"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Lorazepam Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"rxcui\": ",
-      "duration_ms": 323
-    },
-    {
-      "ts": "2026-05-02T01:12:47.823066+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1665188"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Lorazepam Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"rxcui\": ",
-      "duration_ms": 336
-    },
-    {
-      "ts": "2026-05-02T01:12:48.643322+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "diazepam tablet"
-      },
-      "result_preview": "{\n  \"error\": \"No RxCUI found for 'diazepam tablet'\"\n}",
-      "duration_ms": 820
-    },
-    {
-      "ts": "2026-05-02T01:12:52.943961+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "diazepam"
-      },
-      "result_preview": "{\n  \"rxcui\": \"3322\",\n  \"name\": \"diazepam\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=diazepam\"\n}",
-      "duration_ms": 840
-    },
-    {
-      "ts": "2026-05-02T01:12:53.781614+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "alprazolam"
-      },
-      "result_preview": "{\n  \"rxcui\": \"596\",\n  \"name\": \"alprazolam\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=alprazolam\"\n}",
-      "duration_ms": 837
-    },
-    {
-      "ts": "2026-05-02T01:12:54.323580+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "lorazepam tablet"
-      },
-      "result_preview": "{\n  \"error\": \"No RxCUI found for 'lorazepam tablet'\"\n}",
-      "duration_ms": 541
-    },
-    {
-      "ts": "2026-05-02T01:12:57.650292+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "3322"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 3322\"\n}",
-      "duration_ms": 347
-    },
-    {
-      "ts": "2026-05-02T01:12:57.943911+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "596"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 596\"\n}",
-      "duration_ms": 293
-    },
-    {
-      "ts": "2026-05-02T01:12:58.656997+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "3322",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 3322\"\n}",
-      "duration_ms": 713
-    },
-    {
-      "ts": "2026-05-02T01:12:59.283266+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "596",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 596\"\n}",
-      "duration_ms": 626
-    },
-    {
-      "ts": "2026-05-02T01:13:35.166110+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1012404"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Bupivacaine Hydrochloride, Epinephrine Bitartrate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"",
-      "duration_ms": 393
-    },
-    {
-      "ts": "2026-05-02T01:13:35.571149+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "1012404",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection is indicated in adults for the production of local or regi",
-      "duration_ms": 405
-    },
-    {
-      "ts": "2026-05-02T01:13:38.290251+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1012404"
-      },
-      "result_preview": "[{\"rxcui\": \"1815\", \"name\": \"bupivacaine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2560310\", \"name\": \"bupivacaine / meloxicam\", \"confidence\": \"class-member\"}, {\"rxcui\": \"259453\", \"name\": \"levobupivac",
-      "duration_ms": 1058
-    },
-    {
-      "ts": "2026-05-02T01:13:41.772477+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "35780"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 35780\"\n}",
-      "duration_ms": 8
-    },
-    {
-      "ts": "2026-05-02T01:13:41.776440+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "259453"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 259453\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:13:41.779577+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6387"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6387\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:13:41.783314+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "35780",
-        "sections": [
-          "indications_and_usage",
-          "contraindications",
-          "dosage_and_administration"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 35780\"\n}",
-      "duration_ms": 3
-    },
-    {
-      "ts": "2026-05-02T01:13:41.786271+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "259453",
-        "sections": [
-          "indications_and_usage",
-          "contraindications",
-          "dosage_and_administration"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 259453\"\n}",
-      "duration_ms": 2
-    },
-    {
-      "ts": "2026-05-02T01:13:43.909031+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "ropivacaine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"35780\",\n  \"name\": \"ropivacaine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=ropivacaine\"\n}",
-      "duration_ms": 6
-    },
-    {
-      "ts": "2026-05-02T01:13:43.913710+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_normalize_drug_name",
-      "args": {
-        "name": "levobupivacaine"
-      },
-      "result_preview": "{\n  \"rxcui\": \"259453\",\n  \"name\": \"levobupivacaine\",\n  \"source_url\": \"https://rxnav.nlm.nih.gov/REST/rxcui.json?name=levobupivacaine\"\n}",
-      "duration_ms": 4
-    },
-    {
-      "ts": "2026-05-02T01:13:46.598618+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_search_labels_by_indication",
-      "args": {
-        "query": "ropivacaine epidural anesthesia"
-      },
-      "result_preview": "[{\"generic_name\": null, \"rxcui\": [], \"indications_and_usage\": \"INDICATIONS & USAGE Hypertension Lisinopril tablets USP are indicated for the treatment of hypertension to lower blood pressure. Lowering",
-      "duration_ms": 618
-    },
-    {
-      "ts": "2026-05-02T01:13:47.155909+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_search_labels_by_indication",
-      "args": {
-        "query": "levobupivacaine epidural anesthesia"
-      },
-      "result_preview": "[{\"generic_name\": null, \"rxcui\": [], \"indications_and_usage\": \"INDICATIONS & USAGE Hypertension Lisinopril tablets USP are indicated for the treatment of hypertension to lower blood pressure. Lowering",
-      "duration_ms": 557
-    },
-    {
-      "ts": "2026-05-02T01:14:21.444992+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "309336"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Clindamycin Phosphate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Limited Availability\",\n  \"estimated_resolutio",
-      "duration_ms": 410
-    },
-    {
-      "ts": "2026-05-02T01:14:21.867581+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "309336",
+        "rxcui": "685578",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -2976,106 +655,56 @@
         ]
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE CLEOCIN PHOSPHATE products are indicated in the treatment of serious infections caused by susceptible anaerobic bacteria. CLEOCIN PHOSPHATE products",
-      "duration_ms": 422
+      "duration_ms": 906
     },
     {
-      "ts": "2026-05-02T01:14:23.575043+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "309336"
-      },
-      "result_preview": "[{\"rxcui\": \"10169\", \"name\": \"sulfacetamide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2348\", \"name\": \"chloramphenicol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2582\", \"name\": \"clindamycin\", \"confid",
-      "duration_ms": 1707
-    },
-    {
-      "ts": "2026-05-02T01:14:29.865680+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "4053"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4053\"\n}",
-      "duration_ms": 328
-    },
-    {
-      "ts": "2026-05-02T01:14:30.208071+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "2348"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2348\"\n}",
-      "duration_ms": 342
-    },
-    {
-      "ts": "2026-05-02T01:14:30.540418+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6980"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6980\"\n}",
-      "duration_ms": 332
-    },
-    {
-      "ts": "2026-05-02T01:14:31.213805+00:00",
+      "ts": "2026-05-02T02:59:30.765481+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "4053",
+        "rxcui": "801133",
         "sections": [
           "indications_and_usage",
+          "warnings",
+          "dosage_and_administration",
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 4053\"\n}",
-      "duration_ms": 673
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE PROSOL is indicated as a source of amino acids for patients requiring parenteral nutrition when oral or enteral nutrition is not possible, insuffi",
+      "duration_ms": 908
     },
     {
-      "ts": "2026-05-02T01:14:31.895485+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "2348",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 2348\"\n}",
-      "duration_ms": 681
-    },
-    {
-      "ts": "2026-05-02T01:14:32.531899+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "6980",
-        "sections": [
-          "indications_and_usage",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"error\": \"No label found for RxCUI 6980\"\n}",
-      "duration_ms": 636
-    },
-    {
-      "ts": "2026-05-02T01:15:10.071939+00:00",
+      "ts": "2026-05-02T02:59:30.950755+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "197528"
+        "rxcui": "801133"
       },
-      "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
-      "duration_ms": 345
+      "result_preview": "{\n  \"generic_name\": \"Amino Acid Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 1093
     },
     {
-      "ts": "2026-05-02T01:15:10.487821+00:00",
+      "ts": "2026-05-02T02:59:31.215196+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "197528",
+        "rxcui": "1795477",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration",
+          "contraindications"
+        ]
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE These intravenous solutions are indicated for use in adults and pediatric patients as sources of calories and water for hydration.\",\n  \"warnings\": \"",
+      "duration_ms": 1357
+    },
+    {
+      "ts": "2026-05-02T02:59:31.215904+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "197527",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -3084,20 +713,277 @@
         ]
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-      "duration_ms": 415
+      "duration_ms": 1358
     },
     {
-      "ts": "2026-05-02T01:15:11.691082+00:00",
+      "ts": "2026-05-02T02:59:31.216022+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "1358510",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration",
+          "contraindications"
+        ]
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE A. FOR INTRAMUSCULAR ADMINISTRATION When oral therapy is not feasible and the strength, dosage form, and route of administration of the drug reasona",
+      "duration_ms": 1358
+    },
+    {
+      "ts": "2026-05-02T02:59:31.237059+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
-        "rxcui": "197528"
+        "rxcui": "685578"
+      },
+      "result_preview": "[{\"rxcui\": \"10169\", \"name\": \"sulfacetamide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2348\", \"name\": \"chloramphenicol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2582\", \"name\": \"clindamycin\", \"confid",
+      "duration_ms": 1379
+    },
+    {
+      "ts": "2026-05-02T02:59:31.241811+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "801133"
+      },
+      "result_preview": "[{\"rxcui\": \"10737\", \"name\": \"trazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"1086769\", \"name\": \"vilazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"10898\", \"name\": \"tryptophan\", \"confidence\":",
+      "duration_ms": 1384
+    },
+    {
+      "ts": "2026-05-02T02:59:31.588712+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1795477"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Dextrose Monohydrate 5% Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  ",
+      "duration_ms": 1731
+    },
+    {
+      "ts": "2026-05-02T02:59:31.589208+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "197527"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
+      "duration_ms": 1731
+    },
+    {
+      "ts": "2026-05-02T02:59:31.589330+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1358510"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Methylprednisolone Acetate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,",
+      "duration_ms": 1731
+    },
+    {
+      "ts": "2026-05-02T02:59:32.110466+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1795477"
+      },
+      "result_preview": "[{\"rxcui\": \"4850\", \"name\": \"glucose\", \"confidence\": \"class-member\"}, {\"rxcui\": \"4919\", \"name\": \"glycine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6628\", \"name\": \"mannitol\", \"confidence\": \"class-memb",
+      "duration_ms": 2253
+    },
+    {
+      "ts": "2026-05-02T02:59:32.114329+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "197527"
       },
       "result_preview": "[{\"rxcui\": \"2598\", \"name\": \"clonazepam\", \"confidence\": \"class-member\"}]",
-      "duration_ms": 1203
+      "duration_ms": 2256
+    },
+    {
+      "ts": "2026-05-02T02:59:32.115234+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1358510"
+      },
+      "result_preview": "[{\"rxcui\": \"5492\", \"name\": \"hydrocortisone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6902\", \"name\": \"methylprednisolone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"8638\", \"name\": \"prednisolone\", \"co",
+      "duration_ms": 2257
+    },
+    {
+      "ts": "2026-05-02T02:59:32.460441+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1086769"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1086769\"\n}",
+      "duration_ms": 345
+    },
+    {
+      "ts": "2026-05-02T02:59:32.461882+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "2348"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2348\"\n}",
+      "duration_ms": 346
+    },
+    {
+      "ts": "2026-05-02T02:59:32.809904+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "4919"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4919\"\n}",
+      "duration_ms": 694
+    },
+    {
+      "ts": "2026-05-02T02:59:32.811556+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "2598"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2598\"\n}",
+      "duration_ms": 696
+    },
+    {
+      "ts": "2026-05-02T02:59:33.291077+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "6902"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6902\"\n}",
+      "duration_ms": 1175
+    },
+    {
+      "ts": "2026-05-02T02:59:33.291716+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "5492"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 5492\"\n}",
+      "duration_ms": 1176
+    },
+    {
+      "ts": "2026-05-02T02:59:33.291963+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "4850"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4850\"\n}",
+      "duration_ms": 1176
+    },
+    {
+      "ts": "2026-05-02T02:59:33.292224+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "10169"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10169\"\n}",
+      "duration_ms": 1176
+    },
+    {
+      "ts": "2026-05-02T02:59:33.292343+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "10737"
+      },
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10737\"\n}",
+      "duration_ms": 1176
+    },
+    {
+      "ts": "2026-05-02T02:59:34.114103+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "10169",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration"
+        ],
+        "drug_name": "sulfacetamide"
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS: This product is indicated for use in the topical control of acne vulgaris, acne rosacea and seborrheic dermatitis.\",\n  \"warnings\": \"WARNINGS: Sulfonamides ar",
+      "duration_ms": 821
+    },
+    {
+      "ts": "2026-05-02T02:59:34.116501+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "10737",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration"
+        ],
+        "drug_name": "trazodone"
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Trazodone is a selective serotonin reuptake inhibitor indicated for the treatment of major depressive disorder (MDD) ( 1 ). Trazodone hydrochlorid",
+      "duration_ms": 823
+    },
+    {
+      "ts": "2026-05-02T02:59:34.117906+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "4850",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration"
+        ],
+        "drug_name": "glucose"
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"Uses for relief of upset stomach associated with nausea\",\n  \"warnings\": \"Warnings this product contains fructose and should not be taken by persons with hereditary fructo",
+      "duration_ms": 825
+    },
+    {
+      "ts": "2026-05-02T02:59:34.118452+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "2598",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration"
+        ],
+        "drug_name": "clonazepam"
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
+      "duration_ms": 825
+    },
+    {
+      "ts": "2026-05-02T02:59:34.118586+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "5492",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration"
+        ],
+        "drug_name": "hydrocortisone"
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"Uses \u2022 temporarily relieves itching associated with minor skin irritations, inflammation, and rashes due to: \u2022 eczema \u2022 psoriasis \u2022 poison ivy, oak, sumac \u2022 insect bites ",
+      "duration_ms": 825
     }
   ],
-  "total_tokens_used": 0,
-  "latency_ms": 532487,
-  "label": "SYNTHETIC \u2014 v0.1 demo"
+  "total_tokens_used": 32828,
+  "latency_ms": 112547,
+  "label": "SYNTHETIC \u2014 v0.1 demo",
+  "fetch_error": null
 }

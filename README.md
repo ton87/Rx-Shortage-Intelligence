@@ -98,11 +98,16 @@ make install
 
 ```
 src/
-  main.py                  # Streamlit dashboard (streamlit run src/main.py)
-  agent.py                 # Anthropic tool-use loop
-  briefing.py              # generate_briefing(), compute_diff()
+  main.py                  # Streamlit tab dispatcher (streamlit run src/main.py)
+  briefing.py              # CLI orchestrator (python -m src.briefing)
   mcp_bridge.py            # spawns 3 servers, exposes 6 tools
   cache.py                 # diskcache wrapper
+  domain/                  # pure logic: severity, confidence, fda, diff,
+                           # indexing, matching, constants
+  agent/                   # LLM: loop.py, prompts.py, prefetch.py, prompts/*.md
+  io_/                     # filesystem: briefing_store.py, data_loader.py
+  ui/                      # streamlit: theme, components, formatters,
+                           # actions, runner, *_view.py per tab
   servers/
     fda_shortage_server.py
     drug_label_server.py

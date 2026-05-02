@@ -54,12 +54,12 @@ def get_drug_label_sections(
             if drug_name:
                 # Use provided drug_name for fallback
                 fallback_name = drug_name
-                fallback_url = f"{BASE}?search=openfda.generic_name%3A%22{fallback_name}%22&limit=1"
+                fallback_url = f"{BASE}?search=openfda.generic_name%3A{fallback_name}*&limit=1"
                 fallback_key = f"label:name:{fallback_name}"
 
                 def _fetch_by_name():
                     params = {
-                        "search": f'openfda.generic_name:"{fallback_name}"+AND+_exists_:openfda.rxcui',
+                        "search": f"openfda.generic_name:{fallback_name}*",
                         "limit": 1,
                     }
                     resp = httpx.get(BASE, params=params, timeout=15)

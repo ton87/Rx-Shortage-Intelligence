@@ -1,76 +1,50 @@
-"""
-Tests for H5 UI helper functions (pure logic, no Streamlit rendering).
-
-Imports helpers directly from src.main by monkey-patching streamlit
-so set_page_config doesn't blow up outside a browser context.
-"""
+"""Tests for UI helper functions (pure logic, no Streamlit rendering)."""
 
 import json
 import sys
+import unittest.mock as mock
 from datetime import datetime, timezone
 from pathlib import Path
-from unittest import mock
 
 import pytest
 
-# ── Patch streamlit before importing src.main ────────────────────────────────
-# set_page_config is called at module import time; stub the whole module.
-st_mock = mock.MagicMock()
-sys.modules.setdefault("streamlit", st_mock)
+# log_action uses st.error/st.warning — stub streamlit before that import
+sys.modules.setdefault("streamlit", mock.MagicMock())
 
-from src.main import (  # noqa: E402  (import after sys.modules patch)
-    SORT_ORDER,
-    find_latest_briefing,
-    load_briefing,
-    log_action,
-)
+from src.io_.briefing_store import find_latest_briefing, load_briefing
+from src.domain.severity import SEVERITY_RANK
+from src.ui.actions import log_action
 
 
 # ── find_latest_briefing ─────────────────────────────────────────────────────
 
-def test_find_latest_briefing_returns_none_when_no_dir(tmp_path):
+def test_find_latest_briefing_returns_none_when_no_dir(tmp_path, monkeypatch):
     """Returns None when the briefings directory doesn't exist."""
     missing = tmp_path / "briefings"
-    # Temporarily point BRIEFINGS_DIR at a non-existent path
-    import src.main as m
-    original = m.BRIEFINGS_DIR
-    try:
-        m.BRIEFINGS_DIR = missing
-        assert find_latest_briefing() is None
-    finally:
-        m.BRIEFINGS_DIR = original
+    monkeypatch.setattr("src.io_.briefing_store.BRIEFINGS_DIR", missing)
+    assert find_latest_briefing() is None
 
 
-def test_find_latest_briefing_returns_most_recent(tmp_path):
+def test_find_latest_briefing_returns_most_recent(tmp_path, monkeypatch):
     """Returns the lexicographically latest .json file."""
-    import src.main as m
-    original = m.BRIEFINGS_DIR
-    try:
-        m.BRIEFINGS_DIR = tmp_path
-        older = tmp_path / "2026-04-30.json"
-        newer = tmp_path / "2026-05-01.json"
-        older.write_text("{}")
-        newer.write_text("{}")
-        result = find_latest_briefing()
-        assert result == newer
-    finally:
-        m.BRIEFINGS_DIR = original
+    monkeypatch.setattr("src.io_.briefing_store.BRIEFINGS_DIR", tmp_path)
+    older = tmp_path / "2026-04-30.json"
+    newer = tmp_path / "2026-05-01.json"
+    older.write_text("{}")
+    newer.write_text("{}")
+    result = find_latest_briefing()
+    assert result == newer
 
 
-def test_find_latest_briefing_ignores_non_json_files(tmp_path):
+def test_find_latest_briefing_ignores_non_json_files(tmp_path, monkeypatch):
     """Only .json files are considered; .txt files are ignored."""
-    import src.main as m
-    original = m.BRIEFINGS_DIR
-    try:
-        m.BRIEFINGS_DIR = tmp_path
-        txt_file = tmp_path / "2026-05-02.txt"
-        json_file = tmp_path / "2026-04-15.json"
-        txt_file.write_text("not json")
-        json_file.write_text("{}")
-        result = find_latest_briefing()
-        assert result == json_file
-    finally:
-        m.BRIEFINGS_DIR = original
+    monkeypatch.setattr("src.io_.briefing_store.BRIEFINGS_DIR", tmp_path)
+    txt_file = tmp_path / "2026-05-02.txt"
+    json_file = tmp_path / "2026-04-15.json"
+    txt_file.write_text("not json")
+    json_file.write_text("{}")
+    result = find_latest_briefing()
+    assert result == json_file
 
 
 # ── load_briefing ────────────────────────────────────────────────────────────
@@ -125,14 +99,14 @@ def test_log_action_sets_timestamp(tmp_path):
     assert before <= ts_utc <= after
 
 
-# ── SORT_ORDER ───────────────────────────────────────────────────────────────
+# ── SEVERITY_RANK ─────────────────────────────────────────────────────────────
 
-def test_sort_order_critical_before_watch_before_resolved():
+def test_severity_rank_critical_before_watch_before_resolved():
     """Critical < Watch < Resolved in sort order."""
     items = [
         {"severity": "Resolved"},
         {"severity": "Critical"},
         {"severity": "Watch"},
     ]
-    sorted_items = sorted(items, key=lambda x: SORT_ORDER.get(x.get("severity", "Watch"), 1))
+    sorted_items = sorted(items, key=lambda x: SEVERITY_RANK.get(x.get("severity", "Watch"), 1))
     assert [i["severity"] for i in sorted_items] == ["Critical", "Watch", "Resolved"]

@@ -24,14 +24,14 @@ def get_current_shortages(limit: int = 20) -> list[dict]:
     Fetch current FDA drug shortages.
 
     Args:
-        limit: Max number of records to return (default 20, max 100).
+        limit: Max number of records to return (default 20, max 1000).
 
     Returns:
         List of shortage records. Each has generic_name, status, rxcui (list),
         shortage_reason, and source_url for citation.
     """
     try:
-        safe_limit = min(limit, 100)
+        safe_limit = min(limit, 1000)
         key = f"fda_shortages:status:Current:limit:{safe_limit}"
 
         def fetch():

@@ -264,8 +264,8 @@ class TestNegative:
 
 class TestAmbientDegraded:
 
-    def test_limit_above_100_is_clamped_to_100_in_cache_key(self):
-        """AMBIENT: limit=200 is clamped to 100; cache key contains '100', not '200'."""
+    def test_limit_above_cap_is_clamped_in_cache_key(self):
+        """AMBIENT: limit above the server cap (1000) is clamped; cache key reflects cap."""
         captured_keys = []
 
         def capture(key, fetch_fn, ttl):
@@ -276,15 +276,15 @@ class TestAmbientDegraded:
             "src.servers.fda_shortage_server.cached_get",
             side_effect=capture,
         ):
-            get_current_shortages(limit=200)
+            get_current_shortages(limit=5000)
 
         assert captured_keys, "cached_get was never called"
         key_used = captured_keys[0]
-        assert "100" in key_used, (
-            f"Expected '100' in cache key after clamping, got: {key_used!r}"
+        assert "1000" in key_used, (
+            f"Expected '1000' (cap) in cache key after clamping, got: {key_used!r}"
         )
-        assert "200" not in key_used, (
-            f"Cache key must not contain unclamped '200', got: {key_used!r}"
+        assert "5000" not in key_used, (
+            f"Cache key must not contain unclamped '5000', got: {key_used!r}"
         )
 
     def test_stale_cache_data_still_returns_valid_shape(self):
