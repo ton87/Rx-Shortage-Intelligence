@@ -334,7 +334,6 @@ def load_briefing_inputs() -> tuple[list, list, list]:
     Moved from src/briefing.py load_data(). No streamlit decorators — stays
     usable in both CLI and test contexts.
     """
-    import json
     formulary = json.loads((DATA_DIR / "synthetic_formulary.json").read_text())["drugs"]
     orders_data = json.loads((DATA_DIR / "active_orders.json").read_text())["orders"]
     yesterday_path = DATA_DIR / "yesterday_snapshot.json"
@@ -347,7 +346,6 @@ def load_briefing_inputs() -> tuple[list, list, list]:
 
 def load_formulary() -> list[dict]:
     """Return the drugs list from synthetic_formulary.json."""
-    import json
     formulary_path = DATA_DIR / "synthetic_formulary.json"
     if not formulary_path.exists():
         return []
@@ -356,7 +354,6 @@ def load_formulary() -> list[dict]:
 
 def load_orders_index() -> dict:
     """Return {rxcui: order} mapping from active_orders.json."""
-    import json
     orders_path = DATA_DIR / "active_orders.json"
     if not orders_path.exists():
         return {}
