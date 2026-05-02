@@ -29,16 +29,17 @@ def load_orders_index() -> dict:
 
 def render_formulary_tab() -> None:
     st.title("Formulary")
-    st.markdown(
-        '<div class="rx-meta-row">Memorial Health System · 30 drugs · '
-        'Cross-referenced against today\'s FDA shortage feed</div>',
-        unsafe_allow_html=True,
-    )
 
     drugs = load_formulary()
     if not drugs:
-        st.info("No formulary loaded. Run `python -m src.data_loader` to bootstrap.")
+        st.info("No formulary loaded. Run `python -m src.io_.data_loader` to bootstrap.")
         return
+
+    st.markdown(
+        f'<div class="rx-meta-row">Memorial Health System · {len(drugs)} drugs · '
+        f'Cross-referenced against today\'s FDA shortage feed</div>',
+        unsafe_allow_html=True,
+    )
 
     orders_idx = load_orders_index()
     path = find_latest_briefing()

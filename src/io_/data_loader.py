@@ -25,9 +25,11 @@ import httpx
 from src.cache import cached_get, TTL_FDA_SHORTAGES, TTL_RXNORM
 
 # ── Paths ──────────────────────────────────────────────────────────────────
-ROOT     = Path(__file__).parent.parent
+# src/io_/data_loader.py → parent.parent.parent = repo root.
+# Pre-Step 3 the file lived at src/data_loader.py and used parent.parent;
+# the move broke this and silently resolved DATA_DIR to src/data.
+ROOT     = Path(__file__).parent.parent.parent
 DATA_DIR = ROOT / "data"
-DATA_DIR.mkdir(exist_ok=True)
 
 FORMULARY_PATH = DATA_DIR / "synthetic_formulary.json"
 ORDERS_PATH    = DATA_DIR / "active_orders.json"

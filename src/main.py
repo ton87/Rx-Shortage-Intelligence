@@ -4,12 +4,19 @@ Pattern B: 100% sync. CLI generates briefing JSON; UI reads it.
 See CLAUDE.md "Architecture: briefing CLI + Streamlit reader" for rationale.
 """
 
-import streamlit as st
+import sys
+from pathlib import Path
 
-from src.ui.briefing_view import render_briefing_tab
-from src.ui.eval_view import render_eval_tab
-from src.ui.formulary_view import render_formulary_tab
-from src.ui.theme import render_theme
+# `streamlit run src/main.py` puts src/ on sys.path, not the project root, so
+# the absolute `from src.*` imports below would otherwise fail at startup.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+import streamlit as st  # noqa: E402
+
+from src.ui.briefing_view import render_briefing_tab  # noqa: E402
+from src.ui.eval_view import render_eval_tab  # noqa: E402
+from src.ui.formulary_view import render_formulary_tab  # noqa: E402
+from src.ui.theme import render_theme  # noqa: E402
 
 st.set_page_config(
     page_title="Rx Shortage Intelligence",
