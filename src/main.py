@@ -283,15 +283,19 @@ def log_action(briefing_path: Path, item_id: str, action: str, reason: str | Non
 # ── Re-run pipeline ─────────────────────────────────────────────────────────
 
 def run_briefing_cli() -> tuple[bool, str]:
-    result = subprocess.run(
-        [sys.executable, "-m", "src.briefing"],
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, "-m", "src.briefing"],
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "Briefing exceeded 10-minute timeout."
     if result.returncode == 0:
         return True, result.stdout.strip() or "Briefing complete."
-    return False, result.stderr.strip() or "Briefing failed."
+    err = (result.stderr or result.stdout or "").strip()
+    return False, err or "Briefing failed (no stderr)."
 
 def run_briefing_with_status() -> bool:
     with st.status("Running briefing…", expanded=True) as status:
@@ -302,7 +306,7 @@ def run_briefing_with_status() -> bool:
             status.write(msg)
             return True
         status.update(label="Briefing failed.", state="error")
-        status.write(msg[:500])
+        status.code(msg, language="text")
         return False
 
 # ── Briefing item rendering ─────────────────────────────────────────────────

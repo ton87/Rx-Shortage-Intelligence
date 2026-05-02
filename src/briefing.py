@@ -16,6 +16,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 BRIEFINGS_DIR = DATA_DIR / "briefings"
 
