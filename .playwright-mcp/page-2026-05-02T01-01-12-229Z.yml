@@ -1,0 +1,58 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e7]:
+      - button "Deploy" [active] [ref=e9] [cursor=pointer]:
+        - generic [ref=e11]: Deploy
+      - button "Main menu" [ref=e13] [cursor=pointer]:
+        - img [ref=e14]
+  - generic [ref=e21]:
+    - tablist [ref=e23]:
+      - tab "Briefing" [ref=e24] [cursor=pointer]:
+        - paragraph [ref=e26]: Briefing
+      - tab "Formulary" [ref=e27] [cursor=pointer]:
+        - paragraph [ref=e29]: Formulary
+      - tab "Eval" [selected] [ref=e30] [cursor=pointer]:
+        - paragraph [ref=e32]: Eval
+    - tabpanel "Eval" [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Eval — 15-case scoring" [level=1] [ref=e41]:
+          - text: Eval — 15-case scoring
+          - generic [ref=e42]:
+            - link "Link to heading":
+              - /url: "#eval-15-case-scoring"
+              - img
+        - paragraph [ref=e47]: Internal quality scoring · pharmacy operations review · not for clinical use.
+        - generic [ref=e49]:
+          - generic [ref=e54]:
+            - paragraph [ref=e57]: Severity acc
+            - paragraph [ref=e60]: 100%
+          - generic [ref=e65]:
+            - paragraph [ref=e68]: Citation acc
+            - paragraph [ref=e71]: 100%
+          - generic [ref=e76]:
+            - paragraph [ref=e79]: Hallucination
+            - paragraph [ref=e82]: 0%
+          - generic [ref=e87]:
+            - paragraph [ref=e90]: Recall
+            - paragraph [ref=e93]: 100%
+          - generic [ref=e98]:
+            - paragraph [ref=e101]: Clinical appr.
+            - paragraph [ref=e104]: 4.0/5
+        - generic [ref=e109]: "Targets: Severity ≥90% · Citation 100% · Hallucination <2% · Recall 100% · Clinical ≥4"
+        - paragraph [ref=e114]: Clinical appropriateness is stubbed at 4.0 for v0.1. Wire Claude-as-judge in v0.2.
+        - heading "Case results" [level=3] [ref=e119]:
+          - text: Case results
+          - generic [ref=e120]:
+            - link "Link to heading":
+              - /url: "#case-results"
+              - img
+        - paragraph [ref=e125]: ✓ = matched expected · ✗ = mismatch or not found
+        - generic [ref=e130]:
+          - button "Show/hide columns" [ref=e134] [cursor=pointer]:
+            - img [ref=e135]
+          - button "Download as CSV" [ref=e140] [cursor=pointer]:
+            - img [ref=e141]
+          - button "Search" [ref=e146] [cursor=pointer]:
+            - img [ref=e147]
+          - button "Fullscreen" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]

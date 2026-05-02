@@ -1,0 +1,98 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e7]:
+      - button "Deploy" [ref=e9] [cursor=pointer]:
+        - generic [ref=e11]: Deploy
+      - button "Main menu" [ref=e13] [cursor=pointer]:
+        - img [ref=e14]
+  - generic [ref=e21]:
+    - tablist [ref=e23]:
+      - tab "Briefing" [active] [selected] [ref=e24] [cursor=pointer]:
+        - paragraph [ref=e26]: Briefing
+      - tab "Formulary" [ref=e27] [cursor=pointer]:
+        - paragraph [ref=e29]: Formulary
+      - tab "Eval" [ref=e30] [cursor=pointer]:
+        - paragraph [ref=e32]: Eval
+    - tabpanel "Briefing" [ref=e164]:
+      - generic [ref=e165]:
+        - generic [ref=e167]:
+          - heading "Rx Shortage Intelligence" [level=1] [ref=e174]:
+            - text: Rx Shortage Intelligence
+            - generic [ref=e175]:
+              - link "Link to heading":
+                - /url: "#rx-shortage-intelligence"
+                - img
+          - button "Re-run briefing" [ref=e180] [cursor=pointer]:
+            - paragraph [ref=e184]: Re-run briefing
+        - generic [ref=e189]:
+          - generic [ref=e190]: DEMO
+          - generic [ref=e191]: Formulary and active orders are synthetic. FDA shortage feed and RxNorm are live public data.
+        - heading "Morning Briefing — May 01, 2026 · 08:00 UTC" [level=3] [ref=e196]:
+          - generic [ref=e197]: Morning Briefing — May 01, 2026 · 08:00 UTC
+          - generic [ref=e198]:
+            - link "Link to heading":
+              - /url: "#morning-briefing-may-01-2026-08-00-utc"
+              - img
+        - generic [ref=e200]:
+          - generic [ref=e205]:
+            - paragraph [ref=e208]: Critical
+            - paragraph [ref=e211]: "1"
+          - generic [ref=e216]:
+            - paragraph [ref=e219]: Watch
+            - paragraph [ref=e222]: "1"
+          - generic [ref=e227]:
+            - paragraph [ref=e230]: Resolved
+            - paragraph [ref=e233]: "0"
+          - generic [ref=e238]:
+            - paragraph [ref=e241]: Latency
+            - paragraph [ref=e244]: —
+        - generic [ref=e249]: 3 drugs reviewed · 2 items surfaced
+        - separator [ref=e254]
+        - generic [ref=e259]:
+          - generic [ref=e261]:
+            - generic [ref=e262]: CRITICAL
+            - text: "Confidence:"
+            - generic [ref=e263]: MED
+          - generic [ref=e264]: Cisplatin
+          - generic [ref=e265]: Cisplatin is currently in FDA shortage with 23 active Oncology orders and no available formulary alternative.
+          - generic [ref=e266]: Action:Initiate P&T expedited review for carboplatin substitution protocol.
+          - generic [ref=e267]:
+            - text: "Source:"
+            - link "FDA shortage record" [ref=e268] [cursor=pointer]:
+              - /url: https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309311
+        - generic [ref=e270]:
+          - button "Accept" [ref=e275] [cursor=pointer]:
+            - paragraph [ref=e279]: Accept
+          - button "Override" [ref=e284] [cursor=pointer]:
+            - paragraph [ref=e288]: Override
+          - button "Escalate" [ref=e293] [cursor=pointer]:
+            - paragraph [ref=e297]: Escalate
+        - group [ref=e300]:
+          - generic "keyboard_arrow_right Details + citations" [ref=e301] [cursor=pointer]:
+            - generic [ref=e302]:
+              - generic [ref=e304]: keyboard_arrow_right
+              - paragraph [ref=e307]: Details + citations
+        - generic [ref=e312]:
+          - generic [ref=e314]:
+            - generic [ref=e315]: WATCH
+            - text: "Confidence:"
+            - generic [ref=e316]: MED
+          - generic [ref=e317]: Methotrexate Injection
+          - generic [ref=e318]: Methotrexate IV shortage ongoing. 8 active orders across Oncology and Rheumatology. One formulary alternative available.
+          - generic [ref=e319]: Action:Monitor supply levels. Review pemetrexed eligibility with clinical pharmacist.
+          - generic [ref=e320]:
+            - text: "Source:"
+            - link "FDA shortage record" [ref=e321] [cursor=pointer]:
+              - /url: https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A41493
+        - generic [ref=e323]:
+          - button "Accept" [ref=e328] [cursor=pointer]:
+            - paragraph [ref=e332]: Accept
+          - button "Override" [ref=e337] [cursor=pointer]:
+            - paragraph [ref=e341]: Override
+          - button "Escalate" [ref=e346] [cursor=pointer]:
+            - paragraph [ref=e350]: Escalate
+        - group [ref=e353]:
+          - generic "keyboard_arrow_right Details + citations" [ref=e354] [cursor=pointer]:
+            - generic [ref=e355]:
+              - generic [ref=e357]: keyboard_arrow_right
+              - paragraph [ref=e360]: Details + citations

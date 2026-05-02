@@ -1,0 +1,116 @@
+- generic [ref=e2]:
+  - generic [ref=e9]:
+    - paragraph [ref=e13]: Navigation
+    - radiogroup "Navigation" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]:
+        - radio "Briefing" [checked]
+        - paragraph [ref=e20]: Briefing
+      - generic [ref=e21]:
+        - radio "Eval"
+        - paragraph [ref=e26]: Eval
+  - generic [ref=e3]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - button "keyboard_double_arrow_right" [ref=e34] [cursor=pointer]:
+          - generic [ref=e36]: keyboard_double_arrow_right
+        - generic [ref=e37]:
+          - button "Deploy" [ref=e39] [cursor=pointer]:
+            - generic [ref=e41]: Deploy
+          - button "Main menu" [ref=e43] [cursor=pointer]:
+            - img [ref=e44]
+    - generic [ref=e47]:
+      - generic [ref=e49]:
+        - heading "💊 Rx Shortage Intelligence" [level=1] [ref=e56]:
+          - text: 💊 Rx Shortage Intelligence
+          - generic [ref=e57]:
+            - link "Link to heading":
+              - /url: "#rx-shortage-intelligence"
+              - img
+        - button "🔄 Re-run briefing" [ref=e62] [cursor=pointer]:
+          - paragraph [ref=e66]: 🔄 Re-run briefing
+      - alert [ref=e69]:
+        - generic [ref=e72]:
+          - generic [ref=e75]: ⚠️
+          - paragraph [ref=e77]:
+            - strong [ref=e78]: SYNTHETIC DATA
+            - text: — Formulary and active orders are synthetic for v0.1 demo. FDA shortage feed and RxNorm are live public data.
+      - generic [ref=e80]:
+        - generic [ref=e85]:
+          - paragraph [ref=e88]: 🔴 Critical
+          - paragraph [ref=e91]: "1"
+        - generic [ref=e96]:
+          - paragraph [ref=e99]: 🟡 Watch
+          - paragraph [ref=e102]: "1"
+        - generic [ref=e107]:
+          - paragraph [ref=e110]: 🟢 Resolved
+          - paragraph [ref=e113]: "0"
+        - generic [ref=e118]:
+          - paragraph [ref=e121]: Latency
+          - paragraph [ref=e124]: 0s
+        - generic [ref=e129]:
+          - paragraph [ref=e132]: Tokens used
+          - paragraph [ref=e135]: "0"
+      - paragraph [ref=e140]: "Last run: 2026-05-01T08:00:00Z · 3 drugs reviewed · 2 items surfaced · Customer: memorial-health-450"
+      - separator [ref=e145]
+      - generic [ref=e147]:
+        - generic [ref=e149]:
+          - generic [ref=e151]:
+            - paragraph [ref=e156]:
+              - text: 🔴
+              - strong [ref=e157]: CRITICAL
+              - text: — Cisplatin
+            - paragraph [ref=e162]: Cisplatin is currently in FDA shortage with 23 active Oncology orders and no available formulary alternative.
+            - paragraph [ref=e167]: → Initiate P&T expedited review for carboplatin substitution protocol.
+          - paragraph [ref=e174]:
+            - text: 🟡
+            - code [ref=e175]: medium
+        - group [ref=e178]:
+          - generic "keyboard_arrow_down Agent reasoning + citations" [active] [ref=e226] [cursor=pointer]:
+            - generic [ref=e180]:
+              - generic [ref=e228]: keyboard_arrow_down
+              - paragraph [ref=e185]: Agent reasoning + citations
+          - generic [ref=e230]:
+            - paragraph [ref=e235]:
+              - strong [ref=e236]: Rationale
+            - paragraph [ref=e241]: "Rule C2 applies: IV route, Oncology department, no available preferred alternative off shortage list. Active orders confirm clinical exposure."
+            - paragraph [ref=e246]:
+              - strong [ref=e247]: Therapeutic alternatives
+            - list [ref=e252]:
+              - listitem [ref=e253]:
+                - strong [ref=e254]: Carboplatin
+                - text: (RxCUI
+                - code [ref=e255]: "40048"
+                - text: ) 🟡
+                - code [ref=e256]: medium
+                - text: — Same ATC class L01XA (platinum compounds), IV route match. Non-formulary — requires P&T expedited review.
+            - paragraph [ref=e261]:
+              - strong [ref=e262]: Citations
+            - list [ref=e267]:
+              - listitem [ref=e268]:
+                - text: Cisplatin currently in FDA shortage —
+                - link "source" [ref=e269] [cursor=pointer]:
+                  - /url: https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A309311
+            - generic [ref=e271]:
+              - button "✓ Accept" [ref=e276] [cursor=pointer]:
+                - paragraph [ref=e280]: ✓ Accept
+              - button "✎ Override" [ref=e285] [cursor=pointer]:
+                - paragraph [ref=e289]: ✎ Override
+              - button "⚠ Escalate" [ref=e294] [cursor=pointer]:
+                - paragraph [ref=e298]: ⚠ Escalate
+      - generic [ref=e187]:
+        - generic [ref=e189]:
+          - generic [ref=e191]:
+            - paragraph [ref=e196]:
+              - text: 🟡
+              - strong [ref=e197]: WATCH
+              - text: — Methotrexate Injection
+            - paragraph [ref=e202]: Methotrexate IV shortage ongoing. 8 active orders across Oncology and Rheumatology. One formulary alternative available.
+            - paragraph [ref=e207]: → Monitor supply levels. Review pemetrexed eligibility with clinical pharmacist.
+          - paragraph [ref=e214]:
+            - text: 🟡
+            - code [ref=e215]: medium
+        - group [ref=e218]:
+          - generic "keyboard_arrow_right Agent reasoning + citations" [ref=e219] [cursor=pointer]:
+            - generic [ref=e220]:
+              - generic [ref=e222]: keyboard_arrow_right
+              - paragraph [ref=e225]: Agent reasoning + citations

@@ -1,0 +1,68 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e21]:
+    - tablist [ref=e23]:
+      - tab "Briefing" [ref=e24] [cursor=pointer]:
+        - paragraph [ref=e26]: Briefing
+      - tab "Formulary" [selected] [ref=e27] [cursor=pointer]:
+        - paragraph [ref=e29]: Formulary
+      - tab "Eval" [ref=e30] [cursor=pointer]:
+        - paragraph [ref=e32]: Eval
+    - tabpanel "Formulary" [ref=e232]:
+      - generic [ref=e233]:
+        - heading "Formulary" [level=1] [ref=e238]:
+          - text: Formulary
+          - generic [ref=e239]:
+            - link "Link to heading":
+              - /url: "#formulary"
+              - img
+        - generic [ref=e244]: Memorial Health System · 30 drugs · Cross-referenced against today's FDA shortage feed
+        - generic [ref=e246]:
+          - generic [ref=e251]:
+            - paragraph [ref=e254]: Total formulary
+            - paragraph [ref=e257]: "30"
+          - generic [ref=e262]:
+            - paragraph [ref=e265]: Affected today
+            - paragraph [ref=e268]: "0"
+          - generic [ref=e273]:
+            - paragraph [ref=e276]: Critical
+            - paragraph [ref=e279]: "0"
+        - separator [ref=e284]
+        - generic [ref=e286]:
+          - generic [ref=e290]:
+            - paragraph [ref=e294]: Route
+            - generic [ref=e297]:
+              - generic [ref=e298]:
+                - combobox "Route" [ref=e300]
+                - generic: Choose options
+              - img "open" [ref=e302] [cursor=pointer]
+          - generic [ref=e307]:
+            - paragraph [ref=e311]: Formulary status
+            - generic [ref=e314]:
+              - generic [ref=e315]:
+                - combobox "Formulary status" [ref=e317]
+                - generic: Choose options
+              - img "open" [ref=e319] [cursor=pointer]
+          - generic [ref=e324]:
+            - paragraph [ref=e328]: Shortage status
+            - generic [ref=e331]:
+              - generic [ref=e332]:
+                - combobox "Shortage status" [ref=e334]
+                - generic: Choose options
+              - img "open" [ref=e336] [cursor=pointer]
+        - paragraph [ref=e342]:
+          - strong [ref=e343]: 30 drugs
+        - generic [ref=e348]:
+          - button "Show/hide columns" [ref=e352] [cursor=pointer]:
+            - img [ref=e353]
+          - button "Download as CSV" [ref=e358] [cursor=pointer]:
+            - img [ref=e359]
+          - button "Search" [ref=e364] [cursor=pointer]:
+            - img [ref=e365]
+          - button "Fullscreen" [ref=e370] [cursor=pointer]:
+            - img [ref=e371]
