@@ -31,7 +31,6 @@ from src.io_.briefing_store import write_briefing
 from src.io_.data_loader import load_briefing_inputs
 from src.agent.prompts import (
     build_system_blocks,
-    build_user_message,
     build_user_message_prefetch,
     parse_briefing_item,
 )
