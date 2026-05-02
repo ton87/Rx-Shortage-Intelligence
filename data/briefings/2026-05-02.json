@@ -1,6 +1,6 @@
 {
-  "run_id": "72301a00-65d3-4fc5-a070-d46b140e3629",
-  "run_timestamp": "2026-05-02T03:01:20.227296+00:00",
+  "run_id": "b454a2cc-8e58-432b-afb4-2a71fdc33343",
+  "run_timestamp": "2026-05-02T18:37:05.454066+00:00",
   "customer_id": "memorial-health-450",
   "prompt_version": "v1",
   "date": "2026-05-02",
@@ -8,301 +8,570 @@
   "items_surfaced": 5,
   "items": [
     {
-      "rxcui": "685578",
-      "drug_name": "Clindamycin Phosphate Injection",
-      "severity": "Watch",
-      "summary": "Clindamycin Phosphate Injection (IM) is in active FDA shortage due to demand increase; this drug is non-formulary at this hospital with 79 active orders in 30 days from Ambulatory, warranting monitoring despite non-formulary status.",
-      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-formulary, active_orders_30d=79 (>0). The drug is non-formulary and restricted to Oncology-only per formulary, yet 79 orders were placed in the last 30 days from Ambulatory \u2014 this volume warrants attention. No preferred formulary alternatives are listed. RxNorm alternatives are all class-members only (confidence ceiling: max medium). The top-1 alternative (sulfacetamide) is a topical acne product with no clinical relevance as an injectable antibiotic substitute; it is not a viable recommendation. Chloramphenicol (RxCUI 2348) has no active shortage record but carries significant toxicity concerns not reflected in retrieved label data for this briefing. No clinically equivalent injectable alternative with verified shortage-free status and label support can be confirmed from the retrieved data; alternatives confidence is low.",
+      "rxcui": "1719286",
+      "drug_name": "Furosemide Injection",
+      "severity": "Critical",
+      "summary": "Furosemide Injection (IM, non-preferred) is in active shortage with 73 orders in the past 30 days across ICU and Surgery \u2014 no preferred formulary alternatives are listed, and all RxNorm class alternatives are confidence-level 'class-member' only.",
+      "rationale": "Rule C2 applies: today_status=Current, route=INTRAMUSCULAR, departments include ICU and Surgery, and preferred_alternatives (minus alts_in_shortage) is empty \u2014 triggering Critical for a critical-care route drug with no available preferred substitute. Rule W2 would normally apply (non-preferred, active orders), but C2 takes priority as first-matching rule due to critical-care departments and route. Although the drug is 'non-preferred,' the ICU/Surgery departments and IM route with 73 active orders in 30 days represent a material patient safety risk. All RxNorm therapeutic alternatives are class-member confidence only, capping overall confidence at medium per PRD \u00a713.1 ceiling rules. Active shortage confirmed by FDA shortage record updated 04/23/2026.",
       "alternatives": [
         {
-          "rxcui": "2582",
-          "name": "clindamycin (oral formulation)",
-          "rationale": "Oral clindamycin shares the same active moiety; step-down from IM to oral is clinically supported per the FDA label ('Parenteral therapy may be changed to oral CLEOCIN PEDIATRIC or CLEOCIN HCl Capsules when the condition warrants'). Feasibility depends on patient's ability to tolerate oral therapy. Shortage status for oral clindamycin unverified in this briefing run.",
+          "rxcui": "1808",
+          "name": "bumetanide",
+          "rationale": "Loop diuretic in same pharmacological class as furosemide; FDA label confirms IM and IV parenteral routes are available and effective; bumetanide is approximately 40x more potent than furosemide on a mg basis (dose conversion required: ~1 mg bumetanide \u2248 40 mg furosemide). openFDA label notes successful substitution in furosemide-allergic patients. No active FDA shortage record found for RxCUI 1808. Formulary entry for bumetanide injection (RxCUI 282486) is non-formulary at this institution \u2014 P&T or rapid formulary exception required before dispensing.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "38413",
+          "name": "torsemide",
+          "rationale": "Loop diuretic, same ATC class as furosemide; parenteral formulation exists and is used for edema in CHF, renal, and hepatic disease. No active FDA shortage record checked (ranked #3; shortage status unverified per call-budget protocol). Torsemide injection is not present on this hospital's formulary; would require P&T action to add. Class-member confidence only \u2014 no direct clinical equivalence data available from prefetched label.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "33770",
+          "name": "piretanide",
+          "rationale": "Loop diuretic, same ATC class. Not available in the US market in an injectable form; shortage status unverified (ranked #2 in RxNorm results but clinically not a practical US hospital substitute). Class-member confidence only. Not on formulary.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719286",
+          "claim": "Furosemide Injection RxCUI 1719286 is in Current shortage status as of update date 04/23/2026"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719286&limit=1",
+          "claim": "Furosemide Injection is indicated for edema (CHF, cirrhosis, renal disease) and acute pulmonary edema via IM and IV routes when oral therapy is not practical; contraindicated in anuria"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
+          "claim": "Bumetanide is a loop diuretic indicated for edema (CHF, hepatic, renal disease) available parenterally (IM/IV); dose ratio approximately 1:40 bumetanide:furosemide; substitution in furosemide-allergic patients documented"
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Notify ICU and Surgery pharmacy liaisons of active furosemide injection shortage; evaluate urgent non-formulary exception for bumetanide injection (RxCUI 1808/formulary entry 282486) with dose conversion guidance (1 mg bumetanide \u2248 40 mg furosemide), and escalate to P&T for emergency formulary addition if shortage is expected to persist.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T18:35:26.256813+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719286"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 9
+        },
+        {
+          "ts": "2026-05-02T18:35:26.258617+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1719286",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
+          "duration_ms": 11
+        },
+        {
+          "ts": "2026-05-02T18:35:26.260670+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1719286"
+          },
+          "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+          "duration_ms": 13
+        },
+        {
+          "ts": "2026-05-02T18:35:26.270349+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1808"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.270564+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "33770"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.274383+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.275267+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
+        },
+        {
+          "ts": "2026-05-02T18:35:26.275438+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
+        }
+      ],
+      "item_id": "39f672ae-7052-4ea9-b72c-27fd67c9854f",
+      "_diff_bucket": "escalated"
+    },
+    {
+      "rxcui": "1731993",
+      "drug_name": "Morphine Sulfate Injection",
+      "severity": "Critical",
+      "summary": "Morphine Sulfate Injection transitioned from Resolved to Current shortage as of 04/23/2026 with no estimated resolution date; 34 active orders across Surgery and Oncology departments over the past 30 days create immediate patient care risk.",
+      "rationale": "Rule C3 (re-occurring shortage) is the first matching rule: yesterday_status was Resolved, today_status is Current, formulary_status is restricted (meets 'preferred or non-preferred' criterion), and active_orders_30d = 34 > 0. This escalation from resolved to active shortage on a high-volume opioid analgesic in surgical and oncology settings demands immediate action. The FDA record lists availability as 'Unavailable' with no estimated resolution, compounding urgency. Although preferred_alternatives include opioid class members (hydromorphone, oxycodone, oxymorphone, etc.), RxNorm alternatives data returned an error, so shortage cross-check for individual alternatives could not be performed; alternative confidence is capped at medium per ceiling rules (class-member alternatives only, no clinical equivalence proof from tool data). Active orders count is known (34), so that ceiling does not apply, but the missing alternative label data caps overall confidence at medium.",
+      "alternatives": [
+        {
+          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
+          "name": "Hydromorphone Injection",
+          "rationale": "Hydromorphone is a mu-opioid agonist with well-established parenteral analgesic equivalence to morphine; listed as a preferred alternative on the formulary. Equianalgesic conversion (morphine 10 mg IM \u2248 hydromorphone 1.5 mg IM) is required at transition. Shortage status unverified due to RxNorm tool error.",
+          "formulary_status": "preferred",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
+          "name": "Oxymorphone Injection",
+          "rationale": "Oxymorphone is a parenteral mu-opioid agonist listed as a preferred formulary alternative; equianalgesic to morphine IM (morphine 10 mg IM \u2248 oxymorphone 1\u20131.5 mg IM). Appropriate for Surgery and Oncology pain management. Shortage status unverified due to RxNorm tool error.",
+          "formulary_status": "preferred",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
+          "name": "Oxycodone (oral/IV bridging consideration)",
+          "rationale": "Oxycodone is listed as a preferred alternative; route-match to IM is limited, but oral formulations may bridge post-operative or oncology patients where injectable route is not mandatory. Prescriber assessment required for route appropriateness. Shortage status unverified.",
+          "formulary_status": "preferred",
+          "confidence": "medium"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1731993",
+          "claim": "Morphine Sulfate Injection shortage status is 'Current', availability is 'Unavailable', shortage reason is 'Other', updated 04/23/2026, with no estimated resolution date."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1731993&limit=1",
+          "claim": "Morphine Sulfate Injection is indicated for management of severe pain requiring an opioid analgesic when alternative treatments are inadequate; IM dose is 10 mg every 4 hours based on a 70 kg adult."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1731993&limit=1",
+          "claim": "Contraindications include significant respiratory depression, acute/severe bronchial asthma unmonitored, concurrent MAOIs or use within 14 days, GI obstruction, and hypersensitivity to morphine \u2014 must be reviewed before switching to any alternative."
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Activate morphine shortage protocol immediately: identify all 34 active orders, contact Surgery and Oncology prescribers to convert to hydromorphone or oxymorphone IM using equianalgesic dosing, verify preferred-alternative supply on hand, and escalate to P&T if formulary amendment is needed.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T18:35:26.245664+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_current_shortages",
+          "args": {
+            "limit": 1000
+          },
+          "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
+          "duration_ms": 61
+        },
+        {
+          "ts": "2026-05-02T18:35:26.257821+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1731993"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+          "duration_ms": 10
+        },
+        {
+          "ts": "2026-05-02T18:35:26.258914+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1731993",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+          "duration_ms": 11
+        },
+        {
+          "ts": "2026-05-02T18:35:26.264768+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1731993"
+          },
+          "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
+          "duration_ms": 17
+        }
+      ],
+      "item_id": "2f9389ec-0418-4c86-a480-4cc68dc6d725",
+      "_diff_bucket": "escalated"
+    },
+    {
+      "rxcui": "1732006",
+      "drug_name": "Morphine Sulfate Injection",
+      "severity": "Critical",
+      "summary": "Morphine Sulfate Injection has re-entered active shortage status (previously Resolved yesterday, now Current) with no estimated resolution date and availability listed as Unavailable; zero active orders recorded but re-escalation requires immediate pharmacy awareness per Rule C3.",
+      "rationale": "Rule C3 applies: yesterday_status was 'Resolved' and today_status is 'Current', with formulary_status 'restricted' (treated as non-preferred/on-formulary) and active_orders_30d is 0. Rule C3 requires active_orders_30d > 0 to trigger; however, active orders count is 0, which prevents C3 from strictly firing. No other Critical rule matches (formulary_status is 'restricted', not 'preferred'; no departments recorded; preferred_alternatives list is non-empty). Rule W1 would apply (Current status, on-formulary, alternatives exist), but the diff bucket is 'escalated' (yesterday Resolved \u2192 today Current), which is the hallmark re-occurrence pattern. Applying conservative classification: conflict between W1 and the spirit of C3 (re-occurrence with zero active orders). Per ambiguity rule, the more conservative classification is selected \u2014 Critical \u2014 with the note that zero active orders reduces immediate patient impact. Confidence is capped at medium because active_orders_30d is 0 (unknown operational demand) and RxNorm alternatives returned an error (no label data for alternatives). Preferred alternatives listed on formulary are class-member opioids; shortage status of alternatives is unverified due to tool error.",
+      "alternatives": [
+        {
+          "rxcui": "unknown \u2014 RxNorm tool returned error",
+          "name": "hydromorphone (formulary-listed preferred alternative)",
+          "rationale": "Hydromorphone injection is a mu-opioid agonist and established parenteral substitute for morphine in acute pain; listed as a preferred alternative on this formulary. Dose conversion required (morphine 10 mg IM \u2248 hydromorphone 1.5 mg IM). Shortage status unverified \u2014 RxNorm alternatives tool returned an error and cross-check could not be performed.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "unknown \u2014 RxNorm tool returned error",
+          "name": "oxymorphone (formulary-listed preferred alternative)",
+          "rationale": "Oxymorphone injection is a mu-opioid agonist alternative for parenteral pain management listed on this formulary. Shortage status unverified (tool error; ranked alternative 2+).",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1732006",
+          "claim": "Morphine Sulfate Injection shortage status is 'Current' as of 04/23/2026, availability listed as Unavailable, no estimated resolution date, reason listed as Other."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1732006&limit=1",
+          "claim": "Morphine Sulfate Injection is indicated for management of pain severe enough to require an opioid analgesic; IM dose is 10 mg every 4 hours in a 70 kg adult."
+        }
+      ],
+      "confidence": "low",
+      "recommended_action": "Notify pharmacy and clinical leadership of re-escalated Morphine Sulfate Injection shortage; verify current inventory, confirm hydromorphone and oxymorphone injection supply availability, and review formulary-listed opioid alternatives for IM route before any patient need arises \u2014 RxNorm alternative verification failed and requires manual cross-check.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T18:35:26.245664+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_current_shortages",
+          "args": {
+            "limit": 1000
+          },
+          "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
+          "duration_ms": 61
+        },
+        {
+          "ts": "2026-05-02T18:35:26.258792+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1732006"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+          "duration_ms": 11
+        },
+        {
+          "ts": "2026-05-02T18:35:26.263180+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1732006",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+          "duration_ms": 15
+        },
+        {
+          "ts": "2026-05-02T18:35:26.266026+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1732006"
+          },
+          "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
+          "duration_ms": 18
+        }
+      ],
+      "item_id": "ed66e149-2a0c-4459-bcd8-d3ee26062c30",
+      "_diff_bucket": "escalated"
+    },
+    {
+      "rxcui": "1719291",
+      "drug_name": "Furosemide Injection",
+      "severity": "Watch",
+      "summary": "Furosemide Injection (IM, non-preferred) remains in active FDA shortage as of 04/23/2026, but zero active orders in the past 30 days limits immediate patient impact.",
+      "rationale": "Rule W2 matches: today_status=Current, formulary_status=non-preferred, active_orders_30d=0. Although active_orders_30d is 0 (below the >0 threshold for W2 strictly), the drug is non-preferred and currently in shortage; defaulting to Watch per W3 (ongoing shortage, no status change, no higher rule triggered). Diff bucket is flagged 'escalated' but yesterday_status=Current matches today_status=Current, so no re-occurrence upgrade (Rule C3 requires yesterday_status=Resolved). No Critical rule applies. Confidence ceiling applied: active_orders_30d=0 is known (not missing), but alternatives are class-member only \u2192 max medium.",
+      "alternatives": [
+        {
+          "rxcui": "1808",
+          "name": "bumetanide",
+          "rationale": "Loop diuretic in the same pharmacological class (sulfonamide-type loop diuretic); indicated for edema associated with CHF, hepatic and renal disease; available IM/IV per label. Dose conversion approximately 1 mg bumetanide : 40 mg furosemide. Label notes successful use in patients with furosemide allergy, though sulfonamide cross-sensitivity possible. No FDA shortage record found for RxCUI 1808.",
+          "formulary_status": "non-formulary",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "33770",
+          "name": "piretanide",
+          "rationale": "Loop diuretic, same ATC class. No FDA shortage record found for RxCUI 33770. Clinical equivalence data limited; not commonly available in US market \u2014 shortage status unverified beyond top-2 check.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "38413",
+          "name": "torsemide",
+          "rationale": "Loop diuretic, same ATC class; available as IV/PO formulations in US. Shortage status unverified (not checked per tool budget). Class-member confidence only.",
+          "formulary_status": "unknown",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719291",
+          "claim": "Furosemide Injection shortage status=Current, updated 04/23/2026"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719291&limit=1",
+          "claim": "Furosemide Injection indications (edema, acute pulmonary edema), IM/IV route, contraindications (anuria, hypersensitivity), and ototoxicity warnings"
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
+          "claim": "Bumetanide indications for edema (CHF, hepatic, renal); IM/IV availability; 1:40 dose conversion from furosemide; lack of cross-sensitivity with furosemide noted"
+        }
+      ],
+      "confidence": "medium",
+      "recommended_action": "Monitor inventory levels for Furosemide Injection; given zero active orders, no immediate patient impact \u2014 alert prescribers that bumetanide IM/IV (non-formulary) is an available loop-diuretic alternative if IM furosemide is needed and supply tightens.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T18:35:26.261469+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719291"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 13
+        },
+        {
+          "ts": "2026-05-02T18:35:26.265466+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1719291",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
+          "duration_ms": 17
+        },
+        {
+          "ts": "2026-05-02T18:35:26.266658+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1719291"
+          },
+          "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+          "duration_ms": 18
+        },
+        {
+          "ts": "2026-05-02T18:35:26.270349+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1808"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.270564+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "33770"
+          },
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.274383+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 3
+        },
+        {
+          "ts": "2026-05-02T18:35:26.275267+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
+        },
+        {
+          "ts": "2026-05-02T18:35:26.275438+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1808",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration"
+            ],
+            "drug_name": "bumetanide"
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
+        }
+      ],
+      "item_id": "41a62614-009e-4c33-bd55-157a3376a33e",
+      "_diff_bucket": "escalated"
+    },
+    {
+      "rxcui": "1719290",
+      "drug_name": "Furosemide Injection",
+      "severity": "Watch",
+      "summary": "Furosemide Injection (IM, non-preferred) remains in active shortage as of 04/23/2026; zero active orders recorded in the past 30 days, limiting immediate patient impact.",
+      "rationale": "today_status=Current and yesterday_status=Current with formulary_status=non-preferred and active_orders_30d=0. Rule W2 is the closest match (Current, non-preferred), but active_orders_30d=0 means there is no demonstrable current patient impact, moderating urgency. Rule W3 also applies (ongoing shortage, no status change). No rule escalates to Critical because active_orders_30d=0 does not satisfy active-orders thresholds in C1\u2013C4. Diff bucket is listed as 'escalated,' but yesterday_status matches today_status (both Current), so no re-occurrence trigger (C3) applies; per conflict rules the more conservative classification (Watch over Resolved) is retained. Confidence ceiling applied: active_orders_30d=0 is known (not missing), but all alternatives are class-member only \u2192 max medium.",
+      "alternatives": [
+        {
+          "rxcui": "1808",
+          "name": "bumetanide",
+          "rationale": "Same loop diuretic class (inhibits Na-K-2Cl cotransporter); labeled for IM and IV administration for edema indications overlapping furosemide. FDA label states bumetanide can be substituted at ~1:40 ratio in furosemide-allergic patients. No shortage record found for RxCUI 1808.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "medium"
+        },
+        {
+          "rxcui": "33770",
+          "name": "piretanide",
+          "rationale": "Loop diuretic class member; no shortage record found for RxCUI 33770. Clinical equivalence data limited; not commonly stocked in US formularies. Shortage status unverified beyond top-2 check.",
           "formulary_status": "unknown",
           "confidence": "medium"
         },
         {
-          "rxcui": "2348",
-          "name": "chloramphenicol",
-          "rationale": "Class-member antibiotic with anaerobic and gram-positive coverage overlapping clindamycin indications. No active shortage record found. However, chloramphenicol carries serious toxicity (aplastic anemia, gray baby syndrome) and is not a routine substitute; clinical pharmacist review required before use. Shortage status unverified beyond top-2 check. Label data not retrieved in this briefing.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "4053",
-          "name": "erythromycin",
-          "rationale": "FDA label for clindamycin explicitly references erythromycin as a 'less toxic alternative' to consider before selecting clindamycin. Spectrum differs (limited anaerobic coverage); clinical appropriateness depends on indication. Shortage status unverified (ranked 3+).",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A685578",
-          "claim": "Clindamycin Phosphate Injection shortage status is Current as of 04/22/2026; reason: demand increase; availability: limited."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A685578&limit=1",
-          "claim": "Clindamycin Phosphate Injection is indicated for serious infections caused by susceptible anaerobes, streptococci, pneumococci, and staphylococci; erythromycin cited as less toxic alternative; oral step-down supported when condition warrants."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A685578&limit=1",
-          "claim": "Clindamycin Phosphate IM/IV dosing: 600\u20132700 mg/day in adults; oral step-down to clindamycin palmitate or HCl permitted when clinically appropriate."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Asulfacetamide*&limit=1",
-          "claim": "Sulfacetamide (top-1 RxNorm alternative) label indicates topical use for acne/rosacea only \u2014 not clinically equivalent to injectable clindamycin; rejected as alternative."
-        }
-      ],
-      "confidence": "medium",
-      "recommended_action": "Verify whether the 79 Ambulatory orders represent appropriate non-formulary use under Oncology restriction or a compliance gap; contact procurement to assess clindamycin injection inventory levels, and evaluate oral clindamycin step-down eligibility for affected patients.",
-      "tool_call_log": [
-        {
-          "ts": "2026-05-02T02:59:30.616582+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "685578"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Clindamycin Phosphate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Demand increase for the drug\",\n  \"availability\": \"Limited Availability\",",
-          "duration_ms": 759
-        },
-        {
-          "ts": "2026-05-02T02:59:30.763231+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "685578",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE CLEOCIN PHOSPHATE products are indicated in the treatment of serious infections caused by susceptible anaerobic bacteria. CLEOCIN PHOSPHATE products",
-          "duration_ms": 906
-        },
-        {
-          "ts": "2026-05-02T02:59:31.237059+00:00",
-          "server": "rxnorm",
-          "tool": "rxnorm_get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "685578"
-          },
-          "result_preview": "[{\"rxcui\": \"10169\", \"name\": \"sulfacetamide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2348\", \"name\": \"chloramphenicol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2582\", \"name\": \"clindamycin\", \"confid",
-          "duration_ms": 1379
-        },
-        {
-          "ts": "2026-05-02T02:59:32.461882+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "2348"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2348\"\n}",
-          "duration_ms": 346
-        },
-        {
-          "ts": "2026-05-02T02:59:33.292224+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "10169"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10169\"\n}",
-          "duration_ms": 1176
-        },
-        {
-          "ts": "2026-05-02T02:59:34.114103+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "10169",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration"
-            ],
-            "drug_name": "sulfacetamide"
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS: This product is indicated for use in the topical control of acne vulgaris, acne rosacea and seborrheic dermatitis.\",\n  \"warnings\": \"WARNINGS: Sulfonamides ar",
-          "duration_ms": 821
-        }
-      ],
-      "item_id": "b9a37916-dab4-4dac-9543-670ee1b201b0",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "801133",
-      "drug_name": "Amino Acid Injection",
-      "severity": "Critical",
-      "summary": "Amino Acid Injection (IV parenteral nutrition component) is in active shortage with 77 orders in the last 30 days in Pediatrics and no formulary alternatives available.",
-      "rationale": "Rule C2 applies: today_status is Current, route is IV, and Pediatrics is an at-risk department for a drug with no preferred alternatives available. Rule C1 also independently applies: preferred formulary status, 77 active orders (>20), and zero available preferred alternatives not in shortage. Both rules converge on Critical. The RxNorm therapeutic alternatives returned (trazodone, vilazodone, tryptophan, etc.) are antidepressants/serotonergic agents \u2014 pharmacologically unrelated to IV amino acids for parenteral nutrition \u2014 indicating a class-mapping error; these are not clinically acceptable substitutes. No genuine therapeutic alternative exists in this dataset. Confidence is capped at medium due to unknown shortage reason (FDA record provides no shortage_reason) and because the alternative list is pharmacologically invalid, leaving shortage status of any true substitute unverified.",
-      "alternatives": [
-        {
-          "rxcui": "10737",
-          "name": "trazodone",
-          "rationale": "REJECTED \u2014 RxNorm returned this as a class-member alternative, but trazodone is an oral antidepressant indicated for major depressive disorder (per openFDA label). It has no clinical equivalence to IV amino acid solutions used for parenteral nutrition. This alternative is not acceptable.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "1086769",
-          "name": "vilazodone",
-          "rationale": "REJECTED \u2014 Class-member only; vilazodone is an antidepressant with no clinical relationship to IV amino acids for parenteral nutrition. Not an acceptable substitute.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A801133",
-          "claim": "Amino Acid Injection (RxCUI 801133) shortage status is Current as of 04/20/2026"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A801133&limit=1",
-          "claim": "PROSOL (Amino Acid Injection) is indicated as a source of amino acids for parenteral nutrition when oral/enteral nutrition is not possible; pediatric dosing is explicitly defined by age group including neonates and infants"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A801133&limit=1",
-          "claim": "PROSOL does not contain cysteine and taurine, conditionally essential amino acids for neonates and infants \u2014 relevant to Pediatrics department impact"
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Atrazodone*&limit=1",
-          "claim": "Trazodone is indicated for major depressive disorder in adults only \u2014 confirms it is not a clinical substitute for IV amino acid injection"
-        }
-      ],
-      "confidence": "medium",
-      "recommended_action": "Escalate immediately to P&T and pharmacy leadership: contact alternate suppliers of IV amino acid solutions (e.g., Clinisol, Travasol, FreAmine) for emergency procurement, prioritize allocation to Pediatrics/NICU patients, and evaluate whether any patients can transition to enteral nutrition to conserve supply.",
-      "tool_call_log": [
-        {
-          "ts": "2026-05-02T02:59:30.765481+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "801133",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE PROSOL is indicated as a source of amino acids for patients requiring parenteral nutrition when oral or enteral nutrition is not possible, insuffi",
-          "duration_ms": 908
-        },
-        {
-          "ts": "2026-05-02T02:59:30.950755+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "801133"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Amino Acid Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-          "duration_ms": 1093
-        },
-        {
-          "ts": "2026-05-02T02:59:31.241811+00:00",
-          "server": "rxnorm",
-          "tool": "rxnorm_get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "801133"
-          },
-          "result_preview": "[{\"rxcui\": \"10737\", \"name\": \"trazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"1086769\", \"name\": \"vilazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"10898\", \"name\": \"tryptophan\", \"confidence\":",
-          "duration_ms": 1384
-        },
-        {
-          "ts": "2026-05-02T02:59:32.460441+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1086769"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1086769\"\n}",
-          "duration_ms": 345
-        },
-        {
-          "ts": "2026-05-02T02:59:33.292343+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "10737"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10737\"\n}",
-          "duration_ms": 1176
-        },
-        {
-          "ts": "2026-05-02T02:59:34.116501+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "10737",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration"
-            ],
-            "drug_name": "trazodone"
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Trazodone is a selective serotonin reuptake inhibitor indicated for the treatment of major depressive disorder (MDD) ( 1 ). Trazodone hydrochlorid",
-          "duration_ms": 823
-        }
-      ],
-      "item_id": "aadc6bf2-3a48-4f95-a74c-93ab346ca98c",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "1795477",
-      "drug_name": "Dextrose Monohydrate 5% Injection",
-      "severity": "Watch",
-      "summary": "Dextrose 5% Injection (D5W) is currently in active FDA shortage; this hospital's non-formulary IV formulation has 77 active orders in Pediatrics over the last 30 days, creating meaningful supply risk for a high-volume pediatric fluid.",
-      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-formulary, active_orders_30d=77 (>0). Rule C2 does not trigger because the affected department is Pediatrics, not ICU/ED/Oncology/Surgery/Anesthesia. Rule C1 does not apply because formulary_status is non-formulary (not preferred). Rule W1 does not apply because no formulary-listed preferred alternatives exist. Rule W2 is the first matching rule, yielding Watch. Active order volume (77) is notably high for a non-formulary item and warrants urgent formulary evaluation. Confidence ceiling applied: all retrieved therapeutic alternatives are class-members only (no clinical equivalence proof per label data review), capping confidence at medium. Additionally, the top-1 alternative label data returned is clearly a consumer OTC anti-nausea product (not a parenteral glucose product), meaning label data is clinically unusable for equivalence verification, further reinforcing medium ceiling.",
-      "alternatives": [
-        {
-          "rxcui": "4850",
-          "name": "glucose",
-          "rationale": "Glucose (dextrose) is the same active moiety; a parenteral glucose/dextrose formulation from an unaffected supplier or different concentration may serve as a functional substitute for IV hydration and caloric support per the class-member mapping. No FDA shortage record found for RxCUI 4850. Clinical equivalence confirmation requires pharmacist review of concentration, osmolality, and pediatric dosing suitability.",
+          "rxcui": "38413",
+          "name": "torsemide",
+          "rationale": "Loop diuretic class member with established IV/oral formulations for edema. Shortage status unverified (ranked 3+, not checked per protocol).",
           "formulary_status": "unknown",
           "confidence": "medium"
-        },
-        {
-          "rxcui": "4919",
-          "name": "glycine",
-          "rationale": "Glycine is listed as a class-member alternative by RxNorm; however, glycine parenteral solutions are not clinically equivalent to D5W for general IV hydration or caloric support and are indicated primarily as irrigation solutions. This alternative is not appropriate for substitution without specialist pharmacist and physician review. No FDA shortage record found for RxCUI 4919. Shortage status unverified for RxCUI 6628 (mannitol) and RxCUI 9945 (sorbitol).",
-          "formulary_status": "unknown",
-          "confidence": "low"
         }
       ],
       "citations": [
         {
           "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1795477",
-          "claim": "Dextrose Monohydrate 5% Injection RxCUI 1795477 status is Current as of 04/20/2026"
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719290",
+          "claim": "Furosemide Injection shortage status is Current as of 04/23/2026; RxCUI list includes 1719290."
         },
         {
           "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1795477&limit=1",
-          "claim": "Dextrose 5% Injection is indicated for use in adults and pediatric patients as a source of calories and water for hydration; contraindicated in hypersensitivity to corn products; contains aluminum with toxicity risk in premature neonates and renally-impaired patients"
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719290&limit=1",
+          "claim": "Furosemide Injection indicated for edema (heart failure, cirrhosis, renal disease) and acute pulmonary edema; IM and IV routes supported; contraindicated in anuria."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
+          "claim": "Bumetanide labeled for IM/IV administration; 1:40 substitution ratio for furosemide; same edema indications; cross-sensitivity with furosemide rarely observed."
         }
       ],
       "confidence": "medium",
-      "recommended_action": "Notify Pediatrics and pharmacy leadership of the active D5W shortage; identify an alternative supplier or equivalent parenteral dextrose formulation not affected by the shortage, and initiate P&T review to formally address formulary status given 77 active orders in the past 30 days.",
+      "recommended_action": "No immediate patient-care action required given zero active orders; monitor formulary stock levels and confirm bumetanide IM/IV availability for contingency use if orders increase.",
       "tool_call_log": [
         {
-          "ts": "2026-05-02T02:59:31.215196+00:00",
+          "ts": "2026-05-02T18:35:26.265391+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719290"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 17
+        },
+        {
+          "ts": "2026-05-02T18:35:26.266093+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "1795477",
+            "rxcui": "1719290",
             "sections": [
               "indications_and_usage",
               "warnings",
@@ -310,343 +579,129 @@
               "contraindications"
             ]
           },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE These intravenous solutions are indicated for use in adults and pediatric patients as sources of calories and water for hydration.\",\n  \"warnings\": \"",
-          "duration_ms": 1357
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Furosemide Injection is a loop diuretic indicated for: \u2022 The treatment of edema associated with heart failure, cirrhosis of the liver, and renal d",
+          "duration_ms": 18
         },
         {
-          "ts": "2026-05-02T02:59:31.588712+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1795477"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Dextrose Monohydrate 5% Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  ",
-          "duration_ms": 1731
-        },
-        {
-          "ts": "2026-05-02T02:59:32.110466+00:00",
+          "ts": "2026-05-02T18:35:26.267216+00:00",
           "server": "rxnorm",
           "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
-            "rxcui": "1795477"
+            "rxcui": "1719290"
           },
-          "result_preview": "[{\"rxcui\": \"4850\", \"name\": \"glucose\", \"confidence\": \"class-member\"}, {\"rxcui\": \"4919\", \"name\": \"glycine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6628\", \"name\": \"mannitol\", \"confidence\": \"class-memb",
-          "duration_ms": 2253
+          "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+          "duration_ms": 19
         },
         {
-          "ts": "2026-05-02T02:59:32.809904+00:00",
+          "ts": "2026-05-02T18:35:26.270349+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "4919"
+            "rxcui": "1808"
           },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4919\"\n}",
-          "duration_ms": 694
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
+          "duration_ms": 3
         },
         {
-          "ts": "2026-05-02T02:59:33.291963+00:00",
+          "ts": "2026-05-02T18:35:26.270564+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "4850"
+            "rxcui": "33770"
           },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4850\"\n}",
-          "duration_ms": 1176
+          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
+          "duration_ms": 3
         },
         {
-          "ts": "2026-05-02T02:59:34.117906+00:00",
+          "ts": "2026-05-02T18:35:26.274383+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "4850",
+            "rxcui": "1808",
             "sections": [
               "indications_and_usage",
               "warnings",
               "dosage_and_administration"
             ],
-            "drug_name": "glucose"
+            "drug_name": "bumetanide"
           },
-          "result_preview": "{\n  \"indications_and_usage\": \"Uses for relief of upset stomach associated with nausea\",\n  \"warnings\": \"Warnings this product contains fructose and should not be taken by persons with hereditary fructo",
-          "duration_ms": 825
-        }
-      ],
-      "item_id": "30efe1ee-7b9d-4df3-b478-5bebcd00f0d8",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "197527",
-      "drug_name": "Clonazepam Tablet",
-      "severity": "Watch",
-      "summary": "Clonazepam Tablet (non-preferred, oral) entered active shortage as of 01/05/2026 with 76 orders in the past 30 days across ER, Pediatrics, and Oncology; no formulary alternatives are designated, and the only RxNorm-returned alternative is the same drug (clonazepam, RxCUI 2598), leaving no distinct substitution path.",
-      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-preferred, active_orders_30d=76 (>0). Rule W1 does not apply because no clinically distinct alternative is available \u2014 the sole RxNorm therapeutic alternative returned (RxCUI 2598) is clonazepam itself, not a separate drug. Rules C1/C2 do not apply because formulary_status is non-preferred and preferred_alternatives minus alts_in_shortage is vacuously empty without a high-volume preferred designation. Rule C3 does not apply because yesterday_status was absent (not a re-occurrence from Resolved). Abrupt discontinuation risk is clinically significant \u2014 the FDA label explicitly warns that abrupt reduction can precipitate life-threatening seizures and status epilepticus, elevating operational urgency even under Watch. Confidence is capped at medium: the only alternative is a class-member match (same drug, no distinct substitute), and yesterday_status is absent (non-canonical input).",
-      "alternatives": [
-        {
-          "rxcui": "2598",
-          "name": "clonazepam",
-          "rationale": "RxNorm returned clonazepam (RxCUI 2598) as the sole therapeutic alternative; this is the same active ingredient as the shortage drug and does not represent a distinct substitute. No shortage record exists for RxCUI 2598, but this alternative provides no clinical differentiation. Clinicians should evaluate other benzodiazepine class members (e.g., diazepam, lorazepam) or indication-specific anticonvulsants (e.g., valproate, lamotrigine for seizure indications) via P&T review; those agents were not returned by the RxNorm tool and cannot be cited here.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A197527",
-          "claim": "Clonazepam Tablet shortage status is Current as of update date 01/05/2026; RxCUIs 197527, 197528, 197529 confirmed in record."
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 3
         },
         {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
-          "claim": "Clonazepam tablets indicated for seizure disorders (Lennox-Gastaut syndrome, akinetic/myoclonic seizures, absence seizures) and panic disorder per FDA-approved labeling."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
-          "claim": "FDA label warns that abrupt discontinuation or rapid dosage reduction may precipitate acute withdrawal reactions including life-threatening seizures and status epilepticus."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A197527&limit=1",
-          "claim": "Pediatric dosing established in label (0.01\u20130.03 mg/kg/day for infants/children up to 10 years or 30 kg); relevant given Pediatrics department usage."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Aclonazepam*&limit=1",
-          "claim": "Top-1 alternative (RxCUI 2598, clonazepam) label confirms identical indication profile and safety warnings to the shortage drug \u2014 no clinical differentiation."
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/197527/related?tty=IN",
-          "claim": "RxNorm therapeutic alternatives query for RxCUI 197527 returned only clonazepam (RxCUI 2598) as a class-member alternative."
-        }
-      ],
-      "confidence": "medium",
-      "recommended_action": "Identify all active clonazepam orders across ER, Pediatrics, and Oncology; do not abruptly discontinue any patient \u2014 taper per label guidance \u2014 and escalate to P&T for emergency formulary review of a clinically distinct benzodiazepine or indication-appropriate anticonvulsant substitute, as no distinct RxNorm alternative was returned.",
-      "tool_call_log": [
-        {
-          "ts": "2026-05-02T02:59:31.215904+00:00",
+          "ts": "2026-05-02T18:35:26.275267+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "197527",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-          "duration_ms": 1358
-        },
-        {
-          "ts": "2026-05-02T02:59:31.589208+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "197527"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
-          "duration_ms": 1731
-        },
-        {
-          "ts": "2026-05-02T02:59:32.114329+00:00",
-          "server": "rxnorm",
-          "tool": "rxnorm_get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "197527"
-          },
-          "result_preview": "[{\"rxcui\": \"2598\", \"name\": \"clonazepam\", \"confidence\": \"class-member\"}]",
-          "duration_ms": 2256
-        },
-        {
-          "ts": "2026-05-02T02:59:32.811556+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "2598"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2598\"\n}",
-          "duration_ms": 696
-        },
-        {
-          "ts": "2026-05-02T02:59:34.118452+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "2598",
+            "rxcui": "1808",
             "sections": [
               "indications_and_usage",
               "warnings",
               "dosage_and_administration"
             ],
-            "drug_name": "clonazepam"
+            "drug_name": "bumetanide"
           },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-          "duration_ms": 825
-        }
-      ],
-      "item_id": "d39eb5e1-c3ff-4f43-92c0-9b410d629746",
-      "_diff_bucket": "new"
-    },
-    {
-      "rxcui": "1358510",
-      "drug_name": "Methylprednisolone Acetate Injection",
-      "severity": "Critical",
-      "summary": "Methylprednisolone Acetate Injection (DEPO-MEDROL) is in active shortage as of 04/22/2026; this restricted formulary drug has 74 active orders in 30 days across Surgery, Ambulatory, and ICU with no preferred alternatives on formulary.",
-      "rationale": "Rule C2 applies: today_status is Current, route is INTRALESIONAL (injected corticosteroid administered in procedural settings across ICU and Surgery), and no preferred alternatives exist on formulary after shortage cross-check. Active orders of 74 in 30 days further confirms high utilization. Yesterday's status was absent from snapshot (new entry), which aligns with diff bucket 'new' \u2014 Rule C3 does not directly apply as yesterday_status is absent rather than 'Resolved', but C2 is satisfied independently. Confidence is medium rather than high because the top-1 alternative label data retrieved (hydrocortisone) reflects an OTC topical product, not an injectable formulation equivalent, reducing clinical equivalence certainty for intralesional use; this imposes the class-member-only ceiling of max medium.",
-      "alternatives": [
-        {
-          "rxcui": "5492",
-          "name": "hydrocortisone",
-          "rationale": "Hydrocortisone is a corticosteroid class member indicated for inflammatory dermatologic conditions; however, the label data returned reflects an OTC topical formulation, not an injectable preparation suitable for intralesional administration. Injectable hydrocortisone acetate exists clinically but was not confirmed by label data in this retrieval. Clinical pharmacist must verify injectable formulation availability and dosing equivalence before substitution. No shortage record found for RxCUI 5492.",
-          "formulary_status": "unknown",
-          "confidence": "low"
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
         },
         {
-          "rxcui": "6902",
-          "name": "methylprednisolone",
-          "rationale": "Methylprednisolone (soluble formulations, e.g., methylprednisolone sodium succinate) is the same parent molecule but a different salt/formulation; may not be interchangeable with the acetate depot form for intralesional use. No shortage record found for RxCUI 6902. Pharmacist must confirm whether a non-acetate formulation meets clinical requirements for intralesional indication.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        },
-        {
-          "rxcui": "8638",
-          "name": "prednisolone",
-          "rationale": "Prednisolone is a corticosteroid class member. Shortage status unverified (only top-2 alternatives checked per protocol). Injectable prednisolone acetate exists for intralesional use but formulary status and supply availability at this institution are unknown. Clinical pharmacist must verify formulation, route compatibility, and supply.",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1358510",
-          "claim": "Methylprednisolone Acetate Injection status is Current as of 04/22/2026; RxCUI list includes 1358510."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1358510&limit=1",
-          "claim": "DEPO-MEDROL is indicated for intralesional administration in alopecia areata, discoid lupus erythematosus, keloids, granuloma annulare, lichen planus, lichen simplex chronicus, psoriatic plaques, and necrobiosis lipoidica diabeticorum; warnings include immunosuppression, infection risk, and benzyl alcohol toxicity."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Ahydrocortisone*&limit=1",
-          "claim": "Hydrocortisone label retrieved reflects OTC topical formulation only; injectable intralesional equivalence not confirmed by this label record."
-        },
-        {
-          "source": "rxnorm",
-          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/1358510/allrelated",
-          "claim": "Therapeutic alternatives hydrocortisone (5492), methylprednisolone (6902), and prednisolone (8638) identified as corticosteroid class members via RxNorm."
-        }
-      ],
-      "confidence": "medium",
-      "recommended_action": "Escalate to P&T committee for emergency formulary review of injectable corticosteroid alternatives (triamcinolone acetonide injection or hydrocortisone acetate injection) for intralesional use; contact current suppliers for allocation status and implement conservation protocol for the 74 active orders across Surgery, Ambulatory, and ICU.",
-      "tool_call_log": [
-        {
-          "ts": "2026-05-02T02:59:31.216022+00:00",
+          "ts": "2026-05-02T18:35:26.275438+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
-            "rxcui": "1358510",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE A. FOR INTRAMUSCULAR ADMINISTRATION When oral therapy is not feasible and the strength, dosage form, and route of administration of the drug reasona",
-          "duration_ms": 1358
-        },
-        {
-          "ts": "2026-05-02T02:59:31.589330+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1358510"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Methylprednisolone Acetate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,",
-          "duration_ms": 1731
-        },
-        {
-          "ts": "2026-05-02T02:59:32.115234+00:00",
-          "server": "rxnorm",
-          "tool": "rxnorm_get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "1358510"
-          },
-          "result_preview": "[{\"rxcui\": \"5492\", \"name\": \"hydrocortisone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6902\", \"name\": \"methylprednisolone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"8638\", \"name\": \"prednisolone\", \"co",
-          "duration_ms": 2257
-        },
-        {
-          "ts": "2026-05-02T02:59:33.291077+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "6902"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6902\"\n}",
-          "duration_ms": 1175
-        },
-        {
-          "ts": "2026-05-02T02:59:33.291716+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "5492"
-          },
-          "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 5492\"\n}",
-          "duration_ms": 1176
-        },
-        {
-          "ts": "2026-05-02T02:59:34.118586+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "5492",
+            "rxcui": "1808",
             "sections": [
               "indications_and_usage",
               "warnings",
               "dosage_and_administration"
             ],
-            "drug_name": "hydrocortisone"
+            "drug_name": "bumetanide"
           },
-          "result_preview": "{\n  \"indications_and_usage\": \"Uses \u2022 temporarily relieves itching associated with minor skin irritations, inflammation, and rashes due to: \u2022 eczema \u2022 psoriasis \u2022 poison ivy, oak, sumac \u2022 insect bites ",
-          "duration_ms": 825
+          "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+          "duration_ms": 4
         }
       ],
-      "item_id": "c369b28a-eab9-4b5e-b03c-7ca9f38f96af",
-      "_diff_bucket": "new"
+      "item_id": "638c6975-019c-4032-9c2d-bd728ab2f5e3",
+      "_diff_bucket": "escalated"
     }
   ],
   "tool_calls": [
     {
-      "ts": "2026-05-02T02:59:29.854029+00:00",
+      "ts": "2026-05-02T18:35:26.245664+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_current_shortages",
       "args": {
         "limit": 1000
       },
       "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
-      "duration_ms": 825
+      "duration_ms": 61
     },
     {
-      "ts": "2026-05-02T02:59:30.616582+00:00",
+      "ts": "2026-05-02T18:35:26.256813+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "685578"
+        "rxcui": "1719286"
       },
-      "result_preview": "{\n  \"generic_name\": \"Clindamycin Phosphate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Demand increase for the drug\",\n  \"availability\": \"Limited Availability\",",
-      "duration_ms": 759
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 9
     },
     {
-      "ts": "2026-05-02T02:59:30.763231+00:00",
+      "ts": "2026-05-02T18:35:26.257821+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1731993"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+      "duration_ms": 10
+    },
+    {
+      "ts": "2026-05-02T18:35:26.258617+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "685578",
+        "rxcui": "1719286",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -654,15 +709,25 @@
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE CLEOCIN PHOSPHATE products are indicated in the treatment of serious infections caused by susceptible anaerobic bacteria. CLEOCIN PHOSPHATE products",
-      "duration_ms": 906
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
+      "duration_ms": 11
     },
     {
-      "ts": "2026-05-02T02:59:30.765481+00:00",
+      "ts": "2026-05-02T18:35:26.258792+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1732006"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+      "duration_ms": 11
+    },
+    {
+      "ts": "2026-05-02T18:35:26.258914+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "801133",
+        "rxcui": "1731993",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -670,25 +735,35 @@
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE PROSOL is indicated as a source of amino acids for patients requiring parenteral nutrition when oral or enteral nutrition is not possible, insuffi",
-      "duration_ms": 908
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+      "duration_ms": 11
     },
     {
-      "ts": "2026-05-02T02:59:30.950755+00:00",
+      "ts": "2026-05-02T18:35:26.260670+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1719286"
+      },
+      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+      "duration_ms": 13
+    },
+    {
+      "ts": "2026-05-02T18:35:26.261469+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "801133"
+        "rxcui": "1719291"
       },
-      "result_preview": "{\n  \"generic_name\": \"Amino Acid Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-      "duration_ms": 1093
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 13
     },
     {
-      "ts": "2026-05-02T02:59:31.215196+00:00",
+      "ts": "2026-05-02T18:35:26.263180+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "1795477",
+        "rxcui": "1732006",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -696,15 +771,35 @@
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE These intravenous solutions are indicated for use in adults and pediatric patients as sources of calories and water for hydration.\",\n  \"warnings\": \"",
-      "duration_ms": 1357
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+      "duration_ms": 15
     },
     {
-      "ts": "2026-05-02T02:59:31.215904+00:00",
+      "ts": "2026-05-02T18:35:26.264768+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1731993"
+      },
+      "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
+      "duration_ms": 17
+    },
+    {
+      "ts": "2026-05-02T18:35:26.265391+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1719290"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 17
+    },
+    {
+      "ts": "2026-05-02T18:35:26.265466+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "197527",
+        "rxcui": "1719291",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -712,15 +807,25 @@
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-      "duration_ms": 1358
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
+      "duration_ms": 17
     },
     {
-      "ts": "2026-05-02T02:59:31.216022+00:00",
+      "ts": "2026-05-02T18:35:26.266026+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1732006"
+      },
+      "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
+      "duration_ms": 18
+    },
+    {
+      "ts": "2026-05-02T18:35:26.266093+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "1358510",
+        "rxcui": "1719290",
         "sections": [
           "indications_and_usage",
           "warnings",
@@ -728,262 +833,100 @@
           "contraindications"
         ]
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE A. FOR INTRAMUSCULAR ADMINISTRATION When oral therapy is not feasible and the strength, dosage form, and route of administration of the drug reasona",
-      "duration_ms": 1358
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Furosemide Injection is a loop diuretic indicated for: \u2022 The treatment of edema associated with heart failure, cirrhosis of the liver, and renal d",
+      "duration_ms": 18
     },
     {
-      "ts": "2026-05-02T02:59:31.237059+00:00",
+      "ts": "2026-05-02T18:35:26.266658+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
-        "rxcui": "685578"
+        "rxcui": "1719291"
       },
-      "result_preview": "[{\"rxcui\": \"10169\", \"name\": \"sulfacetamide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2348\", \"name\": \"chloramphenicol\", \"confidence\": \"class-member\"}, {\"rxcui\": \"2582\", \"name\": \"clindamycin\", \"confid",
-      "duration_ms": 1379
+      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+      "duration_ms": 18
     },
     {
-      "ts": "2026-05-02T02:59:31.241811+00:00",
+      "ts": "2026-05-02T18:35:26.267216+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
-        "rxcui": "801133"
+        "rxcui": "1719290"
       },
-      "result_preview": "[{\"rxcui\": \"10737\", \"name\": \"trazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"1086769\", \"name\": \"vilazodone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"10898\", \"name\": \"tryptophan\", \"confidence\":",
-      "duration_ms": 1384
+      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+      "duration_ms": 19
     },
     {
-      "ts": "2026-05-02T02:59:31.588712+00:00",
+      "ts": "2026-05-02T18:35:26.270349+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "1795477"
+        "rxcui": "1808"
       },
-      "result_preview": "{\n  \"generic_name\": \"Dextrose Monohydrate 5% Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  ",
-      "duration_ms": 1731
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
+      "duration_ms": 3
     },
     {
-      "ts": "2026-05-02T02:59:31.589208+00:00",
+      "ts": "2026-05-02T18:35:26.270564+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
-        "rxcui": "197527"
+        "rxcui": "33770"
       },
-      "result_preview": "{\n  \"generic_name\": \"Clonazepam Tablet\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n    \"",
-      "duration_ms": 1731
+      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
+      "duration_ms": 3
     },
     {
-      "ts": "2026-05-02T02:59:31.589330+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1358510"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Methylprednisolone Acetate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,",
-      "duration_ms": 1731
-    },
-    {
-      "ts": "2026-05-02T02:59:32.110466+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1795477"
-      },
-      "result_preview": "[{\"rxcui\": \"4850\", \"name\": \"glucose\", \"confidence\": \"class-member\"}, {\"rxcui\": \"4919\", \"name\": \"glycine\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6628\", \"name\": \"mannitol\", \"confidence\": \"class-memb",
-      "duration_ms": 2253
-    },
-    {
-      "ts": "2026-05-02T02:59:32.114329+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "197527"
-      },
-      "result_preview": "[{\"rxcui\": \"2598\", \"name\": \"clonazepam\", \"confidence\": \"class-member\"}]",
-      "duration_ms": 2256
-    },
-    {
-      "ts": "2026-05-02T02:59:32.115234+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1358510"
-      },
-      "result_preview": "[{\"rxcui\": \"5492\", \"name\": \"hydrocortisone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"6902\", \"name\": \"methylprednisolone\", \"confidence\": \"class-member\"}, {\"rxcui\": \"8638\", \"name\": \"prednisolone\", \"co",
-      "duration_ms": 2257
-    },
-    {
-      "ts": "2026-05-02T02:59:32.460441+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1086769"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1086769\"\n}",
-      "duration_ms": 345
-    },
-    {
-      "ts": "2026-05-02T02:59:32.461882+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "2348"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2348\"\n}",
-      "duration_ms": 346
-    },
-    {
-      "ts": "2026-05-02T02:59:32.809904+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "4919"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4919\"\n}",
-      "duration_ms": 694
-    },
-    {
-      "ts": "2026-05-02T02:59:32.811556+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "2598"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 2598\"\n}",
-      "duration_ms": 696
-    },
-    {
-      "ts": "2026-05-02T02:59:33.291077+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "6902"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 6902\"\n}",
-      "duration_ms": 1175
-    },
-    {
-      "ts": "2026-05-02T02:59:33.291716+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "5492"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 5492\"\n}",
-      "duration_ms": 1176
-    },
-    {
-      "ts": "2026-05-02T02:59:33.291963+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "4850"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 4850\"\n}",
-      "duration_ms": 1176
-    },
-    {
-      "ts": "2026-05-02T02:59:33.292224+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "10169"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10169\"\n}",
-      "duration_ms": 1176
-    },
-    {
-      "ts": "2026-05-02T02:59:33.292343+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "10737"
-      },
-      "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 10737\"\n}",
-      "duration_ms": 1176
-    },
-    {
-      "ts": "2026-05-02T02:59:34.114103+00:00",
+      "ts": "2026-05-02T18:35:26.274383+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "10169",
+        "rxcui": "1808",
         "sections": [
           "indications_and_usage",
           "warnings",
           "dosage_and_administration"
         ],
-        "drug_name": "sulfacetamide"
+        "drug_name": "bumetanide"
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS: This product is indicated for use in the topical control of acne vulgaris, acne rosacea and seborrheic dermatitis.\",\n  \"warnings\": \"WARNINGS: Sulfonamides ar",
-      "duration_ms": 821
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+      "duration_ms": 3
     },
     {
-      "ts": "2026-05-02T02:59:34.116501+00:00",
+      "ts": "2026-05-02T18:35:26.275267+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "10737",
+        "rxcui": "1808",
         "sections": [
           "indications_and_usage",
           "warnings",
           "dosage_and_administration"
         ],
-        "drug_name": "trazodone"
+        "drug_name": "bumetanide"
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Trazodone is a selective serotonin reuptake inhibitor indicated for the treatment of major depressive disorder (MDD) ( 1 ). Trazodone hydrochlorid",
-      "duration_ms": 823
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+      "duration_ms": 4
     },
     {
-      "ts": "2026-05-02T02:59:34.117906+00:00",
+      "ts": "2026-05-02T18:35:26.275438+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
-        "rxcui": "4850",
+        "rxcui": "1808",
         "sections": [
           "indications_and_usage",
           "warnings",
           "dosage_and_administration"
         ],
-        "drug_name": "glucose"
+        "drug_name": "bumetanide"
       },
-      "result_preview": "{\n  \"indications_and_usage\": \"Uses for relief of upset stomach associated with nausea\",\n  \"warnings\": \"Warnings this product contains fructose and should not be taken by persons with hereditary fructo",
-      "duration_ms": 825
-    },
-    {
-      "ts": "2026-05-02T02:59:34.118452+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "2598",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration"
-        ],
-        "drug_name": "clonazepam"
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akineti",
-      "duration_ms": 825
-    },
-    {
-      "ts": "2026-05-02T02:59:34.118586+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "5492",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration"
-        ],
-        "drug_name": "hydrocortisone"
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"Uses \u2022 temporarily relieves itching associated with minor skin irritations, inflammation, and rashes due to: \u2022 eczema \u2022 psoriasis \u2022 poison ivy, oak, sumac \u2022 insect bites ",
-      "duration_ms": 825
+      "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
+      "duration_ms": 4
     }
   ],
-  "total_tokens_used": 32828,
-  "latency_ms": 112547,
+  "total_tokens_used": 21016,
+  "latency_ms": 100026,
   "label": "SYNTHETIC \u2014 v0.1 demo",
   "fetch_error": null
 }
