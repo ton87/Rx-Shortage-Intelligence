@@ -18,6 +18,7 @@ import pandas as pd
 import streamlit as st
 
 from src.domain.severity import Severity, SEVERITY_RANK
+from src.domain.confidence import Confidence, CONFIDENCE_LABELS
 from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TIMEOUT_S
 
 # ── Config ──────────────────────────────────────────────────────────────────
@@ -210,7 +211,7 @@ def confidence_pill(conf: str) -> str:
     c = (conf or "").strip().lower()
     if c not in ("high", "medium", "low"):
         c = "low"
-    label = {"high": "HIGH", "medium": "MED", "low": "LOW"}[c]
+    label = CONFIDENCE_LABELS[Confidence(c)]
     return f'<span class="rx-pill rx-pill-{c}">{label}</span>'
 
 def format_timestamp(iso: str) -> str:
@@ -620,7 +621,7 @@ def render_briefing_tab() -> None:
             "Briefing items below may be incomplete or stale."
         )
 
-    counts = {"Critical": 0, "Watch": 0, "Resolved": 0}
+    counts = {s: 0 for s in Severity}
     for it in items:
         sev = it.get("severity", "Watch")
         if sev in counts:
@@ -783,7 +784,7 @@ def render_formulary_tab() -> None:
     if sel_shortage:
         filtered = filtered[filtered["Shortage today"].isin(sel_shortage)]
 
-    severity_order = {"Critical": 0, "Watch": 1, "Resolved": 2, "—": 3}
+    severity_order = {**SEVERITY_RANK, "—": 3}
     filtered = filtered.assign(
         _sev_rank=filtered["Shortage today"].map(severity_order).fillna(3)
     ).sort_values(by=["_sev_rank", "Drug"]).drop(columns=["_sev_rank"])

@@ -14,11 +14,16 @@ class FDAStatus(StrEnum):
     RESOLVED = "Resolved"
 
 
+# Diff escalation rank. FDAStatus members cover the canonical 3 statuses verified
+# 2026-05-01. The two extra keys handle (a) historical "Discontinued" snapshots
+# from before the API switched to "To Be Discontinued", and (b) "Available with
+# limitations" appearing in some legacy yesterday_snapshot.json fixtures. New
+# code should use FDAStatus values; status_rank tolerates the legacy strings.
 _STATUS_RANK: dict[str, int] = {
-    "Resolved": 0,
+    FDAStatus.RESOLVED: 0,
     "Available with limitations": 1,
-    "Current": 2,
-    "To Be Discontinued": 3,
+    FDAStatus.CURRENT: 2,
+    FDAStatus.TBD: 3,
     "Discontinued": 3,
 }
 
