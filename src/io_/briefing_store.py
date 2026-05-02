@@ -42,19 +42,20 @@ def load_briefing(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
-def write_briefing(run: dict, date_str: str) -> Path:
-    """Atomically write a briefing run dict to data/briefings/<date_str>.json.
-
-    Uses tmp + rename so a concurrent reader never sees a half-written file.
-    Returns the final path.
-    """
-    BRIEFINGS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = BRIEFINGS_DIR / f"{date_str}.json"
-    tmp_path = out_path.with_suffix(".json.tmp")
+def atomic_write_json(path: Path, data: dict) -> None:
+    """Write data as JSON to path via tmp + rename so readers never see a partial file."""
+    tmp_path = path.with_suffix(path.suffix + ".tmp")
     try:
-        tmp_path.write_text(json.dumps(run, indent=2))
-        tmp_path.replace(out_path)
+        tmp_path.write_text(json.dumps(data, indent=2))
+        tmp_path.replace(path)
     except OSError:
         tmp_path.unlink(missing_ok=True)
         raise
+
+
+def write_briefing(run: dict, date_str: str) -> Path:
+    """Write a briefing run dict to data/briefings/<date_str>.json. Returns the final path."""
+    BRIEFINGS_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = BRIEFINGS_DIR / f"{date_str}.json"
+    atomic_write_json(out_path, run)
     return out_path
