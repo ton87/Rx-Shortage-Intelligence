@@ -35,99 +35,11 @@ from src.agent.prompts import (
     build_user_message_prefetch,
     parse_briefing_item,
 )
+from src.agent.prefetch import prefetch_drug_data
 
 load_dotenv()
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-
-
-async def _prefetch_drug_data(
-    bridge,
-    candidates: list[dict],
-    formulary_idx: dict,
-) -> dict[str, dict]:
-    """Parallel-fetch shortage detail + label + alternatives for all candidates,
-    then parallel-fetch alt shortage status and top-1 alt label."""
-    frxcuis = [d.get("_formulary_rxcui", "") for d in candidates if d.get("_formulary_rxcui")]
-
-    async def _phase1_one(frxcui: str) -> tuple[str, str, str, str]:
-        shortage, label, alts = await asyncio.gather(
-            bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": frxcui}),
-            bridge.call_tool("drug_label_get_drug_label_sections", {
-                "rxcui": frxcui,
-                "sections": ["indications_and_usage", "warnings", "dosage_and_administration", "contraindications"],
-            }),
-            bridge.call_tool("rxnorm_get_therapeutic_alternatives", {"rxcui": frxcui}),
-        )
-        return frxcui, shortage, label, alts
-
-    phase1 = await asyncio.gather(*[_phase1_one(r) for r in frxcuis])
-
-    drug_data: dict[str, dict] = {}
-    all_alt_rxcuis: set[str] = set()
-
-    for frxcui, shortage_str, label_str, alts_str in phase1:
-        try:
-            alts_parsed = json.loads(alts_str)
-        except Exception:
-            alts_parsed = []
-        if isinstance(alts_parsed, dict):
-            alts_list = alts_parsed.get("alternatives", alts_parsed.get("drugs", []))
-        elif isinstance(alts_parsed, list):
-            alts_list = alts_parsed
-        else:
-            alts_list = []
-
-        drug_data[frxcui] = {
-            "shortage_detail": shortage_str,
-            "label": label_str,
-            "alternatives": alts_list,
-            "alt_shortage": {},
-            "alt_label_top1": None,
-        }
-        for alt in alts_list[:2]:
-            rxcui = str(alt.get("rxcui", "") or "")
-            if rxcui:
-                all_alt_rxcuis.add(rxcui)
-
-    # Phase 2a: shortage status for all unique alt RxCUIs
-    alt_rxcui_list = list(all_alt_rxcuis)
-    if alt_rxcui_list:
-        alt_shortage_results = await asyncio.gather(
-            *[bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": r}) for r in alt_rxcui_list]
-        )
-        alt_shortage_map = dict(zip(alt_rxcui_list, alt_shortage_results))
-    else:
-        alt_shortage_map = {}
-
-    # Phase 2b: label for top-1 alternative per drug
-    top1_items: list[tuple[str, str]] = []
-    for frxcui, data in drug_data.items():
-        if data["alternatives"]:
-            top1_rxcui = str(data["alternatives"][0].get("rxcui", "") or "")
-            if top1_rxcui:
-                top1_items.append((frxcui, top1_rxcui))
-
-    if top1_items:
-        top1_label_results = await asyncio.gather(
-            *[bridge.call_tool("drug_label_get_drug_label_sections", {
-                "rxcui": alt_rxcui,
-                "sections": ["indications_and_usage", "warnings", "dosage_and_administration"],
-                "drug_name": drug_data[frxcui]["alternatives"][0].get("name"),
-            }) for frxcui, alt_rxcui in top1_items]
-        )
-        for (frxcui, _), label_str in zip(top1_items, top1_label_results):
-            drug_data[frxcui]["alt_label_top1"] = label_str
-
-    # Attach alt shortage map to each drug
-    for frxcui, data in drug_data.items():
-        data["alt_shortage"] = {
-            str(alt.get("rxcui", "")): alt_shortage_map.get(str(alt.get("rxcui", "")), "{}")
-            for alt in data["alternatives"][:2]
-            if alt.get("rxcui")
-        }
-
-    return drug_data
 
 
 # ── Main generate_briefing ──
@@ -207,7 +119,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         # Each drug now costs 1 classification call (~39s) instead of ~11 calls (~90s).
         t_pre = time.monotonic()
         _log(f"phase=prefetch_start drugs={len(candidates)}")
-        prefetch_map = await _prefetch_drug_data(bridge, candidates, formulary_idx)
+        prefetch_map = await prefetch_drug_data(bridge, candidates, formulary_idx)
         _log(
             f"phase=prefetch_done elapsed={time.monotonic()-t_pre:.1f}s "
             f"tool_calls={len(bridge.tool_calls)}"
