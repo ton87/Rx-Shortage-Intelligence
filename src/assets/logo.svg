@@ -1,0 +1,51 @@
+<svg viewBox="0 0 420 106" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anton Hospital">
+
+  <!-- ═══ A MARK (100×98 canvas, origin 0,0) ═══ -->
+
+  <!-- Left leg: apex → bottom-left -->
+  <polygon points="44,2 57,2 25,97 6,97" fill="#1C3561"/>
+
+  <!-- Right leg: apex → bottom-right -->
+  <polygon points="44,2 57,2 95,97 77,97" fill="#1C3561"/>
+
+  <!-- Crossbar rectangle connecting both legs at mid-height -->
+  <rect x="30" y="48" width="41" height="13" fill="#1C3561"/>
+
+  <!-- ═══ ECG / HEARTBEAT LINE (slate, full width of A) ═══ -->
+  <!--
+    Runs left-to-right through the crossbar zone.
+    Visible over navy legs AND the open inner triangle.
+    Classic P-QRS-T medical waveform.
+  -->
+  <polyline
+    points="6,54  23,54  27,46  31,62  35,40  40,70  44,54  73,54"
+    stroke="#5E7BA4" stroke-width="3.2" fill="none"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ═══ MEDICAL CROSS (+), slate, right side ═══ -->
+  <!-- Vertical bar -->
+  <rect x="72" y="44" width="5.5" height="19" fill="#5E7BA4" rx="0.8"/>
+  <!-- Horizontal bar -->
+  <rect x="66" y="50" width="18"  height="7"  fill="#5E7BA4" rx="0.8"/>
+
+  <!-- ═══ WORDMARK ═══ -->
+
+  <!-- "Anton" — bold navy -->
+  <text
+    x="116" y="60"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="800"
+    font-size="48"
+    fill="#1C3561"
+    letter-spacing="-0.5">Anton</text>
+
+  <!-- "Hospital" — regular slate -->
+  <text
+    x="118" y="97"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="400"
+    font-size="34"
+    fill="#5E7BA4"
+    letter-spacing="0.8">Hospital</text>
+
+</svg>
