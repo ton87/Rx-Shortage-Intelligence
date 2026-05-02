@@ -60,15 +60,15 @@ def build_system_blocks(formulary_subset: list[dict]) -> list[dict]:
     ]
 
 
-def build_user_message(
+def _format_drug_context(
     drug: dict, formulary_entry: dict, orders_entry: dict | None,
-    today_status: str, yesterday_status: str
+    today_status: str, yesterday_status: str,
 ) -> str:
-    """Build user message for tool-calling mode (non-prefetch)."""
+    """Common header lines for both tool-mode and prefetch-mode user messages."""
     orders_count = orders_entry.get("count_last_30_days", 0) if orders_entry else 0
     departments = orders_entry.get("departments", []) if orders_entry else []
     alts = formulary_entry.get("preferred_alternatives", [])
-    return f"""Drug: {drug.get('generic_name') or formulary_entry.get('name')} (RxCUI {drug.get('_formulary_rxcui')})
+    return f"""Drug: {drug.get('generic_name') or formulary_entry.get('name')} (RxCUI {drug.get('_formulary_rxcui', '')})
 Today's shortage status: {today_status}
 Yesterday's status: {yesterday_status or 'not in snapshot'}
 Active orders last 30 days: {orders_count}
@@ -76,9 +76,19 @@ Departments affected: {', '.join(departments) if departments else 'none recorded
 Formulary status: {formulary_entry.get('formulary_status', 'unknown')}
 Route of administration: {formulary_entry.get('route_of_administration', 'unknown')}
 Preferred alternatives on formulary: {alts if alts else 'none'}
-Diff bucket: {drug.get('_diff_bucket', 'unknown')}
+Diff bucket: {drug.get('_diff_bucket', 'unknown')}"""
 
-Generate one BriefingItem JSON object for this drug. Use tools to fetch shortage detail, label sections, and therapeutic alternatives. Return ONLY valid JSON matching the BriefingItem schema — no prose before or after."""
+
+def build_user_message(
+    drug: dict, formulary_entry: dict, orders_entry: dict | None,
+    today_status: str, yesterday_status: str,
+) -> str:
+    """Build user message for tool-calling mode (non-prefetch)."""
+    return _format_drug_context(drug, formulary_entry, orders_entry, today_status, yesterday_status) + (
+        "\n\nGenerate one BriefingItem JSON object for this drug. Use tools to fetch shortage detail, "
+        "label sections, and therapeutic alternatives. Return ONLY valid JSON matching the BriefingItem "
+        "schema — no prose before or after."
+    )
 
 
 def build_user_message_prefetch(
@@ -87,19 +97,8 @@ def build_user_message_prefetch(
     prefetched: dict,
 ) -> str:
     """Build user message for prefetch mode — all data inline, no tool calls."""
-    orders_count = orders_entry.get("count_last_30_days", 0) if orders_entry else 0
-    departments = orders_entry.get("departments", []) if orders_entry else []
-    alts = formulary_entry.get("preferred_alternatives", [])
-    frxcui = drug.get("_formulary_rxcui", "")
-    return f"""Drug: {drug.get('generic_name') or formulary_entry.get('name')} (RxCUI {frxcui})
-Today's shortage status: {today_status}
-Yesterday's status: {yesterday_status or 'not in snapshot'}
-Active orders last 30 days: {orders_count}
-Departments affected: {', '.join(departments) if departments else 'none recorded'}
-Formulary status: {formulary_entry.get('formulary_status', 'unknown')}
-Route of administration: {formulary_entry.get('route_of_administration', 'unknown')}
-Preferred alternatives on formulary: {alts if alts else 'none'}
-Diff bucket: {drug.get('_diff_bucket', 'unknown')}
+    header = _format_drug_context(drug, formulary_entry, orders_entry, today_status, yesterday_status)
+    return f"""{header}
 
 PRE-FETCHED DATA — use this, do not call tools:
 
