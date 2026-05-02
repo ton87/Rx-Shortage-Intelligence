@@ -46,3 +46,6 @@ Thumbs.db
 
 # Project local artifacts (uncomment if briefings should not be tracked)
 # data/briefings/
+
+# Playwright MCP transient session dumps
+.playwright-mcp/
