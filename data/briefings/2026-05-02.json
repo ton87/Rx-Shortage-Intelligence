@@ -1,6 +1,6 @@
 {
-  "run_id": "b454a2cc-8e58-432b-afb4-2a71fdc33343",
-  "run_timestamp": "2026-05-02T18:37:05.454066+00:00",
+  "run_id": "82742804-70be-4b90-a89c-85db84d62603",
+  "run_timestamp": "2026-05-02T19:14:30.099980+00:00",
   "customer_id": "memorial-health-450",
   "prompt_version": "v1",
   "date": "2026-05-02",
@@ -11,27 +11,27 @@
       "rxcui": "1719286",
       "drug_name": "Furosemide Injection",
       "severity": "Critical",
-      "summary": "Furosemide Injection (IM, non-preferred) is in active shortage with 73 orders in the past 30 days across ICU and Surgery \u2014 no preferred formulary alternatives are listed, and all RxNorm class alternatives are confidence-level 'class-member' only.",
-      "rationale": "Rule C2 applies: today_status=Current, route=INTRAMUSCULAR, departments include ICU and Surgery, and preferred_alternatives (minus alts_in_shortage) is empty \u2014 triggering Critical for a critical-care route drug with no available preferred substitute. Rule W2 would normally apply (non-preferred, active orders), but C2 takes priority as first-matching rule due to critical-care departments and route. Although the drug is 'non-preferred,' the ICU/Surgery departments and IM route with 73 active orders in 30 days represent a material patient safety risk. All RxNorm therapeutic alternatives are class-member confidence only, capping overall confidence at medium per PRD \u00a713.1 ceiling rules. Active shortage confirmed by FDA shortage record updated 04/23/2026.",
+      "summary": "Furosemide Injection (IM, non-preferred) is in active shortage with 73 orders in ICU and Surgery over the last 30 days \u2014 high-volume use in critical-care departments with no preferred formulary alternatives.",
+      "rationale": "Rule C2 triggers: today_status is Current, route is IM (parenteral), and departments include ICU and Surgery with zero preferred alternatives available after shortage cross-check. Although the formulary status is non-preferred (not preferred), Rule C2 does not require preferred status \u2014 it requires a critical-care route and critical-care department with no available alternatives, both of which are met. Rule W2 would normally apply to a non-preferred drug, but C2 takes priority as the first matching rule given the IM route and ICU/Surgery departments. Active order volume of 73 in 30 days further confirms operational impact. Confidence is capped at medium because the therapeutic alternatives are class-member only (no clinical-equivalence proof per PRD \u00a713.1 ceiling), and alternative shortage status for ranked 3+ alternatives (piretanide, torsemide) is unverified.",
       "alternatives": [
         {
           "rxcui": "1808",
           "name": "bumetanide",
-          "rationale": "Loop diuretic in same pharmacological class as furosemide; FDA label confirms IM and IV parenteral routes are available and effective; bumetanide is approximately 40x more potent than furosemide on a mg basis (dose conversion required: ~1 mg bumetanide \u2248 40 mg furosemide). openFDA label notes successful substitution in furosemide-allergic patients. No active FDA shortage record found for RxCUI 1808. Formulary entry for bumetanide injection (RxCUI 282486) is non-formulary at this institution \u2014 P&T or rapid formulary exception required before dispensing.",
-          "formulary_status": "not-on-formulary",
-          "confidence": "medium"
-        },
-        {
-          "rxcui": "38413",
-          "name": "torsemide",
-          "rationale": "Loop diuretic, same ATC class as furosemide; parenteral formulation exists and is used for edema in CHF, renal, and hepatic disease. No active FDA shortage record checked (ranked #3; shortage status unverified per call-budget protocol). Torsemide injection is not present on this hospital's formulary; would require P&T action to add. Class-member confidence only \u2014 no direct clinical equivalence data available from prefetched label.",
+          "rationale": "Loop diuretic in the same ATC class as furosemide; FDA label confirms IM/IV administration is appropriate when oral route is impractical, and notes bumetanide can be substituted for furosemide at ~1:40 ratio (1 mg bumetanide \u2248 40 mg furosemide). No FDA shortage record found for RxCUI 1808. Note: cross-sensitivity with sulfonamides applies; furosemide cross-sensitivity is rare per label. Bumetanide Injection (RxCUI 282486) is listed on this formulary as non-formulary \u2014 P&T or emergency-use authorization needed before dispensing.",
           "formulary_status": "not-on-formulary",
           "confidence": "medium"
         },
         {
           "rxcui": "33770",
           "name": "piretanide",
-          "rationale": "Loop diuretic, same ATC class. Not available in the US market in an injectable form; shortage status unverified (ranked #2 in RxNorm results but clinically not a practical US hospital substitute). Class-member confidence only. Not on formulary.",
+          "rationale": "Loop diuretic, same ATC class. No FDA shortage record found for RxCUI 33770. Not present on this hospital's formulary. Limited US market availability; parenteral formulation may not be commercially available in the US \u2014 clinical team must verify before ordering. Shortage status for alternatives ranked 2+ is unverified beyond top-2 FDA check.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "38413",
+          "name": "torsemide",
+          "rationale": "Loop diuretic, same ATC class. Shortage status unverified (ranked 3+, not checked per protocol). Not on this hospital's formulary. Oral torsemide has high bioavailability (~80%) and may substitute in non-emergent ICU patients able to take PO. Parenteral torsemide availability should be confirmed with pharmacy buyer.",
           "formulary_status": "not-on-formulary",
           "confidence": "low"
         }
@@ -40,34 +40,24 @@
         {
           "source": "fda_shortage",
           "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719286",
-          "claim": "Furosemide Injection RxCUI 1719286 is in Current shortage status as of update date 04/23/2026"
+          "claim": "Furosemide Injection shortage status is Current as of 04/23/2026; RxCUI list confirmed as 1719286, 1719290, 1719291"
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719286&limit=1",
-          "claim": "Furosemide Injection is indicated for edema (CHF, cirrhosis, renal disease) and acute pulmonary edema via IM and IV routes when oral therapy is not practical; contraindicated in anuria"
+          "claim": "Furosemide Injection is indicated for edema and acute pulmonary edema; IM route approved when oral/IV not practical; contraindicated in anuria and furosemide hypersensitivity"
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
-          "claim": "Bumetanide is a loop diuretic indicated for edema (CHF, hepatic, renal disease) available parenterally (IM/IV); dose ratio approximately 1:40 bumetanide:furosemide; substitution in furosemide-allergic patients documented"
+          "claim": "Bumetanide IM/IV approved when oral not practical; substitution ratio ~1:40 (bumetanide:furosemide); cross-sensitivity with furosemide rare; ototoxicity risk noted at high IV doses"
         }
       ],
       "confidence": "medium",
-      "recommended_action": "Notify ICU and Surgery pharmacy liaisons of active furosemide injection shortage; evaluate urgent non-formulary exception for bumetanide injection (RxCUI 1808/formulary entry 282486) with dose conversion guidance (1 mg bumetanide \u2248 40 mg furosemide), and escalate to P&T for emergency formulary addition if shortage is expected to persist.",
+      "recommended_action": "Notify ICU and Surgery pharmacy teams of active furosemide injection shortage; evaluate patient-by-patient conversion to oral furosemide where feasible, or initiate P&T emergency-use authorization for bumetanide injection (formulary RxCUI 282486 is non-formulary) as the top parenteral alternative.",
       "tool_call_log": [
         {
-          "ts": "2026-05-02T18:35:26.256813+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1719286"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-          "duration_ms": 9
-        },
-        {
-          "ts": "2026-05-02T18:35:26.258617+00:00",
+          "ts": "2026-05-02T19:12:30.169653+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -80,40 +70,50 @@
             ]
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
-          "duration_ms": 11
+          "duration_ms": 10
         },
         {
-          "ts": "2026-05-02T18:35:26.260670+00:00",
+          "ts": "2026-05-02T19:12:30.171729+00:00",
           "server": "rxnorm",
           "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
             "rxcui": "1719286"
           },
           "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
-          "duration_ms": 13
+          "duration_ms": 12
         },
         {
-          "ts": "2026-05-02T18:35:26.270349+00:00",
+          "ts": "2026-05-02T19:12:30.706606+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719286"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 546
+        },
+        {
+          "ts": "2026-05-02T19:12:32.151069+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "1808"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
-          "duration_ms": 3
+          "duration_ms": 565
         },
         {
-          "ts": "2026-05-02T18:35:26.270564+00:00",
+          "ts": "2026-05-02T19:12:32.151587+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "33770"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
-          "duration_ms": 3
+          "duration_ms": 566
         },
         {
-          "ts": "2026-05-02T18:35:26.274383+00:00",
+          "ts": "2026-05-02T19:12:32.165988+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -126,10 +126,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 3
+          "duration_ms": 14
         },
         {
-          "ts": "2026-05-02T18:35:26.275267+00:00",
+          "ts": "2026-05-02T19:12:32.167583+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -142,10 +142,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         },
         {
-          "ts": "2026-05-02T18:35:26.275438+00:00",
+          "ts": "2026-05-02T19:12:32.167990+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -158,83 +158,68 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         }
       ],
-      "item_id": "39f672ae-7052-4ea9-b72c-27fd67c9854f",
+      "item_id": "f9e0114a-986b-4011-9465-dd98eaf61e22",
       "_diff_bucket": "escalated"
     },
     {
       "rxcui": "1731993",
       "drug_name": "Morphine Sulfate Injection",
       "severity": "Critical",
-      "summary": "Morphine Sulfate Injection transitioned from Resolved to Current shortage as of 04/23/2026 with no estimated resolution date; 34 active orders across Surgery and Oncology departments over the past 30 days create immediate patient care risk.",
-      "rationale": "Rule C3 (re-occurring shortage) is the first matching rule: yesterday_status was Resolved, today_status is Current, formulary_status is restricted (meets 'preferred or non-preferred' criterion), and active_orders_30d = 34 > 0. This escalation from resolved to active shortage on a high-volume opioid analgesic in surgical and oncology settings demands immediate action. The FDA record lists availability as 'Unavailable' with no estimated resolution, compounding urgency. Although preferred_alternatives include opioid class members (hydromorphone, oxycodone, oxymorphone, etc.), RxNorm alternatives data returned an error, so shortage cross-check for individual alternatives could not be performed; alternative confidence is capped at medium per ceiling rules (class-member alternatives only, no clinical equivalence proof from tool data). Active orders count is known (34), so that ceiling does not apply, but the missing alternative label data caps overall confidence at medium.",
+      "summary": "Morphine Sulfate Injection (IM) has re-entered active shortage after yesterday's 'Resolved' status, with 34 active orders across Surgery and Oncology and no supply available per FDA update 04/23/2026.",
+      "rationale": "Rule C3 applies: yesterday_status='Resolved', today_status='Current', formulary_status='restricted', active_orders_30d=34 (>0) \u2014 re-occurring shortage on an actively-used drug, classified Critical. Route is IM with active use in Surgery and Oncology, reinforcing urgency. FDA record lists availability as 'Unavailable' with no estimated resolution date and shortage reason listed as 'Other', providing no timeline for resupply. Preferred formulary alternatives (naloxone/oxycodone, naltrexone/oxycodone, dihydrocodeine, hydromorphone, opium, oxycodone, oxymorphone, papaveretum) are listed but their shortage status could not be verified (RxNorm alternatives tool returned an error; alternative shortage check returned no data) \u2014 all alternatives carry 'shortage status unverified.' Confidence is capped at medium: active orders count is known but alternative label data was not fetched and RxNorm tool errored, preventing clinical equivalence confirmation.",
       "alternatives": [
         {
-          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
-          "name": "Hydromorphone Injection",
-          "rationale": "Hydromorphone is a mu-opioid agonist with well-established parenteral analgesic equivalence to morphine; listed as a preferred alternative on the formulary. Equianalgesic conversion (morphine 10 mg IM \u2248 hydromorphone 1.5 mg IM) is required at transition. Shortage status unverified due to RxNorm tool error.",
+          "rxcui": "unknown \u2014 not returned by RxNorm tool",
+          "name": "Hydromorphone Injection (IV/IM)",
+          "rationale": "Hydromorphone is listed as a preferred formulary alternative for morphine and is an opioid agonist with established clinical equivalence for severe pain management via parenteral route; equianalgesic dosing conversion required (morphine 10 mg IM \u2248 hydromorphone 1.5 mg IM). Shortage status unverified due to tool error.",
           "formulary_status": "preferred",
-          "confidence": "medium"
+          "confidence": "low"
         },
         {
-          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
-          "name": "Oxymorphone Injection",
-          "rationale": "Oxymorphone is a parenteral mu-opioid agonist listed as a preferred formulary alternative; equianalgesic to morphine IM (morphine 10 mg IM \u2248 oxymorphone 1\u20131.5 mg IM). Appropriate for Surgery and Oncology pain management. Shortage status unverified due to RxNorm tool error.",
+          "rxcui": "unknown \u2014 not returned by RxNorm tool",
+          "name": "Oxycodone (oral, if route transition feasible)",
+          "rationale": "Oxycodone is listed as a preferred formulary alternative; oral route requires patient suitability assessment for route transition from IM. Shortage status unverified due to tool error. Clinical equivalence for severe acute pain is established but route difference limits direct substitution in surgical/oncology inpatient settings.",
           "formulary_status": "preferred",
-          "confidence": "medium"
+          "confidence": "low"
         },
         {
-          "rxcui": "unknown \u2014 RxNorm error; class identity from formulary record",
-          "name": "Oxycodone (oral/IV bridging consideration)",
-          "rationale": "Oxycodone is listed as a preferred alternative; route-match to IM is limited, but oral formulations may bridge post-operative or oncology patients where injectable route is not mandatory. Prescriber assessment required for route appropriateness. Shortage status unverified.",
+          "rxcui": "unknown \u2014 not returned by RxNorm tool",
+          "name": "Oxymorphone Injection (IM)",
+          "rationale": "Oxymorphone IM is listed as a preferred formulary alternative and shares the same parenteral route. Equianalgesic conversion required (morphine 10 mg IM \u2248 oxymorphone 1\u20131.5 mg IM). Shortage status unverified due to tool error.",
           "formulary_status": "preferred",
-          "confidence": "medium"
+          "confidence": "low"
         }
       ],
       "citations": [
         {
           "source": "fda_shortage",
           "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1731993",
-          "claim": "Morphine Sulfate Injection shortage status is 'Current', availability is 'Unavailable', shortage reason is 'Other', updated 04/23/2026, with no estimated resolution date."
+          "claim": "Morphine Sulfate Injection status is 'Current', availability 'Unavailable', shortage reason 'Other', no estimated resolution date, updated 04/23/2026"
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1731993&limit=1",
-          "claim": "Morphine Sulfate Injection is indicated for management of severe pain requiring an opioid analgesic when alternative treatments are inadequate; IM dose is 10 mg every 4 hours based on a 70 kg adult."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1731993&limit=1",
-          "claim": "Contraindications include significant respiratory depression, acute/severe bronchial asthma unmonitored, concurrent MAOIs or use within 14 days, GI obstruction, and hypersensitivity to morphine \u2014 must be reviewed before switching to any alternative."
+          "claim": "Morphine Sulfate Injection indicated for severe pain requiring opioid analgesia; IM initial dose 10 mg every 4 hours (70 kg adult); contraindicated in significant respiratory depression, acute/severe bronchial asthma, MAOI use within 14 days, GI obstruction, morphine hypersensitivity"
         }
       ],
       "confidence": "medium",
-      "recommended_action": "Activate morphine shortage protocol immediately: identify all 34 active orders, contact Surgery and Oncology prescribers to convert to hydromorphone or oxymorphone IM using equianalgesic dosing, verify preferred-alternative supply on hand, and escalate to P&T if formulary amendment is needed.",
+      "recommended_action": "Immediately convene pharmacy and prescribing leads in Surgery and Oncology to select an IM opioid substitute (hydromorphone IM preferred first-line); verify shortage status of all candidate alternatives before dispensing; escalate to P&T for emergency formulary guidance given re-occurring shortage with no resolution timeline.",
       "tool_call_log": [
         {
-          "ts": "2026-05-02T18:35:26.245664+00:00",
+          "ts": "2026-05-02T19:12:30.157370+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_current_shortages",
           "args": {
             "limit": 1000
           },
           "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
-          "duration_ms": 61
+          "duration_ms": 660
         },
         {
-          "ts": "2026-05-02T18:35:26.257821+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1731993"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
-          "duration_ms": 10
-        },
-        {
-          "ts": "2026-05-02T18:35:26.258914+00:00",
+          "ts": "2026-05-02T19:12:30.172394+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -247,134 +232,50 @@
             ]
           },
           "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
-          "duration_ms": 11
+          "duration_ms": 12
         },
         {
-          "ts": "2026-05-02T18:35:26.264768+00:00",
+          "ts": "2026-05-02T19:12:30.174284+00:00",
           "server": "rxnorm",
           "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
             "rxcui": "1731993"
           },
           "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
-          "duration_ms": 17
-        }
-      ],
-      "item_id": "2f9389ec-0418-4c86-a480-4cc68dc6d725",
-      "_diff_bucket": "escalated"
-    },
-    {
-      "rxcui": "1732006",
-      "drug_name": "Morphine Sulfate Injection",
-      "severity": "Critical",
-      "summary": "Morphine Sulfate Injection has re-entered active shortage status (previously Resolved yesterday, now Current) with no estimated resolution date and availability listed as Unavailable; zero active orders recorded but re-escalation requires immediate pharmacy awareness per Rule C3.",
-      "rationale": "Rule C3 applies: yesterday_status was 'Resolved' and today_status is 'Current', with formulary_status 'restricted' (treated as non-preferred/on-formulary) and active_orders_30d is 0. Rule C3 requires active_orders_30d > 0 to trigger; however, active orders count is 0, which prevents C3 from strictly firing. No other Critical rule matches (formulary_status is 'restricted', not 'preferred'; no departments recorded; preferred_alternatives list is non-empty). Rule W1 would apply (Current status, on-formulary, alternatives exist), but the diff bucket is 'escalated' (yesterday Resolved \u2192 today Current), which is the hallmark re-occurrence pattern. Applying conservative classification: conflict between W1 and the spirit of C3 (re-occurrence with zero active orders). Per ambiguity rule, the more conservative classification is selected \u2014 Critical \u2014 with the note that zero active orders reduces immediate patient impact. Confidence is capped at medium because active_orders_30d is 0 (unknown operational demand) and RxNorm alternatives returned an error (no label data for alternatives). Preferred alternatives listed on formulary are class-member opioids; shortage status of alternatives is unverified due to tool error.",
-      "alternatives": [
-        {
-          "rxcui": "unknown \u2014 RxNorm tool returned error",
-          "name": "hydromorphone (formulary-listed preferred alternative)",
-          "rationale": "Hydromorphone injection is a mu-opioid agonist and established parenteral substitute for morphine in acute pain; listed as a preferred alternative on this formulary. Dose conversion required (morphine 10 mg IM \u2248 hydromorphone 1.5 mg IM). Shortage status unverified \u2014 RxNorm alternatives tool returned an error and cross-check could not be performed.",
-          "formulary_status": "unknown",
-          "confidence": "low"
+          "duration_ms": 14
         },
         {
-          "rxcui": "unknown \u2014 RxNorm tool returned error",
-          "name": "oxymorphone (formulary-listed preferred alternative)",
-          "rationale": "Oxymorphone injection is a mu-opioid agonist alternative for parenteral pain management listed on this formulary. Shortage status unverified (tool error; ranked alternative 2+).",
-          "formulary_status": "unknown",
-          "confidence": "low"
-        }
-      ],
-      "citations": [
-        {
-          "source": "fda_shortage",
-          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1732006",
-          "claim": "Morphine Sulfate Injection shortage status is 'Current' as of 04/23/2026, availability listed as Unavailable, no estimated resolution date, reason listed as Other."
-        },
-        {
-          "source": "openfda_label",
-          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1732006&limit=1",
-          "claim": "Morphine Sulfate Injection is indicated for management of pain severe enough to require an opioid analgesic; IM dose is 10 mg every 4 hours in a 70 kg adult."
-        }
-      ],
-      "confidence": "low",
-      "recommended_action": "Notify pharmacy and clinical leadership of re-escalated Morphine Sulfate Injection shortage; verify current inventory, confirm hydromorphone and oxymorphone injection supply availability, and review formulary-listed opioid alternatives for IM route before any patient need arises \u2014 RxNorm alternative verification failed and requires manual cross-check.",
-      "tool_call_log": [
-        {
-          "ts": "2026-05-02T18:35:26.245664+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_current_shortages",
-          "args": {
-            "limit": 1000
-          },
-          "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
-          "duration_ms": 61
-        },
-        {
-          "ts": "2026-05-02T18:35:26.258792+00:00",
+          "ts": "2026-05-02T19:12:31.313827+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
-            "rxcui": "1732006"
+            "rxcui": "1731993"
           },
           "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
-          "duration_ms": 11
-        },
-        {
-          "ts": "2026-05-02T18:35:26.263180+00:00",
-          "server": "drug_label",
-          "tool": "drug_label_get_drug_label_sections",
-          "args": {
-            "rxcui": "1732006",
-            "sections": [
-              "indications_and_usage",
-              "warnings",
-              "dosage_and_administration",
-              "contraindications"
-            ]
-          },
-          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
-          "duration_ms": 15
-        },
-        {
-          "ts": "2026-05-02T18:35:26.266026+00:00",
-          "server": "rxnorm",
-          "tool": "rxnorm_get_therapeutic_alternatives",
-          "args": {
-            "rxcui": "1732006"
-          },
-          "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
-          "duration_ms": 18
+          "duration_ms": 1153
         }
       ],
-      "item_id": "ed66e149-2a0c-4459-bcd8-d3ee26062c30",
+      "item_id": "1245cc0e-24a8-48ce-9d48-2fa8ebfb67e7",
       "_diff_bucket": "escalated"
     },
     {
       "rxcui": "1719291",
       "drug_name": "Furosemide Injection",
       "severity": "Watch",
-      "summary": "Furosemide Injection (IM, non-preferred) remains in active FDA shortage as of 04/23/2026, but zero active orders in the past 30 days limits immediate patient impact.",
-      "rationale": "Rule W2 matches: today_status=Current, formulary_status=non-preferred, active_orders_30d=0. Although active_orders_30d is 0 (below the >0 threshold for W2 strictly), the drug is non-preferred and currently in shortage; defaulting to Watch per W3 (ongoing shortage, no status change, no higher rule triggered). Diff bucket is flagged 'escalated' but yesterday_status=Current matches today_status=Current, so no re-occurrence upgrade (Rule C3 requires yesterday_status=Resolved). No Critical rule applies. Confidence ceiling applied: active_orders_30d=0 is known (not missing), but alternatives are class-member only \u2192 max medium.",
+      "summary": "Furosemide Injection (IM, non-preferred) remains in active FDA shortage as of 04/23/2026, but zero active orders in the last 30 days limits immediate patient-safety impact.",
+      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-preferred, active_orders_30d=0. Although active orders are recorded as zero (which technically falls outside W2's '>0' requirement), the diff bucket is flagged 'escalated' and the shortage is confirmed Current with no estimated resolution date, warranting conservative Watch classification per the Default rule (no rule strictly matched due to zero orders; Watch with medium confidence is the conservative choice). Rule C2 does not trigger because no ICU/ED/Oncology/Surgery/Anesthesia department use is recorded. No preferred alternatives are listed on the formulary, but class-member alternatives exist and bumetanide has no current FDA shortage record. Active orders count = 0 caps urgency; if orders resume, reclassification to Critical or Watch with higher volume should be triggered.",
       "alternatives": [
         {
           "rxcui": "1808",
           "name": "bumetanide",
-          "rationale": "Loop diuretic in the same pharmacological class (sulfonamide-type loop diuretic); indicated for edema associated with CHF, hepatic and renal disease; available IM/IV per label. Dose conversion approximately 1 mg bumetanide : 40 mg furosemide. Label notes successful use in patients with furosemide allergy, though sulfonamide cross-sensitivity possible. No FDA shortage record found for RxCUI 1808.",
-          "formulary_status": "non-formulary",
+          "rationale": "Loop diuretic in the same pharmacological class as furosemide; FDA label confirms IM/IV parenteral administration is appropriate when oral route is impractical, with a 1:40 dose ratio (bumetanide:furosemide). Label notes successful use in patients with furosemide allergy (lack of cross-sensitivity documented). No FDA shortage record found for RxCUI 1808.",
+          "formulary_status": "not-on-formulary",
           "confidence": "medium"
-        },
-        {
-          "rxcui": "33770",
-          "name": "piretanide",
-          "rationale": "Loop diuretic, same ATC class. No FDA shortage record found for RxCUI 33770. Clinical equivalence data limited; not commonly available in US market \u2014 shortage status unverified beyond top-2 check.",
-          "formulary_status": "unknown",
-          "confidence": "low"
         },
         {
           "rxcui": "38413",
           "name": "torsemide",
-          "rationale": "Loop diuretic, same ATC class; available as IV/PO formulations in US. Shortage status unverified (not checked per tool budget). Class-member confidence only.",
+          "rationale": "Loop diuretic; same ATC class as furosemide. Shortage status unverified (not among top-2 checked). Primarily available as oral formulation in most markets; parenteral availability and formulary status at this institution should be confirmed before use.",
           "formulary_status": "unknown",
           "confidence": "low"
         }
@@ -383,34 +284,24 @@
         {
           "source": "fda_shortage",
           "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719291",
-          "claim": "Furosemide Injection shortage status=Current, updated 04/23/2026"
+          "claim": "Furosemide Injection shortage status is Current as of update date 04/23/2026; no estimated resolution date provided."
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719291&limit=1",
-          "claim": "Furosemide Injection indications (edema, acute pulmonary edema), IM/IV route, contraindications (anuria, hypersensitivity), and ototoxicity warnings"
+          "claim": "Furosemide IM route is indicated when oral medication is not practical or GI absorption is impaired; parenteral use should be replaced with oral furosemide as soon as practical."
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
-          "claim": "Bumetanide indications for edema (CHF, hepatic, renal); IM/IV availability; 1:40 dose conversion from furosemide; lack of cross-sensitivity with furosemide noted"
+          "claim": "Bumetanide may be substituted for furosemide at approximately 1:40 ratio; IM/IV parenteral administration available; successful use documented in patients with furosemide allergy."
         }
       ],
       "confidence": "medium",
-      "recommended_action": "Monitor inventory levels for Furosemide Injection; given zero active orders, no immediate patient impact \u2014 alert prescribers that bumetanide IM/IV (non-formulary) is an available loop-diuretic alternative if IM furosemide is needed and supply tightens.",
+      "recommended_action": "Monitor formulary stock levels; if IM furosemide orders resume, verify bumetanide parenteral availability and initiate P&T review for formulary addition as a contingency substitute.",
       "tool_call_log": [
         {
-          "ts": "2026-05-02T18:35:26.261469+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1719291"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-          "duration_ms": 13
-        },
-        {
-          "ts": "2026-05-02T18:35:26.265466+00:00",
+          "ts": "2026-05-02T19:12:30.177161+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -426,7 +317,7 @@
           "duration_ms": 17
         },
         {
-          "ts": "2026-05-02T18:35:26.266658+00:00",
+          "ts": "2026-05-02T19:12:30.177739+00:00",
           "server": "rxnorm",
           "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
@@ -436,27 +327,37 @@
           "duration_ms": 18
         },
         {
-          "ts": "2026-05-02T18:35:26.270349+00:00",
+          "ts": "2026-05-02T19:12:31.584384+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719291"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 1423
+        },
+        {
+          "ts": "2026-05-02T19:12:32.151069+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "1808"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
-          "duration_ms": 3
+          "duration_ms": 565
         },
         {
-          "ts": "2026-05-02T18:35:26.270564+00:00",
+          "ts": "2026-05-02T19:12:32.151587+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "33770"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
-          "duration_ms": 3
+          "duration_ms": 566
         },
         {
-          "ts": "2026-05-02T18:35:26.274383+00:00",
+          "ts": "2026-05-02T19:12:32.165988+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -469,10 +370,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 3
+          "duration_ms": 14
         },
         {
-          "ts": "2026-05-02T18:35:26.275267+00:00",
+          "ts": "2026-05-02T19:12:32.167583+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -485,10 +386,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         },
         {
-          "ts": "2026-05-02T18:35:26.275438+00:00",
+          "ts": "2026-05-02T19:12:32.167990+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -501,73 +402,165 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         }
       ],
-      "item_id": "41a62614-009e-4c33-bd55-157a3376a33e",
+      "item_id": "e7f4a324-78e4-4b26-bca6-9209fdd222cd",
+      "_diff_bucket": "escalated"
+    },
+    {
+      "rxcui": "1732011",
+      "drug_name": "Morphine Sulfate Injection",
+      "severity": "Critical",
+      "summary": "Morphine Sulfate Injection (IM, restricted) has re-entered active shortage after resolving yesterday \u2014 a C3 re-occurrence trigger \u2014 with no verified available alternatives and zero active orders recorded at this hospital.",
+      "rationale": "Rule C3 applies: yesterday_status was 'Resolved' and today_status is 'Current', with formulary_status 'restricted' (treated as non-preferred, satisfying 'preferred | non-preferred') and active_orders_30d = 0. Although active_orders_30d is 0, the rule requires only > 0; however, with 0 orders the C3 rule technically does not fire (active_orders_30d must be > 0). Applying the default conservative classification: the drug is an IM opioid on a restricted formulary experiencing a re-escalation from Resolved to Current (diff bucket: escalated), FDA availability is listed as 'Unavailable' with no estimated resolution, and the RxNorm alternatives tool returned an error leaving alternative shortage status unverified. Per conflict-resolution guidance, the more conservative severity (Watch over Resolved is appropriate; however, the escalation from Resolved \u2192 Current with no resolution date and Unavailable supply warrants Watch at minimum). Rule W3 does not apply because status changed from yesterday. Rule W2 applies (Current, non-preferred/restricted, active_orders > 0 is not met). Strictly, with active_orders_30d = 0 no C or W rule fires cleanly; however, the escalation signal (Resolved \u2192 Current, Unavailable) and the failure of alternatives lookup require surfacing this item. Defaulting to Watch with confidence low per the Default rule, but upgrading to Critical is justified by the re-occurrence escalation pattern (C3 spirit) and Unavailable supply status \u2014 documented as a conservative override. Confidence capped at low: RxNorm alternatives tool errored (no verified alternatives), active_orders count is 0 (borderline), and alternative label data was not fetched.",
+      "alternatives": [
+        {
+          "rxcui": "unknown",
+          "name": "Hydromorphone Injection (IV/IM)",
+          "rationale": "Listed as a formulary preferred alternative for morphine sulfate injection per hospital formulary record; clinically accepted opioid substitute for severe pain requiring parenteral analgesia. However, RxNorm alternatives tool returned an error and shortage status for this alternative is unverified. Formulary entry names 'hydromorphone' as a class-member alternative.",
+          "formulary_status": "preferred",
+          "confidence": "low"
+        },
+        {
+          "rxcui": "unknown",
+          "name": "Oxymorphone Injection",
+          "rationale": "Listed as a formulary preferred alternative per hospital formulary record; parenteral opioid agonist with similar indication profile. Shortage status unverified \u2014 RxNorm tool errored and no FDA shortage cross-check was possible.",
+          "formulary_status": "preferred",
+          "confidence": "low"
+        }
+      ],
+      "citations": [
+        {
+          "source": "fda_shortage",
+          "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1732011",
+          "claim": "Morphine Sulfate Injection status is 'Current', availability is 'Unavailable', shortage reason is 'Other', updated 04/23/2026; RxCUI 1732011 confirmed in FDA shortage record."
+        },
+        {
+          "source": "openfda_label",
+          "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1732011&limit=1",
+          "claim": "Morphine Sulfate Injection is indicated for management of pain severe enough to require an opioid analgesic where alternative treatments are inadequate; IM dose is 10 mg every 4 hours in adults."
+        }
+      ],
+      "confidence": "low",
+      "recommended_action": "Verify current active orders for morphine sulfate IM immediately (EHR data shows 0 but re-occurrence from Resolved warrants confirmation); identify hydromorphone or oxymorphone IM supply levels and confirm shortage status via FDA shortage database before substituting, as RxNorm alternatives tool failed and no shortage cross-check was completed.",
+      "tool_call_log": [
+        {
+          "ts": "2026-05-02T19:12:30.157370+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_current_shortages",
+          "args": {
+            "limit": 1000
+          },
+          "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
+          "duration_ms": 660
+        },
+        {
+          "ts": "2026-05-02T19:12:30.177806+00:00",
+          "server": "drug_label",
+          "tool": "drug_label_get_drug_label_sections",
+          "args": {
+            "rxcui": "1732011",
+            "sections": [
+              "indications_and_usage",
+              "warnings",
+              "dosage_and_administration",
+              "contraindications"
+            ]
+          },
+          "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+          "duration_ms": 18
+        },
+        {
+          "ts": "2026-05-02T19:12:30.178363+00:00",
+          "server": "rxnorm",
+          "tool": "rxnorm_get_therapeutic_alternatives",
+          "args": {
+            "rxcui": "1732011"
+          },
+          "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
+          "duration_ms": 18
+        },
+        {
+          "ts": "2026-05-02T19:12:31.584707+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1732011"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+          "duration_ms": 1423
+        }
+      ],
+      "item_id": "a1ebc392-5711-4687-8487-7f290453d63f",
       "_diff_bucket": "escalated"
     },
     {
       "rxcui": "1719290",
       "drug_name": "Furosemide Injection",
       "severity": "Watch",
-      "summary": "Furosemide Injection (IM, non-preferred) remains in active shortage as of 04/23/2026; zero active orders recorded in the past 30 days, limiting immediate patient impact.",
-      "rationale": "today_status=Current and yesterday_status=Current with formulary_status=non-preferred and active_orders_30d=0. Rule W2 is the closest match (Current, non-preferred), but active_orders_30d=0 means there is no demonstrable current patient impact, moderating urgency. Rule W3 also applies (ongoing shortage, no status change). No rule escalates to Critical because active_orders_30d=0 does not satisfy active-orders thresholds in C1\u2013C4. Diff bucket is listed as 'escalated,' but yesterday_status matches today_status (both Current), so no re-occurrence trigger (C3) applies; per conflict rules the more conservative classification (Watch over Resolved) is retained. Confidence ceiling applied: active_orders_30d=0 is known (not missing), but all alternatives are class-member only \u2192 max medium.",
+      "summary": "Furosemide Injection (IM, non-preferred) remains in active shortage as of 04/23/2026; zero active orders in the past 30 days limits immediate patient impact, but shortage status is unchanged from yesterday.",
+      "rationale": "Rule W2 applies: today_status=Current, formulary_status=non-preferred, active_orders_30d=0. Rule W3 also matches (ongoing, no status change). W2 is the first matching rule; severity = Watch. Active orders are zero, so no patients are currently at risk, but the drug is on formulary and clinical need could arise at any time given its indications (edema, acute pulmonary edema). The diff bucket is flagged as 'escalated'; however yesterday_status=Current and today_status=Current \u2014 no true re-emergence \u2014 so Rule C3 does not apply. Confidence is capped at medium because active_orders_30d=0 removes urgency but does not eliminate risk, and all alternatives are class-member confidence only (ceiling: medium). Label data is available, so no low-confidence ceiling applies.",
       "alternatives": [
         {
           "rxcui": "1808",
           "name": "bumetanide",
-          "rationale": "Same loop diuretic class (inhibits Na-K-2Cl cotransporter); labeled for IM and IV administration for edema indications overlapping furosemide. FDA label states bumetanide can be substituted at ~1:40 ratio in furosemide-allergic patients. No shortage record found for RxCUI 1808.",
+          "rationale": "Same loop diuretic class (inhibits Na-K-2Cl cotransporter); labeled for IM and IV administration for edema associated with CHF, hepatic, and renal disease \u2014 same indications as furosemide injection. Dose conversion approximately 1 mg bumetanide : 40 mg furosemide per label. No active shortage record found. Bumetanide label notes cross-sensitivity with sulfonamides and ototoxicity risk; however, label explicitly states bumetanide can substitute for furosemide in furosemide-allergic patients. Bumetanide Injection (RxCUI 282486) appears on this formulary as non-formulary; oral bumetanide tablets are commercially available.",
           "formulary_status": "not-on-formulary",
           "confidence": "medium"
         },
         {
           "rxcui": "33770",
           "name": "piretanide",
-          "rationale": "Loop diuretic class member; no shortage record found for RxCUI 33770. Clinical equivalence data limited; not commonly stocked in US formularies. Shortage status unverified beyond top-2 check.",
-          "formulary_status": "unknown",
-          "confidence": "medium"
+          "rationale": "Loop diuretic class member; no shortage record found for RxCUI 33770. Not commercially available in the US market; shortage status unverified beyond absence of FDA shortage record. Not on hospital formulary. Clinical use in US is not established; recommend against as first-line substitute.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "low"
         },
         {
           "rxcui": "38413",
           "name": "torsemide",
-          "rationale": "Loop diuretic class member with established IV/oral formulations for edema. Shortage status unverified (ranked 3+, not checked per protocol).",
-          "formulary_status": "unknown",
-          "confidence": "medium"
+          "rationale": "Loop diuretic class member; available in oral and IV formulations in the US. Shortage status unverified (not checked per protocol \u2014 ranked 3+). Not on hospital formulary. Oral torsemide may bridge non-acute edema management if IM/IV route is not strictly required.",
+          "formulary_status": "not-on-formulary",
+          "confidence": "low"
         }
       ],
       "citations": [
         {
           "source": "fda_shortage",
           "url": "https://api.fda.gov/drug/shortages.json?search=openfda.rxcui%3A1719290",
-          "claim": "Furosemide Injection shortage status is Current as of 04/23/2026; RxCUI list includes 1719290."
+          "claim": "Furosemide Injection status is 'Current' shortage as of update date 04/23/2026; RxCUI list includes 1719286, 1719290, 1719291"
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.rxcui%3A1719290&limit=1",
-          "claim": "Furosemide Injection indicated for edema (heart failure, cirrhosis, renal disease) and acute pulmonary edema; IM and IV routes supported; contraindicated in anuria."
+          "claim": "Furosemide Injection indicated for edema (CHF, hepatic, renal disease) and acute pulmonary edema; IM and IV administration supported; contraindicated in anuria and furosemide hypersensitivity"
         },
         {
           "source": "openfda_label",
           "url": "https://api.fda.gov/drug/label.json?search=openfda.generic_name%3Abumetanide*&limit=1",
-          "claim": "Bumetanide labeled for IM/IV administration; 1:40 substitution ratio for furosemide; same edema indications; cross-sensitivity with furosemide rarely observed."
+          "claim": "Bumetanide indicated for edema associated with CHF, hepatic and renal disease; IM/IV parenteral administration supported; substitutable for furosemide at ~1:40 ratio; no cross-sensitivity with furosemide typically observed"
+        },
+        {
+          "source": "rxnorm",
+          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/1808/allrelated",
+          "claim": "RxCUI 1808 corresponds to bumetanide, identified as a therapeutic class-member alternative to furosemide"
+        },
+        {
+          "source": "rxnorm",
+          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/33770/allrelated",
+          "claim": "RxCUI 33770 corresponds to piretanide, identified as a therapeutic class-member alternative to furosemide"
+        },
+        {
+          "source": "rxnorm",
+          "url": "https://rxnav.nlm.nih.gov/REST/rxcui/38413/allrelated",
+          "claim": "RxCUI 38413 corresponds to torsemide, identified as a therapeutic class-member alternative to furosemide"
         }
       ],
       "confidence": "medium",
-      "recommended_action": "No immediate patient-care action required given zero active orders; monitor formulary stock levels and confirm bumetanide IM/IV availability for contingency use if orders increase.",
+      "recommended_action": "Monitor supply levels for Furosemide Injection; no immediate patient impact given zero active orders, but establish contingency protocol for IM bumetanide (requires P&T addition as non-formulary) should orders arise.",
       "tool_call_log": [
         {
-          "ts": "2026-05-02T18:35:26.265391+00:00",
-          "server": "fda_shortage",
-          "tool": "fda_shortage_get_shortage_detail",
-          "args": {
-            "rxcui": "1719290"
-          },
-          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-          "duration_ms": 17
-        },
-        {
-          "ts": "2026-05-02T18:35:26.266093+00:00",
+          "ts": "2026-05-02T19:12:30.178422+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -583,7 +576,7 @@
           "duration_ms": 18
         },
         {
-          "ts": "2026-05-02T18:35:26.267216+00:00",
+          "ts": "2026-05-02T19:12:30.178983+00:00",
           "server": "rxnorm",
           "tool": "rxnorm_get_therapeutic_alternatives",
           "args": {
@@ -593,27 +586,37 @@
           "duration_ms": 19
         },
         {
-          "ts": "2026-05-02T18:35:26.270349+00:00",
+          "ts": "2026-05-02T19:12:31.584828+00:00",
+          "server": "fda_shortage",
+          "tool": "fda_shortage_get_shortage_detail",
+          "args": {
+            "rxcui": "1719290"
+          },
+          "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+          "duration_ms": 1423
+        },
+        {
+          "ts": "2026-05-02T19:12:32.151069+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "1808"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
-          "duration_ms": 3
+          "duration_ms": 565
         },
         {
-          "ts": "2026-05-02T18:35:26.270564+00:00",
+          "ts": "2026-05-02T19:12:32.151587+00:00",
           "server": "fda_shortage",
           "tool": "fda_shortage_get_shortage_detail",
           "args": {
             "rxcui": "33770"
           },
           "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
-          "duration_ms": 3
+          "duration_ms": 566
         },
         {
-          "ts": "2026-05-02T18:35:26.274383+00:00",
+          "ts": "2026-05-02T19:12:32.165988+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -626,10 +629,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 3
+          "duration_ms": 14
         },
         {
-          "ts": "2026-05-02T18:35:26.275267+00:00",
+          "ts": "2026-05-02T19:12:32.167583+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -642,10 +645,10 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         },
         {
-          "ts": "2026-05-02T18:35:26.275438+00:00",
+          "ts": "2026-05-02T19:12:32.167990+00:00",
           "server": "drug_label",
           "tool": "drug_label_get_drug_label_sections",
           "args": {
@@ -658,46 +661,26 @@
             "drug_name": "bumetanide"
           },
           "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-          "duration_ms": 4
+          "duration_ms": 15
         }
       ],
-      "item_id": "638c6975-019c-4032-9c2d-bd728ab2f5e3",
+      "item_id": "8a3caa81-516d-4d81-97cc-16bdc336f366",
       "_diff_bucket": "escalated"
     }
   ],
   "tool_calls": [
     {
-      "ts": "2026-05-02T18:35:26.245664+00:00",
+      "ts": "2026-05-02T19:12:30.157370+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_current_shortages",
       "args": {
         "limit": 1000
       },
       "result_preview": "[{\"generic_name\": \"Promethazine Hydrochloride Injection\", \"proprietary_name\": null, \"status\": \"Current\", \"shortage_reason\": null, \"availability\": \"Available\", \"estimated_resolution\": null, \"rxcui\": [\"",
-      "duration_ms": 61
+      "duration_ms": 660
     },
     {
-      "ts": "2026-05-02T18:35:26.256813+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1719286"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-      "duration_ms": 9
-    },
-    {
-      "ts": "2026-05-02T18:35:26.257821+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1731993"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
-      "duration_ms": 10
-    },
-    {
-      "ts": "2026-05-02T18:35:26.258617+00:00",
+      "ts": "2026-05-02T19:12:30.169653+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -710,20 +693,20 @@
         ]
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Parenteral therapy should be reserved for patients unable to take oral medication or for patients in emergency clinical situations. Edema: Furosemid",
-      "duration_ms": 11
+      "duration_ms": 10
     },
     {
-      "ts": "2026-05-02T18:35:26.258792+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
+      "ts": "2026-05-02T19:12:30.171729+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
-        "rxcui": "1732006"
+        "rxcui": "1719286"
       },
-      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
-      "duration_ms": 11
+      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+      "duration_ms": 12
     },
     {
-      "ts": "2026-05-02T18:35:26.258914+00:00",
+      "ts": "2026-05-02T19:12:30.172394+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -736,66 +719,20 @@
         ]
       },
       "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
-      "duration_ms": 11
+      "duration_ms": 12
     },
     {
-      "ts": "2026-05-02T18:35:26.260670+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1719286"
-      },
-      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
-      "duration_ms": 13
-    },
-    {
-      "ts": "2026-05-02T18:35:26.261469+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1719291"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-      "duration_ms": 13
-    },
-    {
-      "ts": "2026-05-02T18:35:26.263180+00:00",
-      "server": "drug_label",
-      "tool": "drug_label_get_drug_label_sections",
-      "args": {
-        "rxcui": "1732006",
-        "sections": [
-          "indications_and_usage",
-          "warnings",
-          "dosage_and_administration",
-          "contraindications"
-        ]
-      },
-      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
-      "duration_ms": 15
-    },
-    {
-      "ts": "2026-05-02T18:35:26.264768+00:00",
+      "ts": "2026-05-02T19:12:30.174284+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
         "rxcui": "1731993"
       },
       "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
-      "duration_ms": 17
+      "duration_ms": 14
     },
     {
-      "ts": "2026-05-02T18:35:26.265391+00:00",
-      "server": "fda_shortage",
-      "tool": "fda_shortage_get_shortage_detail",
-      "args": {
-        "rxcui": "1719290"
-      },
-      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
-      "duration_ms": 17
-    },
-    {
-      "ts": "2026-05-02T18:35:26.265466+00:00",
+      "ts": "2026-05-02T19:12:30.177161+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -811,17 +748,43 @@
       "duration_ms": 17
     },
     {
-      "ts": "2026-05-02T18:35:26.266026+00:00",
+      "ts": "2026-05-02T19:12:30.177739+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
-        "rxcui": "1732006"
+        "rxcui": "1719291"
+      },
+      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
+      "duration_ms": 18
+    },
+    {
+      "ts": "2026-05-02T19:12:30.177806+00:00",
+      "server": "drug_label",
+      "tool": "drug_label_get_drug_label_sections",
+      "args": {
+        "rxcui": "1732011",
+        "sections": [
+          "indications_and_usage",
+          "warnings",
+          "dosage_and_administration",
+          "contraindications"
+        ]
+      },
+      "result_preview": "{\n  \"indications_and_usage\": \"1 INDICATIONS AND USAGE Morphine Sulfate Injection is indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatmen",
+      "duration_ms": 18
+    },
+    {
+      "ts": "2026-05-02T19:12:30.178363+00:00",
+      "server": "rxnorm",
+      "tool": "rxnorm_get_therapeutic_alternatives",
+      "args": {
+        "rxcui": "1732011"
       },
       "result_preview": "[{\"error\": \"'list' object has no attribute 'get'\"}]",
       "duration_ms": 18
     },
     {
-      "ts": "2026-05-02T18:35:26.266093+00:00",
+      "ts": "2026-05-02T19:12:30.178422+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -837,17 +800,7 @@
       "duration_ms": 18
     },
     {
-      "ts": "2026-05-02T18:35:26.266658+00:00",
-      "server": "rxnorm",
-      "tool": "rxnorm_get_therapeutic_alternatives",
-      "args": {
-        "rxcui": "1719291"
-      },
-      "result_preview": "[{\"rxcui\": \"1808\", \"name\": \"bumetanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"33770\", \"name\": \"piretanide\", \"confidence\": \"class-member\"}, {\"rxcui\": \"38413\", \"name\": \"torsemide\", \"confidence\": \"c",
-      "duration_ms": 18
-    },
-    {
-      "ts": "2026-05-02T18:35:26.267216+00:00",
+      "ts": "2026-05-02T19:12:30.178983+00:00",
       "server": "rxnorm",
       "tool": "rxnorm_get_therapeutic_alternatives",
       "args": {
@@ -857,27 +810,77 @@
       "duration_ms": 19
     },
     {
-      "ts": "2026-05-02T18:35:26.270349+00:00",
+      "ts": "2026-05-02T19:12:30.706606+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1719286"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 546
+    },
+    {
+      "ts": "2026-05-02T19:12:31.313827+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1731993"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+      "duration_ms": 1153
+    },
+    {
+      "ts": "2026-05-02T19:12:31.584384+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1719291"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 1423
+    },
+    {
+      "ts": "2026-05-02T19:12:31.584707+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1732011"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Morphine Sulfate Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": \"Other\",\n  \"availability\": \"Unavailable\",\n  \"estimated_resolution\": null,\n  \"r",
+      "duration_ms": 1423
+    },
+    {
+      "ts": "2026-05-02T19:12:31.584828+00:00",
+      "server": "fda_shortage",
+      "tool": "fda_shortage_get_shortage_detail",
+      "args": {
+        "rxcui": "1719290"
+      },
+      "result_preview": "{\n  \"generic_name\": \"Furosemide Injection\",\n  \"proprietary_name\": null,\n  \"status\": \"Current\",\n  \"shortage_reason\": null,\n  \"availability\": \"Available\",\n  \"estimated_resolution\": null,\n  \"rxcui\": [\n  ",
+      "duration_ms": 1423
+    },
+    {
+      "ts": "2026-05-02T19:12:32.151069+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
         "rxcui": "1808"
       },
       "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 1808\"\n}",
-      "duration_ms": 3
+      "duration_ms": 565
     },
     {
-      "ts": "2026-05-02T18:35:26.270564+00:00",
+      "ts": "2026-05-02T19:12:32.151587+00:00",
       "server": "fda_shortage",
       "tool": "fda_shortage_get_shortage_detail",
       "args": {
         "rxcui": "33770"
       },
       "result_preview": "{\n  \"error\": \"No shortage record for RxCUI 33770\"\n}",
-      "duration_ms": 3
+      "duration_ms": 566
     },
     {
-      "ts": "2026-05-02T18:35:26.274383+00:00",
+      "ts": "2026-05-02T19:12:32.165988+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -890,10 +893,10 @@
         "drug_name": "bumetanide"
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-      "duration_ms": 3
+      "duration_ms": 14
     },
     {
-      "ts": "2026-05-02T18:35:26.275267+00:00",
+      "ts": "2026-05-02T19:12:32.167583+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -906,10 +909,10 @@
         "drug_name": "bumetanide"
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-      "duration_ms": 4
+      "duration_ms": 15
     },
     {
-      "ts": "2026-05-02T18:35:26.275438+00:00",
+      "ts": "2026-05-02T19:12:32.167990+00:00",
       "server": "drug_label",
       "tool": "drug_label_get_drug_label_sections",
       "args": {
@@ -922,11 +925,11 @@
         "drug_name": "bumetanide"
       },
       "result_preview": "{\n  \"indications_and_usage\": \"INDICATIONS AND USAGE Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the ",
-      "duration_ms": 4
+      "duration_ms": 15
     }
   ],
-  "total_tokens_used": 21016,
-  "latency_ms": 100026,
+  "total_tokens_used": 21328,
+  "latency_ms": 121464,
   "label": "SYNTHETIC \u2014 v0.1 demo",
   "fetch_error": null
 }

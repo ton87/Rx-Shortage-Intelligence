@@ -151,3 +151,22 @@ button:focus-visible {
 }
 
 [data-testid="stMetricDelta"] { display: none !important; }
+
+/* ── Accept button: navy, not Streamlit primary red ─────────────────────── */
+[data-testid="stVerticalBlockBorderWrapper"] .stButton > button[kind="primary"],
+[data-testid="stVerticalBlock"] .stButton > button[kind="primary"] {
+  background-color: #1A3461 !important;
+  border-color: #1A3461 !important;
+  color: #ffffff !important;
+}
+[data-testid="stVerticalBlockBorderWrapper"] .stButton > button[kind="primary"]:hover,
+[data-testid="stVerticalBlock"] .stButton > button[kind="primary"]:hover {
+  background-color: #243d72 !important;
+  border-color: #243d72 !important;
+}
+
+/* ── Alert card tiles: white background ─────────────────────────────────── */
+[data-testid="stVerticalBlockBorderWrapper"] {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+}
