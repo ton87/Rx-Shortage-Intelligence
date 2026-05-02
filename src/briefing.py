@@ -18,8 +18,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from src.domain.fda import status_rank  # noqa: F401 — kept for compute_diff callers during migration
 from src.domain.diff import compute_diff
+from src.domain.indexing import index_formulary, index_orders
 from src.domain.constants import (
     DEFAULT_CANDIDATE_CAP,
     FDA_FETCH_LIMIT,
@@ -428,20 +428,6 @@ def load_data() -> tuple[list, list, list]:
     else:
         yesterday = []
     return formulary, orders_data, yesterday
-
-
-def index_formulary(drugs: list[dict]) -> dict[str, dict]:
-    """Index formulary by every RxCUI in rxcui_list so any match hits."""
-    idx = {}
-    for drug in drugs:
-        for rxcui in drug.get("rxcui_list", [drug.get("rxcui", "")]):
-            if rxcui:
-                idx[rxcui] = drug
-    return idx
-
-
-def index_orders(orders: list[dict]) -> dict[str, dict]:
-    return {o["rxcui"]: o for o in orders if o.get("rxcui")}
 
 
 # ── User message builder ──
