@@ -36,3 +36,22 @@ def demo_banner() -> str:
         'FDA shortage feed and RxNorm are live public data.</span>'
         '</div>'
     )
+
+
+FORMULARY_STATUS_COLORS: dict[str, tuple[str, str]] = {
+    "preferred":     ("#15803D", "#F0FDF4"),
+    "restricted":    ("#B45309", "#FFFBEB"),
+    "non-preferred": ("#6B7280", "#F3F4F6"),
+    "non-formulary": ("#374151", "#E5E7EB"),
+}
+_DEFAULT_FORMULARY_COLORS = ("#6B7280", "#F3F4F6")
+
+
+def formulary_status_badge(status: str | None) -> str:
+    color, bg = FORMULARY_STATUS_COLORS.get(status or "", _DEFAULT_FORMULARY_COLORS)
+    label = html.escape(status or "—")
+    return (
+        f'<span style="background:{bg};color:{color};'
+        f'padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600;'
+        f'text-transform:uppercase;letter-spacing:0.04em;">{label}</span>'
+    )

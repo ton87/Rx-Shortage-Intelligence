@@ -1,6 +1,6 @@
 """Formulary tab renderer.
 
-Owns STATUS_COLORS, render_formulary_tab, render_drug_drilldown, and the
+Owns render_formulary_tab, render_drug_drilldown, and the
 @st.cache_data wrappers for formulary + orders data loading.
 """
 
@@ -12,14 +12,7 @@ import streamlit as st
 from src.domain.severity import SEVERITY_RANK
 from src.domain.matching import build_shortage_index, find_shortage_match
 from src.io_.briefing_store import find_latest_briefing, load_briefing
-from src.ui.components import severity_badge
-
-STATUS_COLORS = {
-    "preferred":     ("#15803D", "#F0FDF4"),
-    "restricted":    ("#B45309", "#FFFBEB"),
-    "non-preferred": ("#6B7280", "#F3F4F6"),
-    "non-formulary": ("#374151", "#E5E7EB"),
-}
+from src.ui.components import formulary_status_badge, severity_badge
 
 
 @st.cache_data(show_spinner=False)
@@ -136,13 +129,7 @@ def render_drug_drilldown(rxcui: str, drugs: list[dict], orders_idx: dict, rxcui
 
     with col_l:
         st.markdown("**Formulary record**")
-        status_color, status_bg = STATUS_COLORS.get(drug.get("formulary_status", ""), ("#6B7280", "#F3F4F6"))
-        status_html = (
-            f'<span style="background:{status_bg};color:{status_color};'
-            f'padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600;'
-            f'text-transform:uppercase;letter-spacing:0.04em;">'
-            f'{html.escape(drug.get("formulary_status", "—"))}</span>'
-        )
+        status_html = formulary_status_badge(drug.get("formulary_status"))
         st.markdown(
             f"- **Status:** {status_html}\n"
             f"- **Route:** {(drug.get('route_of_administration') or '—').title()}\n"
