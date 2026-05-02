@@ -14,11 +14,9 @@ BRIEFINGS_DIR = DATA_DIR / "briefings"
 
 
 def find_latest_briefing() -> Path | None:
-    """Pick newest briefing by embedded run_timestamp, not filename.
-
-    Filename uses UTC date; run_timestamp is authoritative. Prevents picking
-    a stale 'tomorrow-named' file over a real newer run. Falls back to
-    filename sort if a file is unreadable.
+    """Pick newest briefing by file mtime — set atomically by write_briefing's
+    tmp+rename, so it tracks actual write time rather than the date encoded
+    in the filename. Filename used as tiebreaker.
 
     Returns None if the briefings directory does not exist or is empty.
     """
@@ -27,14 +25,7 @@ def find_latest_briefing() -> Path | None:
     files = list(BRIEFINGS_DIR.glob("*.json"))
     if not files:
         return None
-
-    def _ts(p: Path) -> str:
-        try:
-            return json.loads(p.read_text()).get("run_timestamp", "") or ""
-        except (OSError, json.JSONDecodeError):
-            return ""
-
-    return max(files, key=lambda p: (_ts(p), p.name))
+    return max(files, key=lambda p: (p.stat().st_mtime, p.name))
 
 
 def load_briefing(path: Path) -> dict:

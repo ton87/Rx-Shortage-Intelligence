@@ -62,22 +62,21 @@ class TestFindLatestBriefing:
 
         assert result is None
 
-    def test_picks_newest_by_run_timestamp_not_filename(self, tmp_path):
-        """Selects the file with the latest run_timestamp, not lexicographic filename.
+    def test_picks_newest_by_mtime_not_filename(self, tmp_path):
+        """Selects the most-recently-written file, not the lexicographic-latest filename.
 
-        Scenario: 2026-05-02.json has an OLDER timestamp than 2026-05-01.json.
-        (This simulates a file written with a future-named file but stale content.)
-        find_latest_briefing() must return 2026-05-01.json.
+        Scenario: 2026-05-02.json is written first (older mtime), then 2026-05-01.json
+        is written second (newer mtime). Even though 2026-05-02 sorts later by name,
+        find_latest_briefing() must return 2026-05-01.json because mtime is what
+        write_briefing's atomic tmp+rename guarantees.
         """
         from src.io_.briefing_store import find_latest_briefing
         briefings_dir = tmp_path / "briefings"
         briefings_dir.mkdir()
 
-        # Older timestamp, newer filename
         file_a = briefings_dir / "2026-05-02.json"
         file_a.write_text(json.dumps(_make_briefing("2026-05-01T10:00:00+00:00")))
 
-        # Newer timestamp, older filename
         file_b = briefings_dir / "2026-05-01.json"
         file_b.write_text(json.dumps(_make_briefing("2026-05-02T08:00:00+00:00")))
 
@@ -85,7 +84,7 @@ class TestFindLatestBriefing:
             result = find_latest_briefing()
 
         assert result == file_b, (
-            f"Expected {file_b.name} (newer run_timestamp) but got {result.name}"
+            f"Expected {file_b.name} (newer mtime) but got {result.name}"
         )
 
     def test_picks_single_file_when_only_one(self, tmp_path):
@@ -102,28 +101,28 @@ class TestFindLatestBriefing:
 
         assert result == only_file
 
-    def test_falls_back_to_filename_sort_on_unreadable_file(self, tmp_path):
-        """Unreadable files fall back to filename sort (treated as empty string ts)."""
+    def test_picks_corrupt_file_if_most_recent(self, tmp_path):
+        """find_latest_briefing uses mtime only; it does not read content. A corrupt
+        file written most recently wins selection, and downstream load_briefing
+        surfaces the JSON parse error rather than this function silently picking
+        an older valid briefing the user does not realize they are seeing.
+        """
         from src.io_.briefing_store import find_latest_briefing
         briefings_dir = tmp_path / "briefings"
         briefings_dir.mkdir()
 
-        # Good file with a real timestamp
         good = briefings_dir / "2026-05-02.json"
         good.write_text(json.dumps(_make_briefing("2026-05-02T09:00:00+00:00")))
 
-        # Corrupt file — JSON parse fails → ts = "" → sorts lower
         bad = briefings_dir / "2026-05-03.json"
         bad.write_text("NOT VALID JSON {{{")
 
         with patch("src.io_.briefing_store.BRIEFINGS_DIR", briefings_dir):
             result = find_latest_briefing()
 
-        # good has a real timestamp; bad has "" which sorts lower than any real ts.
-        # So good wins on ts; bad wins on name. Tie-break: ("", "2026-05-03.json")
-        # vs ("2026-05-02T09:00:00+00:00", "2026-05-02.json").
-        # "2026-05-02T..." > "" so good wins.
-        assert result == good
+        assert result == bad, (
+            f"Expected {bad.name} (most recent mtime) but got {result.name}"
+        )
 
 
 # ---------------------------------------------------------------------------
