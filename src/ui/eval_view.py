@@ -4,14 +4,11 @@ Shows the 15-case scoring results from data/eval_results.json.
 Internal QA tool — not for clinical use.
 """
 
-import subprocess
-import sys
-
 import pandas as pd
 import streamlit as st
 
-from src.domain.constants import BRIEFING_SUBPROCESS_TIMEOUT_S
 from src.io_.briefing_store import load_briefing, DATA_DIR
+from src.ui.runner import run_eval_cli
 
 
 def render_eval_tab() -> None:
@@ -23,23 +20,16 @@ def render_eval_tab() -> None:
         st.info("No eval results found. Run: `python -m src.eval.runner`")
         if st.button("Run eval now"):
             with st.status("Running eval…", expanded=True) as status:
-                try:
-                    result = subprocess.run(
-                        [sys.executable, "-m", "src.eval.runner"],
-                        capture_output=True, text=True, timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
-                    )
-                except subprocess.TimeoutExpired:
-                    status.update(label="Eval timed out (>10 min).", state="error")
-                    return
-            if result.returncode == 0:
-                status.update(label="Eval complete.", state="complete")
-                if result.stdout.strip():
-                    status.code(result.stdout, language="text")
-                st.rerun()
-            else:
-                status.update(label="Eval failed.", state="error")
-                err = (result.stderr or result.stdout or "(no output)").strip()
-                status.code(err, language="text")
+                ok, stdout, stderr = run_eval_cli()
+                if ok:
+                    status.update(label="Eval complete.", state="complete")
+                    if stdout.strip():
+                        status.code(stdout, language="text")
+                    st.rerun()
+                else:
+                    status.update(label="Eval failed.", state="error")
+                    err = (stderr or stdout or "(no output)").strip()
+                    status.code(err, language="text")
         return
 
     eval_data = load_briefing(eval_path)

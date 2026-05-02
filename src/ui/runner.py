@@ -122,11 +122,24 @@ def run_briefing_with_status() -> bool:
     Full transcript persisted to data/briefings/logs/briefing-<ts>.log for review.
     """
     with st.status("Running briefing…", expanded=False) as status:
-        ok, _msg, log_path = run_briefing_cli()
+        ok, msg, log_path = run_briefing_cli()
         if log_path:
             st.session_state["last_briefing_log"] = str(log_path)
-        if ok:
-            status.update(label="Briefing complete.", state="complete")
-            return True
-        status.update(label="Briefing failed.", state="error")
-        return False
+        status.update(label=msg, state="complete" if ok else "error")
+        return ok
+
+
+def run_eval_cli() -> tuple[bool, str, str]:
+    """Spawn eval subprocess. Captures output for in-UI display.
+
+    Returns (success, stdout, stderr_or_combined).
+    """
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-m", "src.eval.runner"],
+            capture_output=True, text=True,
+            timeout=BRIEFING_SUBPROCESS_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "", "Eval timed out (>10 min)."
+    return proc.returncode == 0, proc.stdout, proc.stderr
