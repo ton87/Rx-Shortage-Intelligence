@@ -18,7 +18,6 @@ import pandas as pd
 import streamlit as st
 
 from src.domain.severity import Severity, SEVERITY_RANK
-from src.domain.confidence import Confidence, CONFIDENCE_LABELS
 from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TIMEOUT_S
 from src.domain.matching import (
     normalize_drug_name,
@@ -32,6 +31,8 @@ from src.io_.briefing_store import (
     BRIEFINGS_DIR as _BRIEFINGS_DIR,
 )
 from src.ui.theme import render_theme
+from src.ui.components import severity_badge, confidence_pill, citation_link, demo_banner
+from src.ui.formatters import format_timestamp, format_int_or_dash, format_latency_or_dash
 
 # ── Config ──────────────────────────────────────────────────────────────────
 
@@ -48,48 +49,6 @@ FORMULARY_PATH = DATA_DIR / "synthetic_formulary.json"
 ORDERS_PATH = DATA_DIR / "active_orders.json"
 
 ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
-
-# ── Helpers ─────────────────────────────────────────────────────────────────
-
-def severity_badge(severity: str) -> str:
-    s = (severity or "").strip()
-    cls = s.lower() if s.lower() in ("critical", "watch", "resolved") else "watch"
-    return f'<span class="rx-badge rx-badge-{cls}">{html.escape(s.upper())}</span>'
-
-def confidence_pill(conf: str) -> str:
-    c = (conf or "").strip().lower()
-    if c not in ("high", "medium", "low"):
-        c = "low"
-    label = CONFIDENCE_LABELS[Confidence(c)]
-    return f'<span class="rx-pill rx-pill-{c}">{label}</span>'
-
-def format_timestamp(iso: str) -> str:
-    """Display ISO timestamp in the user's local timezone with tz abbreviation."""
-    if not iso:
-        return "—"
-    try:
-        dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
-        # Convert UTC-stored ISO to local; %Z yields tz abbreviation (e.g. EDT, PST)
-        local = dt.astimezone()
-        return local.strftime("%b %d, %Y · %H:%M %Z").strip()
-    except (ValueError, TypeError):
-        return iso
-
-def format_int_or_dash(value) -> str:
-    try:
-        n = int(value)
-    except (TypeError, ValueError):
-        return "—"
-    return "—" if n == 0 else f"{n:,}"
-
-def format_latency_or_dash(latency_ms) -> str:
-    try:
-        ms = int(latency_ms)
-    except (TypeError, ValueError):
-        return "—"
-    if ms == 0:
-        return "—"
-    return f"{ms // 1000}s" if ms >= 1000 else f"{ms} ms"
 
 # ── Data loading ────────────────────────────────────────────────────────────
 
