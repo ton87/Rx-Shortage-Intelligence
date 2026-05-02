@@ -4,6 +4,7 @@ Prevents concurrent CLI invocations from the UI. Lock file at LOCK_PATH;
 stale locks older than LOCK_STALE_S or with dead PIDs are auto-cleared.
 """
 
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -15,12 +16,11 @@ from src.domain.constants import LOCK_PATH, LOCK_STALE_S, BRIEFING_SUBPROCESS_TI
 from src.io_.briefing_store import BRIEFINGS_DIR
 
 BRIEFING_LOCK_PATH = Path(LOCK_PATH)
-BRIEFING_LOCK_STALE_SECONDS = LOCK_STALE_S
 BRIEFING_LOGS_DIR = BRIEFINGS_DIR / "logs"
 
 
 def _briefing_lock_held() -> tuple[bool, str | None]:
-    """Return (is_held, holder_pid_str). Stale locks (>15min, dead pid) cleared."""
+    """Return (is_held, holder_pid_str). Stale locks (>LOCK_STALE_S, dead pid) cleared."""
     if not BRIEFING_LOCK_PATH.exists():
         return False, None
     try:
@@ -28,12 +28,10 @@ def _briefing_lock_held() -> tuple[bool, str | None]:
         pid_str, ts_str = content.split(":", 1)
         ts = float(ts_str)
         age = datetime.now(timezone.utc).timestamp() - ts
-        if age > BRIEFING_LOCK_STALE_SECONDS:
+        if age > LOCK_STALE_S:
             BRIEFING_LOCK_PATH.unlink(missing_ok=True)
             return False, None
-        # Check pid is alive (best-effort, posix only)
         try:
-            import os
             os.kill(int(pid_str), 0)
         except (ProcessLookupError, ValueError):
             BRIEFING_LOCK_PATH.unlink(missing_ok=True)
@@ -51,7 +49,6 @@ def _acquire_briefing_lock() -> bool:
     if held:
         return False
     try:
-        import os
         BRIEFING_LOCK_PATH.write_text(
             f"{os.getpid()}:{datetime.now(timezone.utc).timestamp()}"
         )

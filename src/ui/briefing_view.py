@@ -192,7 +192,7 @@ def render_briefing_tab() -> None:
 
     counts = {s: 0 for s in Severity}
     for it in items:
-        sev = it.get("severity", "Watch")
+        sev = it.get("severity", Severity.WATCH)
         if sev in counts:
             counts[sev] += 1
 
@@ -200,9 +200,9 @@ def render_briefing_tab() -> None:
     st.subheader(f"Morning Briefing — {run_ts}")
 
     s1, s2, s3, s4 = st.columns(4)
-    s1.metric("Critical", counts["Critical"])
-    s2.metric("Watch", counts["Watch"])
-    s3.metric("Resolved", counts["Resolved"])
+    s1.metric("Critical", counts[Severity.CRITICAL])
+    s2.metric("Watch", counts[Severity.WATCH])
+    s3.metric("Resolved", counts[Severity.RESOLVED])
     s4.metric("Latency", format_latency_or_dash(run.get("latency_ms", 0)))
     st.markdown(
         f'<div class="rx-meta-row">{run.get("items_reviewed", 0)} drugs reviewed · '
