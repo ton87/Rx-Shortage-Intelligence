@@ -41,7 +41,8 @@ def _make_response(stop_reason: str, content: list):
 # Tests: compute_diff
 # ---------------------------------------------------------------------------
 
-from src.briefing import compute_diff, index_formulary, index_orders, build_user_message, parse_briefing_item
+from src.domain.diff import compute_diff
+from src.briefing import index_formulary, index_orders, build_user_message, parse_briefing_item
 
 
 class TestComputeDiff(unittest.TestCase):
