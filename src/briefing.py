@@ -59,16 +59,21 @@ and not acceptable.
 
 # Tool-use protocol
 
-1. For each candidate drug from the diff, fetch the FDA shortage detail first to confirm status
-   and shortage reason.
-2. Fetch openFDA label sections relevant to the classification: indications_and_usage, warnings,
-   dosage_and_administration, contraindications. Avoid fetching everything — be targeted.
-3. If the drug is in shortage, fetch therapeutic alternatives via rxnorm. For each alternative
-   you intend to recommend, fetch its label sections to verify route, indication, and absence of
-   absolute contraindications.
-4. If a tool returns {"error": ...}, do not retry. Surface the absence as a constraint in your
-   classification (e.g., "label data unavailable; confidence capped at low").
-5. Never invent a tool call you were not given. Never fabricate a tool response.
+CALL BUDGET: You have a maximum of 6 tool calls per drug. Plan before calling.
+
+Sequence (strict order, no deviations):
+1. Call get_shortage_detail once for the candidate drug. Confirm status and reason.
+2. Call get_drug_label_sections once for the candidate drug with ALL needed sections in one call:
+   ["indications_and_usage", "warnings", "dosage_and_administration", "contraindications"].
+3. Call get_therapeutic_alternatives once to retrieve alternatives list.
+4. Call get_shortage_detail ONCE passing ALL alternative RxCUIs together (if the tool supports
+   a list) OR call it once per top-2 alternatives only — not once per alternative separately.
+   Skip shortage check for alternatives ranked 3+; note "shortage status unverified" in rationale.
+5. Call get_drug_label_sections for the top-1 alternative only (one call, targeted sections).
+6. Produce output. Do not make additional tool calls after step 5.
+
+If a tool returns {"error": ...}, do not retry. Surface as confidence: low.
+Never invent a tool call you were not given. Never fabricate a tool response.
 
 # Data shape rules
 
@@ -298,7 +303,106 @@ def _system_blocks(formulary_subset: list[dict]) -> list[dict]:
             "text": "FORMULARY SUBSET FOR THIS HOSPITAL:\n" + json.dumps(formulary_subset, indent=2),
             "cache_control": {"type": "ephemeral"},
         },
+        {
+            "type": "text",
+            "text": (
+                "PREFETCH MODE — OVERRIDE:\n"
+                "All FDA, openFDA, and RxNorm data has been pre-fetched in parallel before this "
+                "request and is included in the user message. Do NOT call any tools. "
+                "Classify using only the pre-fetched data. Set tool_call_log to []."
+            ),
+            "cache_control": {"type": "ephemeral"},
+        },
     ]
+
+
+async def _prefetch_drug_data(
+    bridge,
+    candidates: list[dict],
+    formulary_idx: dict,
+) -> dict[str, dict]:
+    """Parallel-fetch shortage detail + label + alternatives for all candidates,
+    then parallel-fetch alt shortage status and top-1 alt label."""
+    frxcuis = [d.get("_formulary_rxcui", "") for d in candidates if d.get("_formulary_rxcui")]
+
+    async def _phase1_one(frxcui: str) -> tuple[str, str, str, str]:
+        shortage, label, alts = await asyncio.gather(
+            bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": frxcui}),
+            bridge.call_tool("drug_label_get_drug_label_sections", {
+                "rxcui": frxcui,
+                "sections": ["indications_and_usage", "warnings", "dosage_and_administration", "contraindications"],
+            }),
+            bridge.call_tool("rxnorm_get_therapeutic_alternatives", {"rxcui": frxcui}),
+        )
+        return frxcui, shortage, label, alts
+
+    phase1 = await asyncio.gather(*[_phase1_one(r) for r in frxcuis])
+
+    drug_data: dict[str, dict] = {}
+    all_alt_rxcuis: set[str] = set()
+
+    for frxcui, shortage_str, label_str, alts_str in phase1:
+        try:
+            alts_parsed = json.loads(alts_str)
+        except Exception:
+            alts_parsed = []
+        if isinstance(alts_parsed, dict):
+            alts_list = alts_parsed.get("alternatives", alts_parsed.get("drugs", []))
+        elif isinstance(alts_parsed, list):
+            alts_list = alts_parsed
+        else:
+            alts_list = []
+
+        drug_data[frxcui] = {
+            "shortage_detail": shortage_str,
+            "label": label_str,
+            "alternatives": alts_list,
+            "alt_shortage": {},
+            "alt_label_top1": None,
+        }
+        for alt in alts_list[:2]:
+            rxcui = str(alt.get("rxcui", "") or "")
+            if rxcui:
+                all_alt_rxcuis.add(rxcui)
+
+    # Phase 2a: shortage status for all unique alt RxCUIs
+    alt_rxcui_list = list(all_alt_rxcuis)
+    if alt_rxcui_list:
+        alt_shortage_results = await asyncio.gather(
+            *[bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": r}) for r in alt_rxcui_list]
+        )
+        alt_shortage_map = dict(zip(alt_rxcui_list, alt_shortage_results))
+    else:
+        alt_shortage_map = {}
+
+    # Phase 2b: label for top-1 alternative per drug
+    top1_items: list[tuple[str, str]] = []
+    for frxcui, data in drug_data.items():
+        if data["alternatives"]:
+            top1_rxcui = str(data["alternatives"][0].get("rxcui", "") or "")
+            if top1_rxcui:
+                top1_items.append((frxcui, top1_rxcui))
+
+    if top1_items:
+        top1_label_results = await asyncio.gather(
+            *[bridge.call_tool("drug_label_get_drug_label_sections", {
+                "rxcui": alt_rxcui,
+                "sections": ["indications_and_usage", "warnings", "dosage_and_administration"],
+                "drug_name": drug_data[frxcui]["alternatives"][0].get("name"),
+            }) for frxcui, alt_rxcui in top1_items]
+        )
+        for (frxcui, _), label_str in zip(top1_items, top1_label_results):
+            drug_data[frxcui]["alt_label_top1"] = label_str
+
+    # Attach alt shortage map to each drug
+    for frxcui, data in drug_data.items():
+        data["alt_shortage"] = {
+            str(alt.get("rxcui", "")): alt_shortage_map.get(str(alt.get("rxcui", "")), "{}")
+            for alt in data["alternatives"][:2]
+            if alt.get("rxcui")
+        }
+
+    return drug_data
 
 
 # ── Data loading ──
@@ -403,18 +507,73 @@ Diff bucket: {drug.get('_diff_bucket', 'unknown')}
 Generate one BriefingItem JSON object for this drug. Use tools to fetch shortage detail, label sections, and therapeutic alternatives. Return ONLY valid JSON matching the BriefingItem schema — no prose before or after."""
 
 
+def build_user_message_prefetch(
+    drug: dict, formulary_entry: dict, orders_entry: dict | None,
+    today_status: str, yesterday_status: str,
+    prefetched: dict,
+) -> str:
+    orders_count = orders_entry.get("count_last_30_days", 0) if orders_entry else 0
+    departments = orders_entry.get("departments", []) if orders_entry else []
+    alts = formulary_entry.get("preferred_alternatives", [])
+    frxcui = drug.get("_formulary_rxcui", "")
+    return f"""Drug: {drug.get('generic_name') or formulary_entry.get('name')} (RxCUI {frxcui})
+Today's shortage status: {today_status}
+Yesterday's status: {yesterday_status or 'not in snapshot'}
+Active orders last 30 days: {orders_count}
+Departments affected: {', '.join(departments) if departments else 'none recorded'}
+Formulary status: {formulary_entry.get('formulary_status', 'unknown')}
+Route of administration: {formulary_entry.get('route_of_administration', 'unknown')}
+Preferred alternatives on formulary: {alts if alts else 'none'}
+Diff bucket: {drug.get('_diff_bucket', 'unknown')}
+
+PRE-FETCHED DATA — use this, do not call tools:
+
+FDA shortage detail:
+{prefetched.get('shortage_detail', '{}')}
+
+openFDA label sections:
+{prefetched.get('label', '{}')}
+
+Therapeutic alternatives (RxNorm):
+{json.dumps(prefetched.get('alternatives', []), indent=2)}
+
+Alternative shortage status (top-2 checked):
+{json.dumps(prefetched.get('alt_shortage', {}), indent=2)}
+
+Top-1 alternative label sections:
+{prefetched.get('alt_label_top1') or 'not fetched'}
+
+Generate one BriefingItem JSON object. Cite URLs from the pre-fetched data above. Set tool_call_log to []. Return ONLY valid JSON — no prose before or after."""
+
+
 # ── JSON extraction ──
 
 def parse_briefing_item(text: str, drug_name: str, rxcui: str) -> dict:
-    """Extract JSON from agent output. Falls back to a minimal error item."""
-    # Try to extract JSON block
-    match = re.search(r'\{[\s\S]*\}', text)
-    if match:
+    """Extract JSON from agent output via raw_decode (brace-balanced, prose-tolerant).
+
+    Greedy regex `{[\\s\\S]*}` previously grabbed across embedded JSON in rationale
+    fields. raw_decode walks from the first `{` and stops at the first complete
+    JSON object; survives trailing prose. Falls through to minimal error item.
+    """
+    if not text:
+        return _fallback_item(text, drug_name, rxcui)
+    decoder = json.JSONDecoder()
+    start = 0
+    while True:
+        idx = text.find("{", start)
+        if idx < 0:
+            break
         try:
-            return json.loads(match.group())
+            obj, _ = decoder.raw_decode(text[idx:])
+            if isinstance(obj, dict):
+                return obj
         except json.JSONDecodeError:
             pass
-    # Fallback
+        start = idx + 1
+    return _fallback_item(text, drug_name, rxcui)
+
+
+def _fallback_item(text: str, drug_name: str, rxcui: str) -> dict:
     return {
         "rxcui": rxcui,
         "drug_name": drug_name,
@@ -435,72 +594,183 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
     from src.mcp_bridge import MCPBridge
     from src.agent import run_agent
 
-    date_str = date_str or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    date_str = date_str or datetime.now().strftime("%Y-%m-%d")
     run_id = str(uuid.uuid4())
     t_start = time.monotonic()
+
+    def _log(msg: str) -> None:
+        elapsed = time.monotonic() - t_start
+        print(f"[briefing t={elapsed:5.1f}s] {msg}", flush=True)
+
+    _log(f"phase=start run_id={run_id} date={date_str}")
 
     formulary, orders_list, yesterday = load_data()
     formulary_idx = index_formulary(formulary)
     orders_idx = index_orders(orders_list)
     formulary_rxcuis = set(formulary_idx.keys())
+    _log(f"phase=load_data formulary={len(formulary)} orders={len(orders_list)} yesterday={len(yesterday)}")
 
     # Fetch today's shortages via MCP bridge
     async with MCPBridge() as bridge:
-        tools = bridge.list_tools()
-        system = _system_blocks(formulary)
-
+        _log("phase=mcp_bridge_ready")
+        t_fda = time.monotonic()
         today_raw_str = await bridge.call_tool("fda_shortage_get_current_shortages", {"limit": 100})
+        fetch_error = None
         try:
             today_raw = json.loads(today_raw_str)
             if isinstance(today_raw, dict) and "error" in today_raw:
+                fetch_error = today_raw.get("error", "FDA shortage feed returned error envelope.")
                 today_raw = []
-        except Exception:
+        except Exception as e:
+            fetch_error = f"FDA shortage feed JSON parse failed: {e}"
             today_raw = []
 
+        if fetch_error:
+            _log(f"WARNING fetch_error={fetch_error!r}")
+        _log(f"phase=fda_fetch shortages={len(today_raw)} elapsed={time.monotonic()-t_fda:.1f}s")
+
         diff = compute_diff(today_raw, yesterday, formulary_rxcuis)
+        _log(
+            f"phase=diff new={len(diff['new'])} escalated={len(diff['escalated'])} "
+            f"improved={len(diff['improved'])} resolved={len(diff['resolved'])} "
+            f"unchanged={len(diff['unchanged'])}"
+        )
 
         # Surface new + escalated + improved + resolved (skip unchanged)
         candidates = (
             diff["new"] + diff["escalated"] + diff["improved"] + diff["resolved"]
         )
 
-        # Cut line: cap at 10 drugs to control cost/latency
-        candidates = candidates[:10]
+        # Cut line: cap at 5 drugs for v0.1 tier-1 latency budget.
+        cap = 5
+        if len(candidates) > cap:
+            _log(f"phase=cap_applied total={len(candidates)} kept={cap}")
+        candidates = candidates[:cap]
+        _log(f"phase=candidates count={len(candidates)} names={[c.get('generic_name') for c in candidates]}")
 
-        items = []
-        all_tool_calls = []
-        total_tokens = 0
+        # Pre-fetch all data in parallel before the agent loop.
+        # Eliminates per-drug tool-call roundtrips (was ~11 Anthropic calls/drug).
+        # Each drug now costs 1 classification call (~39s) instead of ~11 calls (~90s).
+        t_pre = time.monotonic()
+        _log(f"phase=prefetch_start drugs={len(candidates)}")
+        prefetch_map = await _prefetch_drug_data(bridge, candidates, formulary_idx)
+        _log(
+            f"phase=prefetch_done elapsed={time.monotonic()-t_pre:.1f}s "
+            f"tool_calls={len(bridge.tool_calls)}"
+        )
+        system = _system_blocks(formulary)
 
-        for drug in candidates:
-            frxcui = drug.get("_formulary_rxcui", "")
-            formulary_entry = formulary_idx.get(frxcui, {})
-            orders_entry = orders_idx.get(frxcui)
-            yesterday_item = next(
-                (r for r in yesterday if frxcui in r.get("rxcui", [])), None
-            )
-            yesterday_status = yesterday_item.get("status", "") if yesterday_item else ""
+        # Serial classification: 1 Anthropic call per drug, no tools.
+        # sem=1 guards against concurrent cache-miss storms on the system prompt.
+        sem = asyncio.Semaphore(1)
 
-            user_msg = build_user_message(
-                drug, formulary_entry, orders_entry,
-                drug.get("status", ""), yesterday_status
-            )
+        async def _process_drug(drug: dict, drug_idx: int, total: int) -> tuple[dict, int]:
+            async with sem:
+                t_drug = time.monotonic()
+                frxcui = drug.get("_formulary_rxcui", "")
+                formulary_entry = formulary_idx.get(frxcui, {})
+                orders_entry = orders_idx.get(frxcui)
+                yesterday_item = next(
+                    (r for r in yesterday if frxcui in r.get("rxcui", [])), None
+                )
+                yesterday_status = yesterday_item.get("status", "") if yesterday_item else ""
+                prefetched = prefetch_map.get(frxcui, {})
 
-            final_text, tool_calls = await run_agent(
-                system=system,
-                user_msg=user_msg,
-                tools=tools,
-                call_tool_fn=bridge.call_tool,
-            )
+                user_msg = build_user_message_prefetch(
+                    drug, formulary_entry, orders_entry,
+                    drug.get("status", ""), yesterday_status,
+                    prefetched,
+                )
 
-            item = parse_briefing_item(
-                final_text,
-                drug.get("generic_name") or formulary_entry.get("name", "Unknown"),
-                frxcui,
-            )
-            item["item_id"] = str(uuid.uuid4())
-            item["_diff_bucket"] = drug.get("_diff_bucket", "unknown")
-            items.append(item)
-            all_tool_calls.extend(bridge.tool_calls[-len(tool_calls):] if tool_calls else [])
+                drug_name = drug.get("generic_name") or formulary_entry.get("name", "Unknown")
+                _log(f"drug={drug_idx}/{total} name={drug_name!r} rxcui={frxcui} started")
+                try:
+                    final_text, tool_calls, tokens = await asyncio.wait_for(
+                        run_agent(
+                            system=system,
+                            user_msg=user_msg,
+                            tools=[],
+                            call_tool_fn=bridge.call_tool,
+                        ),
+                        timeout=90,
+                    )
+                except asyncio.TimeoutError:
+                    _log(f"drug={drug_idx}/{total} name={drug_name!r} TIMEOUT after 90s")
+                    return {
+                        "rxcui": frxcui,
+                        "drug_name": drug_name,
+                        "severity": "Watch",
+                        "summary": "Agent timed out (>90s). Manual review required.",
+                        "rationale": "Agent exceeded per-drug timeout. No automated classification produced.",
+                        "alternatives": [],
+                        "citations": [],
+                        "confidence": "low",
+                        "recommended_action": "Manual review required — agent did not complete within time budget.",
+                        "tool_call_log": [],
+                        "item_id": str(uuid.uuid4()),
+                        "_diff_bucket": drug.get("_diff_bucket", "unknown"),
+                    }, 0
+
+                item = parse_briefing_item(final_text, drug_name, frxcui)
+                item["item_id"] = str(uuid.uuid4())
+                item["_diff_bucket"] = drug.get("_diff_bucket", "unknown")
+                # Attribute prefetch tool calls to this drug.
+                # Match by rxcui in tool args (formulary rxcui or any alt rxcui from prefetch).
+                drug_alt_rxcuis = {
+                    str(a.get("rxcui", "") or "")
+                    for a in (prefetched.get("alternatives") or [])[:2]
+                }
+                drug_alt_rxcuis.add(str(frxcui))
+                item_tool_calls = [
+                    tc for tc in bridge.tool_calls
+                    if str((tc.get("args") or {}).get("rxcui") or "") in drug_alt_rxcuis
+                ]
+                # Append the agent's own tool_call_log too (will be empty in prefetch mode)
+                item["tool_call_log"] = item_tool_calls + (tool_calls or [])
+                _log(
+                    f"drug={drug_idx}/{total} name={drug_name!r} done "
+                    f"elapsed={time.monotonic()-t_drug:.1f}s tokens={tokens} "
+                    f"severity={item.get('severity', '?')!r} confidence={item.get('confidence', '?')!r} "
+                    f"alts={len(item.get('alternatives', []) or [])} "
+                    f"cites={len(item.get('citations', []) or [])} "
+                    f"tool_log={len(item.get('tool_call_log', []) or [])}"
+                )
+                return item, tokens
+
+        # return_exceptions=True so one drug's failure doesn't cancel siblings
+        total = len(candidates)
+        gathered = await asyncio.gather(
+            *(_process_drug(d, i + 1, total) for i, d in enumerate(candidates)),
+            return_exceptions=True,
+        )
+        results = []
+        for d, r in zip(candidates, gathered):
+            if isinstance(r, Exception):
+                frxcui = d.get("_formulary_rxcui", "")
+                drug_name = d.get("generic_name") or formulary_idx.get(frxcui, {}).get("name", "Unknown")
+                _log(f"drug name={drug_name!r} rxcui={frxcui} FAILED type={type(r).__name__} error={str(r)[:200]!r}")
+                results.append((
+                    {
+                        "rxcui": frxcui,
+                        "drug_name": drug_name,
+                        "severity": "Watch",
+                        "summary": f"Classification failed for {drug_name}. Manual review required.",
+                        "rationale": f"Per-drug pipeline raised {type(r).__name__}: {str(r)[:300]}",
+                        "alternatives": [],
+                        "citations": [],
+                        "confidence": "low",
+                        "recommended_action": "Manual review required — automated pipeline failed.",
+                        "tool_call_log": [],
+                        "item_id": str(uuid.uuid4()),
+                        "_diff_bucket": d.get("_diff_bucket", "unknown"),
+                    },
+                    0,
+                ))
+            else:
+                results.append(r)
+        items = [r[0] for r in results]
+        total_tokens = sum(r[1] for r in results)
+        all_tool_calls = list(bridge.tool_calls)
 
     latency_ms = int((time.monotonic() - t_start) * 1000)
     run = {
@@ -516,12 +786,17 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         "total_tokens_used": total_tokens,
         "latency_ms": latency_ms,
         "label": "SYNTHETIC — v0.1 demo",
+        "fetch_error": fetch_error,
     }
 
     BRIEFINGS_DIR.mkdir(parents=True, exist_ok=True)
     out_path = BRIEFINGS_DIR / f"{date_str}.json"
     out_path.write_text(json.dumps(run, indent=2))
-    print(f"Briefing written to {out_path} ({len(items)} items, {latency_ms}ms)")
+    _log(
+        f"phase=write path={out_path.name} items={len(items)} "
+        f"total_tokens={total_tokens} latency={latency_ms/1000:.1f}s"
+    )
+    print(f"Briefing written to {out_path} ({len(items)} items, {latency_ms}ms)", flush=True)
     return run
 
 

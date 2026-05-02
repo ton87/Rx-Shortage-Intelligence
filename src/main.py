@@ -269,44 +269,157 @@ def load_orders_index() -> dict:
 
 # ── HITL action logging ─────────────────────────────────────────────────────
 
-def log_action(briefing_path: Path, item_id: str, action: str, reason: str | None = None) -> None:
-    run = load_json(briefing_path)
-    for item in run["items"]:
-        if item["item_id"] == item_id:
+def log_action(briefing_path: Path, item_id: str, action: str, reason: str | None = None) -> bool:
+    """Atomic read-modify-write of action on briefing JSON.
+
+    Returns True if item_id matched and write succeeded. False on stale item_id
+    (briefing regenerated since render — all uuids new), corrupt JSON, or IO error.
+    Atomic write via tmp + rename so concurrent re-run can't see half-written file.
+    """
+    try:
+        run = load_json(briefing_path)
+    except (OSError, json.JSONDecodeError) as e:
+        st.error(f"Could not read briefing: {e}. Try Re-run briefing.")
+        return False
+
+    matched = False
+    for item in run.get("items", []) or []:
+        if item.get("item_id") == item_id:
             item["user_action"] = action
             item["user_action_timestamp"] = datetime.now(timezone.utc).isoformat()
             if reason:
                 item["user_action_reason"] = reason
+            matched = True
             break
-    briefing_path.write_text(json.dumps(run, indent=2))
+
+    if not matched:
+        st.warning("Action not recorded — briefing was regenerated. Refresh and try again.")
+        return False
+
+    tmp_path = briefing_path.with_suffix(briefing_path.suffix + ".tmp")
+    try:
+        tmp_path.write_text(json.dumps(run, indent=2))
+        tmp_path.replace(briefing_path)
+        return True
+    except OSError as e:
+        st.error(f"Could not save action: {e}")
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except OSError:
+            pass
+        return False
 
 # ── Re-run pipeline ─────────────────────────────────────────────────────────
 
-def run_briefing_cli() -> tuple[bool, str]:
+BRIEFING_LOCK_PATH = Path("/tmp/rx_briefing.lock")
+BRIEFING_LOCK_STALE_SECONDS = 900  # 15 min — anything older is stale
+
+def _briefing_lock_held() -> tuple[bool, str | None]:
+    """Return (is_held, holder_pid_str). Stale locks (>15min, dead pid) cleared."""
+    if not BRIEFING_LOCK_PATH.exists():
+        return False, None
     try:
-        result = subprocess.run(
-            [sys.executable, "-m", "src.briefing"],
-            capture_output=True,
-            text=True,
-            timeout=600,
+        content = BRIEFING_LOCK_PATH.read_text().strip()
+        pid_str, ts_str = content.split(":", 1)
+        ts = float(ts_str)
+        age = datetime.now(timezone.utc).timestamp() - ts
+        if age > BRIEFING_LOCK_STALE_SECONDS:
+            BRIEFING_LOCK_PATH.unlink(missing_ok=True)
+            return False, None
+        # Check pid is alive (best-effort, posix only)
+        try:
+            import os
+            os.kill(int(pid_str), 0)
+        except (ProcessLookupError, ValueError):
+            BRIEFING_LOCK_PATH.unlink(missing_ok=True)
+            return False, None
+        except PermissionError:
+            pass  # process exists, owned by different user
+        return True, pid_str
+    except (OSError, ValueError):
+        BRIEFING_LOCK_PATH.unlink(missing_ok=True)
+        return False, None
+
+def _acquire_briefing_lock() -> bool:
+    held, _ = _briefing_lock_held()
+    if held:
+        return False
+    try:
+        import os
+        BRIEFING_LOCK_PATH.write_text(
+            f"{os.getpid()}:{datetime.now(timezone.utc).timestamp()}"
+        )
+        return True
+    except OSError:
+        return False
+
+def _release_briefing_lock() -> None:
+    try:
+        BRIEFING_LOCK_PATH.unlink(missing_ok=True)
+    except OSError:
+        pass
+
+BRIEFING_LOGS_DIR = BRIEFINGS_DIR / "logs"
+
+def _new_log_path() -> Path:
+    BRIEFING_LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    return BRIEFING_LOGS_DIR / f"briefing-{ts}.log"
+
+def run_briefing_cli() -> tuple[bool, str, Path | None]:
+    """Spawn briefing subprocess. Output inherits parent stdout/stderr so logs
+    appear in the terminal running `streamlit run` (not the browser UI).
+
+    Returns (success, summary_message, log_file_path).
+    Mirror copy written to data/briefings/logs/briefing-<ts>.log via tee.
+    """
+    if not _acquire_briefing_lock():
+        _, holder = _briefing_lock_held()
+        return False, (
+            f"Another briefing is already running (pid={holder or 'unknown'}). "
+            "Wait for it to finish or close other browser tabs."
+        ), None
+
+    log_path = _new_log_path()
+
+    # Tee subprocess output: parent stdout/stderr (terminal) AND log file.
+    # Use shell pipe with `tee` so streamlit container shows logs live + file persists.
+    cmd = (
+        f"{sys.executable} -u -m src.briefing 2>&1 | tee {log_path}"
+    )
+
+    try:
+        proc = subprocess.run(
+            cmd, shell=True, timeout=600,
+            stdout=None, stderr=None,  # inherit terminal
         )
     except subprocess.TimeoutExpired:
-        return False, "Briefing exceeded 10-minute timeout."
-    if result.returncode == 0:
-        return True, result.stdout.strip() or "Briefing complete."
-    err = (result.stderr or result.stdout or "").strip()
-    return False, err or "Briefing failed (no stderr)."
+        _release_briefing_lock()
+        return False, "Briefing exceeded 10-minute timeout. Check terminal logs.", log_path
+    finally:
+        _release_briefing_lock()
+
+    if proc.returncode == 0:
+        return True, f"Briefing complete. Log: {log_path.name}", log_path
+    return False, (
+        f"Briefing failed (exit {proc.returncode}). See terminal running streamlit "
+        f"or {log_path} for full output."
+    ), log_path
 
 def run_briefing_with_status() -> bool:
-    with st.status("Running briefing…", expanded=True) as status:
-        status.write("Fetching FDA shortage data…")
-        ok, msg = run_briefing_cli()
+    """Run briefing CLI. Logs appear in the terminal running streamlit, not the UI.
+
+    UI shows a single status spinner + final success/failure message with log path.
+    Full transcript persisted to data/briefings/logs/briefing-<ts>.log for review.
+    """
+    with st.status("Running briefing…", expanded=False) as status:
+        ok, _msg, log_path = run_briefing_cli()
+        if log_path:
+            st.session_state["last_briefing_log"] = str(log_path)
         if ok:
             status.update(label="Briefing complete.", state="complete")
-            status.write(msg)
             return True
         status.update(label="Briefing failed.", state="error")
-        status.code(msg, language="text")
         return False
 
 # ── Briefing item rendering ─────────────────────────────────────────────────
@@ -440,9 +553,14 @@ def render_drilldown(item: dict) -> None:
 # ── Briefing tab ────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
+    running = st.session_state.get("briefing_running", False)
     hcol1, hcol2 = st.columns([4, 1])
     hcol1.title("Rx Shortage Intelligence")
-    rerun_clicked = hcol2.button("Re-run briefing", use_container_width=True)
+    rerun_clicked = hcol2.button(
+        "Running…" if running else "Re-run briefing",
+        use_container_width=True,
+        disabled=running,
+    )
 
     st.markdown(
         '<div class="rx-demo-banner">'
@@ -453,8 +571,13 @@ def render_briefing_tab() -> None:
         unsafe_allow_html=True,
     )
 
-    if rerun_clicked:
-        if run_briefing_with_status():
+    if rerun_clicked and not running:
+        st.session_state["briefing_running"] = True
+        try:
+            ok = run_briefing_with_status()
+        finally:
+            st.session_state["briefing_running"] = False
+        if ok:
             st.rerun()
         return
 
@@ -462,12 +585,19 @@ def render_briefing_tab() -> None:
     if path is None:
         st.info(
             "No briefing for today yet. Click **Re-run briefing** to fetch the latest "
-            "FDA shortage data — takes about 45 seconds."
+            "FDA shortage data — takes 2-3 minutes."
         )
         return
 
     run = load_json(path)
     items = run.get("items", []) or []
+
+    # Surface FDA fetch errors honestly — fake-clean briefings break trust.
+    if run.get("fetch_error"):
+        st.error(
+            f"FDA shortage feed returned error: {run['fetch_error']}. "
+            "Briefing items below may be incomplete or stale."
+        )
 
     counts = {"Critical": 0, "Watch": 0, "Resolved": 0}
     for it in items:
@@ -510,11 +640,30 @@ STATUS_COLORS = {
     "non-formulary": ("#374151", "#E5E7EB"),
 }
 
+def _normalize_drug_name(name: str) -> str:
+    """Lowercase + strip + collapse whitespace + drop common dosage form words."""
+    if not name:
+        return ""
+    n = name.lower().strip()
+    # Drop dosage-form noise so 'Cefotaxime Sodium Powder, for Solution' matches
+    # 'Cefotaxime Sodium for Injection' etc. Conservative list — only formulation
+    # words, not active ingredient distinguishers.
+    for token in [",", ";", "  "]:
+        n = n.replace(token, " ")
+    while "  " in n:
+        n = n.replace("  ", " ")
+    return n.strip()
+
 def get_briefing_shortage_index() -> tuple[dict, dict]:
     """Return (rxcui_idx, name_idx) from latest briefing items.
 
-    rxcui_idx: rxcui -> match dict
-    name_idx:  lowercase-name-token -> match dict (fallback when RxCUI concept levels differ)
+    rxcui_idx: rxcui (str) -> match dict — primary join key
+    name_idx:  normalized full-name (str) -> list[match] — exact-name fallback only
+
+    Both keys must match exactly. No substring fallback. Multi-formulation drugs
+    (e.g. 3× bupivacaine entries in formulary) used to all match a single bupivacaine
+    briefing item via first-token substring; fixed by requiring full normalized
+    name equality OR rxcui intersection.
     """
     path = find_latest_briefing()
     if not path:
@@ -532,20 +681,29 @@ def get_briefing_shortage_index() -> tuple[dict, dict]:
         rxcui = str(item.get("rxcui", ""))
         if rxcui:
             rxcui_idx[rxcui] = match
-        name = (item.get("drug_name") or "").lower().strip()
-        if name:
-            name_idx[name.split()[0]] = match
+        norm = _normalize_drug_name(item.get("drug_name") or "")
+        if norm:
+            name_idx.setdefault(norm, []).append(match)
     return rxcui_idx, name_idx
 
 def find_shortage_match(drug: dict, rxcui_idx: dict, name_idx: dict):
+    """Match formulary drug to briefing item by RxCUI or exact normalized name.
+
+    Order:
+    1. RxCUI intersection (drug.rxcui_list ∩ briefing item.rxcui)
+    2. Exact normalized full-name equality
+    Returns None if no exact match — UI shows '—' honestly.
+    """
     rxcui_list = drug.get("rxcui_list") or [drug.get("rxcui")]
     for r in rxcui_list:
-        if str(r) in rxcui_idx:
+        if r and str(r) in rxcui_idx:
             return rxcui_idx[str(r)]
-    drug_name = (drug.get("name") or "").lower()
-    for token, match in name_idx.items():
-        if token and token in drug_name:
-            return match
+    norm = _normalize_drug_name(drug.get("name") or "")
+    matches = name_idx.get(norm) or []
+    if matches:
+        # Prefer most-severe match if duplicate names ever appear in briefing
+        order = {"Critical": 0, "Watch": 1, "Resolved": 2}
+        return min(matches, key=lambda m: order.get(m.get("severity", "Watch"), 1))
     return None
 
 def render_formulary_tab() -> None:
@@ -704,15 +862,23 @@ def render_eval_tab() -> None:
         st.info("No eval results found. Run: `python -m src.eval.runner`")
         if st.button("Run eval now"):
             with st.status("Running eval…", expanded=True) as status:
-                result = subprocess.run(
-                    [sys.executable, "-m", "src.eval.runner"],
-                    capture_output=True, text=True, timeout=60,
-                )
+                try:
+                    result = subprocess.run(
+                        [sys.executable, "-m", "src.eval.runner"],
+                        capture_output=True, text=True, timeout=600,
+                    )
+                except subprocess.TimeoutExpired:
+                    status.update(label="Eval timed out (>10 min).", state="error")
+                    return
             if result.returncode == 0:
                 status.update(label="Eval complete.", state="complete")
+                if result.stdout.strip():
+                    status.code(result.stdout, language="text")
                 st.rerun()
             else:
-                st.error(result.stderr[:500])
+                status.update(label="Eval failed.", state="error")
+                err = (result.stderr or result.stdout or "(no output)").strip()
+                status.code(err, language="text")
         return
 
     eval_data = load_json(eval_path)
