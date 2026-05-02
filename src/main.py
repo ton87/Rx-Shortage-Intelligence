@@ -67,9 +67,15 @@ def _render_header() -> None:
         ">
             {logo_html}
             <div style="display:flex; align-items:center; gap:12px; padding-right:4px;">
-                <div style="text-align:right; line-height:1.3;">
-                    <div style="font-size:14px; font-weight:700; color:#1C3561;">{_USER_NAME}</div>
-                    <div style="font-size:12px; color:#5E7BA4;">{_USER_ROLE}</div>
+                <div style="text-align:right; line-height:1.5;">
+                    <div style="font-size:13px; color:#1C3561;">
+                        <span style="color:#5E7BA4; font-size:11px;">User: </span>
+                        <strong>{_USER_NAME}</strong>
+                    </div>
+                    <div style="font-size:13px; color:#1C3561;">
+                        <span style="color:#5E7BA4; font-size:11px;">Role: </span>
+                        <strong>{_USER_ROLE}</strong>
+                    </div>
                 </div>
                 {avatar_html}
             </div>

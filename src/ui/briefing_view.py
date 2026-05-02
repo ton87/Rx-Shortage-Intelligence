@@ -197,7 +197,7 @@ def render_briefing_tab() -> None:
             counts[sev] += 1
 
     run_ts = format_timestamp(run.get("run_timestamp", ""))
-    st.subheader(f"Morning Briefing — {run_ts}")
+    st.subheader(f"Shortage Briefing — {run_ts}")
 
     s1, s2, s3, s4 = st.columns(4)
     s1.metric("Critical", counts[Severity.CRITICAL])
