@@ -14,8 +14,7 @@ import sys
 import traceback
 import anthropic
 
-MODEL = "claude-sonnet-4-6"
-MAX_ITERATIONS = 8
+from src.domain.constants import AGENT_MODEL as MODEL, AGENT_MAX_ITERATIONS as MAX_ITERATIONS, AGENT_MAX_TOKENS
 
 
 async def run_agent(
@@ -38,7 +37,7 @@ async def run_agent(
     last_stop_reason = "unknown"
 
     for iter_idx in range(MAX_ITERATIONS):
-        kwargs: dict = dict(model=MODEL, max_tokens=4096, system=system, messages=messages)
+        kwargs: dict = dict(model=MODEL, max_tokens=AGENT_MAX_TOKENS, system=system, messages=messages)
         if tools:
             kwargs["tools"] = tools
         resp = await client.messages.create(**kwargs)
@@ -53,7 +52,7 @@ async def run_agent(
         # Capture any text emitted this turn even if not end_turn — useful when stop_reason=max_tokens
         turn_text = ""
         for block in resp.content:
-            if hasattr(block, "text"):
+            if getattr(block, "type", None) == "text":
                 turn_text += block.text
         if turn_text:
             last_text = turn_text
