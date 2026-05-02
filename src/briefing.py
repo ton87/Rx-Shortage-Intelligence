@@ -29,6 +29,7 @@ from src.domain.constants import (
     SYNTHETIC_LABEL,
 )
 from src.io_.briefing_store import write_briefing
+from src.io_.data_loader import load_briefing_inputs
 
 load_dotenv()
 
@@ -416,20 +417,6 @@ async def _prefetch_drug_data(
     return drug_data
 
 
-# ── Data loading ──
-
-def load_data() -> tuple[list, list, list]:
-    """Returns (formulary_drugs, orders, yesterday_shortages)."""
-    formulary = json.loads((DATA_DIR / "synthetic_formulary.json").read_text())["drugs"]
-    orders_data = json.loads((DATA_DIR / "active_orders.json").read_text())["orders"]
-    yesterday_path = DATA_DIR / "yesterday_snapshot.json"
-    if yesterday_path.exists():
-        yesterday = json.loads(yesterday_path.read_text()).get("shortages", [])
-    else:
-        yesterday = []
-    return formulary, orders_data, yesterday
-
-
 # ── User message builder ──
 
 def build_user_message(
@@ -549,7 +536,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
 
     _log(f"phase=start run_id={run_id} date={date_str}")
 
-    formulary, orders_list, yesterday = load_data()
+    formulary, orders_list, yesterday = load_briefing_inputs()
     formulary_idx = index_formulary(formulary)
     orders_idx = index_orders(orders_list)
     formulary_rxcuis = set(formulary_idx.keys())

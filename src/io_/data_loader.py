@@ -326,6 +326,44 @@ def generate_yesterday_snapshot(today_drugs: list[dict]) -> dict:
     }
 
 
+# ── Public I/O helpers (no Streamlit — decorators live in main.py) ─────────
+
+def load_briefing_inputs() -> tuple[list, list, list]:
+    """Return (formulary_drugs, orders, yesterday_shortages).
+
+    Moved from src/briefing.py load_data(). No streamlit decorators — stays
+    usable in both CLI and test contexts.
+    """
+    import json
+    formulary = json.loads((DATA_DIR / "synthetic_formulary.json").read_text())["drugs"]
+    orders_data = json.loads((DATA_DIR / "active_orders.json").read_text())["orders"]
+    yesterday_path = DATA_DIR / "yesterday_snapshot.json"
+    if yesterday_path.exists():
+        yesterday = json.loads(yesterday_path.read_text()).get("shortages", [])
+    else:
+        yesterday = []
+    return formulary, orders_data, yesterday
+
+
+def load_formulary() -> list[dict]:
+    """Return the drugs list from synthetic_formulary.json."""
+    import json
+    formulary_path = DATA_DIR / "synthetic_formulary.json"
+    if not formulary_path.exists():
+        return []
+    return json.loads(formulary_path.read_text()).get("drugs", [])
+
+
+def load_orders_index() -> dict:
+    """Return {rxcui: order} mapping from active_orders.json."""
+    import json
+    orders_path = DATA_DIR / "active_orders.json"
+    if not orders_path.exists():
+        return {}
+    data = json.loads(orders_path.read_text())
+    return {str(o["rxcui"]): o for o in data.get("orders", [])}
+
+
 # ── Entry point ────────────────────────────────────────────────────────────
 
 def main():

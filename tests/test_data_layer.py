@@ -287,71 +287,71 @@ class TestTrim:
 
     def test_rxcui_preserved_as_list_multi(self):
         """_trim() keeps rxcui as a list when multiple RxCUIs present."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert isinstance(result["rxcui"], list)
         assert result["rxcui"] == ["309311", "1049502"]
 
     def test_rxcui_preserved_as_list_single(self):
         """_trim() keeps rxcui as a list even with a single RxCUI."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_SINGLE)
         assert isinstance(result["rxcui"], list)
         assert len(result["rxcui"]) == 1
 
     def test_rxcui_empty_when_no_openfda(self):
         """_trim() returns empty list for rxcui when openfda key is missing."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_NO_OPENFDA)
         assert result["rxcui"] == []
 
     def test_rxcui_empty_when_openfda_has_no_rxcui(self):
         """_trim() returns empty list for rxcui when openfda.rxcui is absent."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_NO_RXCUI)
         assert result["rxcui"] == []
 
     def test_brand_name_is_scalar(self):
         """_trim() extracts first brand_name as a scalar string."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert isinstance(result["brand_name"], str)
         assert result["brand_name"] == "Platinol"
 
     def test_route_is_scalar(self):
         """_trim() extracts first route as a scalar string."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert isinstance(result["route"], str)
         assert result["route"] == "INTRAVENOUS"
 
     def test_generic_name_preserved(self):
         """_trim() preserves generic_name."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert result["generic_name"] == "Cisplatin Injection"
 
     def test_unknown_generic_name_default(self):
         """_trim() defaults generic_name to 'Unknown' when field is absent."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim({"openfda": {"rxcui": ["123"]}})
         assert result["generic_name"] == "Unknown"
 
     def test_status_preserved(self):
         """_trim() preserves status field."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert result["status"] == "Current"
 
     def test_openfda_noise_stripped(self):
         """_trim() removes the openfda wrapper; top-level keys only in output."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         result = _trim(RAW_RECORD_MULTI)
         assert "openfda" not in result
 
     def test_null_openfda_treated_as_empty(self):
         """_trim() handles openfda: null gracefully."""
-        from src.data_loader import _trim
+        from src.io_.data_loader import _trim
         record = {"generic_name": "Drug X", "openfda": None}
         result = _trim(record)
         assert result["rxcui"] == []
@@ -368,7 +368,7 @@ class TestIndexByRxcui:
 
     def test_single_rxcui_indexed(self):
         """A single-RxCUI drug produces one index entry."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         drugs = [make_trimmed(rxcui=["AAA"])]
         idx = index_by_rxcui(drugs)
         assert "AAA" in idx
@@ -376,7 +376,7 @@ class TestIndexByRxcui:
 
     def test_multi_rxcui_all_indexed(self):
         """A multi-RxCUI drug produces one entry per RxCUI."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         drugs = [make_trimmed(rxcui=["AAA", "BBB", "CCC"])]
         idx = index_by_rxcui(drugs)
         assert "AAA" in idx
@@ -387,7 +387,7 @@ class TestIndexByRxcui:
 
     def test_multiple_drugs_indexed(self):
         """Multiple drugs each get their own entries."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         drug_a = make_trimmed(generic_name="Drug A", rxcui=["111"])
         drug_b = make_trimmed(generic_name="Drug B", rxcui=["222"])
         idx = index_by_rxcui([drug_a, drug_b])
@@ -396,19 +396,19 @@ class TestIndexByRxcui:
 
     def test_empty_rxcui_drug_excluded(self):
         """Drug with empty rxcui list produces no index entries."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         drug = make_trimmed(rxcui=[])
         idx = index_by_rxcui([drug])
         assert idx == {}
 
     def test_empty_input(self):
         """Empty drug list returns empty index."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         assert index_by_rxcui([]) == {}
 
     def test_later_drug_overwrites_shared_rxcui(self):
         """If two drugs share a RxCUI, last one wins (acknowledged Q2 trade-off)."""
-        from src.data_loader import index_by_rxcui
+        from src.io_.data_loader import index_by_rxcui
         drug_a = make_trimmed(generic_name="Drug A", rxcui=["SHARED"])
         drug_b = make_trimmed(generic_name="Drug B", rxcui=["SHARED"])
         idx = index_by_rxcui([drug_a, drug_b])
@@ -425,11 +425,11 @@ class TestSampleDrugsFromFeed:
 
     def _patch_fetch_raw(self, records):
         """Patch _fetch_shortages_raw to return `records` directly."""
-        return patch("src.data_loader._fetch_shortages_raw", return_value=records)
+        return patch("src.io_.data_loader._fetch_shortages_raw", return_value=records)
 
     def test_filters_records_without_rxcui(self):
         """Records with no RxCUI are excluded."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         raw = [RAW_RECORD_MULTI, RAW_RECORD_NO_RXCUI, RAW_RECORD_SINGLE]
         with self._patch_fetch_raw(raw):
             drugs = sample_drugs_from_feed(target=30)
@@ -439,7 +439,7 @@ class TestSampleDrugsFromFeed:
 
     def test_dedupes_by_primary_rxcui(self):
         """Two records sharing the same primary RxCUI produce only one entry."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         dup_a = deepcopy(RAW_RECORD_MULTI)
         dup_b = deepcopy(RAW_RECORD_MULTI)
         dup_b["generic_name"] = "Cisplatin Variant"
@@ -450,7 +450,7 @@ class TestSampleDrugsFromFeed:
 
     def test_respects_target_limit(self):
         """Returns at most `target` records."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         # 20 records, each with unique primary RxCUI
         raw = [
             {
@@ -467,7 +467,7 @@ class TestSampleDrugsFromFeed:
 
     def test_returns_trimmed_records(self):
         """Returned records are _trim()-shaped (no openfda wrapper)."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         with self._patch_fetch_raw([RAW_RECORD_MULTI]):
             drugs = sample_drugs_from_feed()
         assert len(drugs) == 1
@@ -476,14 +476,14 @@ class TestSampleDrugsFromFeed:
 
     def test_empty_feed_returns_empty_list(self):
         """Empty FDA feed returns empty list without error."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         with self._patch_fetch_raw([]):
             drugs = sample_drugs_from_feed()
         assert drugs == []
 
     def test_deduplication_uses_first_rxcui(self):
         """Deduplication key is rxcui[0] (primary), not rxcui[1]."""
-        from src.data_loader import sample_drugs_from_feed
+        from src.io_.data_loader import sample_drugs_from_feed
         # Two records: same secondary RxCUI but different primary → both included
         rec_a = {
             "generic_name": "Drug A",
@@ -511,10 +511,10 @@ class TestFetchClassAlternatives:
 
     def test_returns_list_of_strings(self):
         """Happy path: returns a list of drug name strings."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", return_value="2555"), \
-             patch("src.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "CISPLATIN"}), \
-             patch("src.data_loader._get_class_members", return_value=[
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value="2555"), \
+             patch("src.io_.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "CISPLATIN"}), \
+             patch("src.io_.data_loader._get_class_members", return_value=[
                  {"rxcui": "99999", "name": "Carboplatin"},
                  {"rxcui": "88888", "name": "Oxaliplatin"},
              ]):
@@ -525,10 +525,10 @@ class TestFetchClassAlternatives:
 
     def test_excludes_queried_drug_itself(self):
         """The drug being queried (same rxcui) is excluded from results."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", return_value="2555"), \
-             patch("src.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "CISPLATIN"}), \
-             patch("src.data_loader._get_class_members", return_value=[
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value="2555"), \
+             patch("src.io_.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "CISPLATIN"}), \
+             patch("src.io_.data_loader._get_class_members", return_value=[
                  {"rxcui": "2555", "name": "Cisplatin"},   # same rxcui → excluded
                  {"rxcui": "99999", "name": "Carboplatin"},
              ]):
@@ -538,48 +538,48 @@ class TestFetchClassAlternatives:
 
     def test_caps_at_10_results(self):
         """At most 10 alternatives are returned."""
-        from src.data_loader import fetch_class_alternatives
+        from src.io_.data_loader import fetch_class_alternatives
         members = [{"rxcui": str(i), "name": f"Drug{i}"} for i in range(20)]
-        with patch("src.data_loader._normalize_to_rxcui", return_value="2555"), \
-             patch("src.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "X"}), \
-             patch("src.data_loader._get_class_members", return_value=members):
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value="2555"), \
+             patch("src.io_.data_loader._get_atc_class", return_value={"classId": "L01XA01", "className": "X"}), \
+             patch("src.io_.data_loader._get_class_members", return_value=members):
             result = fetch_class_alternatives("cisplatin")
         assert len(result) <= 10
 
     def test_returns_empty_when_rxcui_not_found(self):
         """Returns [] when drug name cannot be resolved to a RxCUI."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", return_value=None):
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value=None):
             result = fetch_class_alternatives("unknown_drug_xyz")
         assert result == []
 
     def test_returns_empty_when_no_atc_class(self):
         """Returns [] when no ATC class is found for the RxCUI."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", return_value="2555"), \
-             patch("src.data_loader._get_atc_class", return_value=None):
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value="2555"), \
+             patch("src.io_.data_loader._get_atc_class", return_value=None):
             result = fetch_class_alternatives("cisplatin")
         assert result == []
 
     def test_returns_empty_on_http_exception(self):
         """Returns [] silently if any underlying call raises an exception."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", side_effect=Exception("network error")):
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", side_effect=Exception("network error")):
             result = fetch_class_alternatives("cisplatin")
         assert result == []
 
     def test_returns_empty_on_key_error(self):
         """Returns [] if member dict is malformed (missing keys)."""
-        from src.data_loader import fetch_class_alternatives
-        with patch("src.data_loader._normalize_to_rxcui", return_value="2555"), \
-             patch("src.data_loader._get_atc_class", return_value={"classId": "L01XA01"}), \
-             patch("src.data_loader._get_class_members", side_effect=KeyError("classId")):
+        from src.io_.data_loader import fetch_class_alternatives
+        with patch("src.io_.data_loader._normalize_to_rxcui", return_value="2555"), \
+             patch("src.io_.data_loader._get_atc_class", return_value={"classId": "L01XA01"}), \
+             patch("src.io_.data_loader._get_class_members", side_effect=KeyError("classId")):
             result = fetch_class_alternatives("cisplatin")
         assert result == []
 
     def test_never_raises(self):
         """fetch_class_alternatives() never propagates any Exception."""
-        from src.data_loader import fetch_class_alternatives
+        from src.io_.data_loader import fetch_class_alternatives
         errors = [
             RuntimeError("boom"),
             ValueError("bad"),
@@ -587,7 +587,7 @@ class TestFetchClassAlternatives:
             json.JSONDecodeError("msg", "", 0),
         ]
         for err in errors:
-            with patch("src.data_loader._normalize_to_rxcui", side_effect=err):
+            with patch("src.io_.data_loader._normalize_to_rxcui", side_effect=err):
                 try:
                     result = fetch_class_alternatives("any")
                     assert result == []
@@ -604,7 +604,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_returns_dict_with_required_keys(self):
         """Output has snapshot_date, label, and results keys."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         assert "snapshot_date" in snap
@@ -613,7 +613,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_two_records_dropped_new_today(self):
         """Yesterday has 2 fewer records than today (the 2 NEW shortages)."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         # 15 original - 2 dropped + 2 fake resolved = 15 total
@@ -622,7 +622,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_two_fake_resolved_appended(self):
         """Yesterday snapshot includes 2 FAKE_RESOLVED records."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         fake_names = [r["generic_name"] for r in snap["results"]
@@ -631,7 +631,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_status_flips_applied(self):
         """Two records have status flipped to Resolved / Available with limitations."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         statuses = [r["status"] for r in snap["results"]]
@@ -642,7 +642,7 @@ class TestGenerateYesterdaySnapshot:
         """BUG-1: Fake RESOLVED records must use trimmed shape (rxcui as list),
         not raw openFDA shape (openfda.rxcui), so consumers can access record['rxcui'].
         """
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         for record in snap["results"]:
@@ -660,7 +660,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_sparse_path_when_fewer_than_10(self):
         """With <10 drugs the function returns without applying diff scenarios."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(5)
         snap = generate_yesterday_snapshot(drugs)
         # Should return early — no fake records added
@@ -670,7 +670,7 @@ class TestGenerateYesterdaySnapshot:
     def test_snapshot_date_is_yesterday(self):
         """snapshot_date is one day before today."""
         from datetime import datetime, timezone, timedelta
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap = generate_yesterday_snapshot(drugs)
         today = datetime.now(timezone.utc).date()
@@ -679,7 +679,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_does_not_mutate_input(self):
         """generate_yesterday_snapshot() does not mutate the input drug list."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         original = deepcopy(drugs)
         generate_yesterday_snapshot(drugs)
@@ -687,7 +687,7 @@ class TestGenerateYesterdaySnapshot:
 
     def test_deterministic_with_same_seed(self):
         """Two calls on same input produce identical results (seed=44)."""
-        from src.data_loader import generate_yesterday_snapshot
+        from src.io_.data_loader import generate_yesterday_snapshot
         drugs = make_drug_list(15)
         snap1 = generate_yesterday_snapshot(drugs)
         snap2 = generate_yesterday_snapshot(drugs)
@@ -703,9 +703,9 @@ class TestSynthesizeFormulary:
 
     def test_returns_dict_with_required_keys(self):
         """Output has customer_id, label, generated_at, drugs."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         drugs = make_drug_list(5)
-        with patch("src.data_loader.fetch_class_alternatives", return_value=[]):
+        with patch("src.io_.data_loader.fetch_class_alternatives", return_value=[]):
             formulary = synthesize_formulary(drugs)
         assert "customer_id" in formulary
         assert "label" in formulary
@@ -714,17 +714,17 @@ class TestSynthesizeFormulary:
 
     def test_drug_count_matches_input(self):
         """Output contains one formulary entry per input drug."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         drugs = make_drug_list(8)
-        with patch("src.data_loader.fetch_class_alternatives", return_value=[]):
+        with patch("src.io_.data_loader.fetch_class_alternatives", return_value=[]):
             formulary = synthesize_formulary(drugs)
         assert len(formulary["drugs"]) == 8
 
     def test_primary_rxcui_is_scalar(self):
         """Each formulary entry has rxcui as a scalar string (primary RxCUI)."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         drugs = [make_trimmed(rxcui=["309311", "1049502"])]
-        with patch("src.data_loader.fetch_class_alternatives", return_value=[]):
+        with patch("src.io_.data_loader.fetch_class_alternatives", return_value=[]):
             formulary = synthesize_formulary(drugs)
         entry = formulary["drugs"][0]
         assert isinstance(entry["rxcui"], str)
@@ -732,21 +732,21 @@ class TestSynthesizeFormulary:
 
     def test_rxcui_list_preserved(self):
         """Each formulary entry has rxcui_list preserving all RxCUIs."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         drugs = [make_trimmed(rxcui=["309311", "1049502"])]
-        with patch("src.data_loader.fetch_class_alternatives", return_value=[]):
+        with patch("src.io_.data_loader.fetch_class_alternatives", return_value=[]):
             formulary = synthesize_formulary(drugs)
         entry = formulary["drugs"][0]
         assert entry["rxcui_list"] == ["309311", "1049502"]
 
     def test_demo_drug_alternatives_populated(self):
         """DEMO_DRUG_NAMES get their alternatives pre-populated."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         cisplatin_drug = make_trimmed(
             generic_name="Cisplatin Injection",
             rxcui=["309311"],
         )
-        with patch("src.data_loader.fetch_class_alternatives",
+        with patch("src.io_.data_loader.fetch_class_alternatives",
                    return_value=["Carboplatin", "Oxaliplatin"]):
             formulary = synthesize_formulary([cisplatin_drug])
         entry = formulary["drugs"][0]
@@ -754,9 +754,9 @@ class TestSynthesizeFormulary:
 
     def test_deterministic_with_seed_42(self):
         """synthesize_formulary uses seed=42 — same input → same formulary_status."""
-        from src.data_loader import synthesize_formulary
+        from src.io_.data_loader import synthesize_formulary
         drugs = make_drug_list(5)
-        with patch("src.data_loader.fetch_class_alternatives", return_value=[]):
+        with patch("src.io_.data_loader.fetch_class_alternatives", return_value=[]):
             f1 = synthesize_formulary(drugs)
             f2 = synthesize_formulary(drugs)
         statuses1 = [d["formulary_status"] for d in f1["drugs"]]
@@ -773,7 +773,7 @@ class TestSynthesizeOrders:
 
     def test_returns_dict_with_required_keys(self):
         """Output has customer_id, snapshot_date, label, orders."""
-        from src.data_loader import synthesize_orders
+        from src.io_.data_loader import synthesize_orders
         drugs = make_drug_list(5)
         orders = synthesize_orders(drugs)
         assert "customer_id" in orders
@@ -783,14 +783,14 @@ class TestSynthesizeOrders:
 
     def test_order_count_matches_input(self):
         """One order per input drug."""
-        from src.data_loader import synthesize_orders
+        from src.io_.data_loader import synthesize_orders
         drugs = make_drug_list(7)
         orders = synthesize_orders(drugs)
         assert len(orders["orders"]) == 7
 
     def test_orders_have_required_fields(self):
         """Each order has rxcui, count_last_30_days, departments."""
-        from src.data_loader import synthesize_orders
+        from src.io_.data_loader import synthesize_orders
         drugs = make_drug_list(3)
         orders = synthesize_orders(drugs)
         for order in orders["orders"]:
@@ -801,7 +801,7 @@ class TestSynthesizeOrders:
 
     def test_deterministic_with_seed_43(self):
         """synthesize_orders uses seed=43 — same input → same counts."""
-        from src.data_loader import synthesize_orders
+        from src.io_.data_loader import synthesize_orders
         drugs = make_drug_list(5)
         o1 = synthesize_orders(drugs)
         o2 = synthesize_orders(drugs)
@@ -817,7 +817,7 @@ class TestMainR6Mitigation:
 
     def test_skips_snapshot_generation_when_file_exists(self, tmp_path, monkeypatch):
         """main() does not overwrite yesterday_snapshot.json if it already exists."""
-        from src import data_loader as dl_mod
+        from src.io_ import data_loader as dl_mod
 
         # Redirect all data paths to tmp_path
         monkeypatch.setattr(dl_mod, "DATA_DIR", tmp_path)
@@ -861,7 +861,7 @@ class TestMainR6Mitigation:
 
     def test_generates_snapshot_when_file_missing(self, tmp_path, monkeypatch):
         """main() calls generate_yesterday_snapshot() when file does not exist."""
-        from src import data_loader as dl_mod
+        from src.io_ import data_loader as dl_mod
 
         monkeypatch.setattr(dl_mod, "DATA_DIR", tmp_path)
         monkeypatch.setattr(dl_mod, "FORMULARY_PATH", tmp_path / "synthetic_formulary.json")
@@ -907,14 +907,14 @@ class TestFetchShortagesRaw:
 
     def test_returns_results_on_200(self):
         """Returns results list from FDA JSON on HTTP 200."""
-        from src.data_loader import _fetch_shortages_raw
+        from src.io_.data_loader import _fetch_shortages_raw
 
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {"results": [RAW_RECORD_MULTI, RAW_RECORD_SINGLE]}
 
         # Bypass the disk cache entirely for this test
-        with patch("src.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
+        with patch("src.io_.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
              patch("httpx.get", return_value=mock_resp):
             result = _fetch_shortages_raw(limit=10)
 
@@ -922,12 +922,12 @@ class TestFetchShortagesRaw:
 
     def test_returns_empty_list_on_404(self):
         """Returns [] when FDA returns HTTP 404 (no records for query)."""
-        from src.data_loader import _fetch_shortages_raw
+        from src.io_.data_loader import _fetch_shortages_raw
 
         mock_resp = MagicMock()
         mock_resp.status_code = 404
 
-        with patch("src.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
+        with patch("src.io_.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
              patch("httpx.get", return_value=mock_resp):
             result = _fetch_shortages_raw(limit=10)
 
@@ -936,7 +936,7 @@ class TestFetchShortagesRaw:
     def test_raises_on_non_404_http_error(self):
         """Non-404 HTTP errors propagate (raise_for_status)."""
         import httpx as httpx_mod
-        from src.data_loader import _fetch_shortages_raw
+        from src.io_.data_loader import _fetch_shortages_raw
 
         mock_resp = MagicMock()
         mock_resp.status_code = 500
@@ -944,7 +944,7 @@ class TestFetchShortagesRaw:
             "server error", request=MagicMock(), response=mock_resp
         )
 
-        with patch("src.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
+        with patch("src.io_.data_loader.cached_get", side_effect=lambda key, fn, ttl: fn()), \
              patch("httpx.get", return_value=mock_resp):
             with pytest.raises(httpx_mod.HTTPStatusError):
                 _fetch_shortages_raw(limit=10)

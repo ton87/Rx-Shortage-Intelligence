@@ -257,16 +257,13 @@ def format_latency_or_dash(latency_ms) -> str:
 
 @st.cache_data(show_spinner=False)
 def load_formulary() -> list[dict]:
-    if not FORMULARY_PATH.exists():
-        return []
-    return load_briefing(FORMULARY_PATH).get("drugs", [])
+    from src.io_.data_loader import load_formulary as _load
+    return _load()
 
 @st.cache_data(show_spinner=False)
 def load_orders_index() -> dict:
-    if not ORDERS_PATH.exists():
-        return {}
-    data = load_briefing(ORDERS_PATH)
-    return {str(o["rxcui"]): o for o in data.get("orders", [])}
+    from src.io_.data_loader import load_orders_index as _load
+    return _load()
 
 # ── HITL action logging ─────────────────────────────────────────────────────
 
