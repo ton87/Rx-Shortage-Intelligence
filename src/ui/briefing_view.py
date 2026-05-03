@@ -157,58 +157,9 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
         f'border-bottom:1px solid {_BORDER};">∞ FDA Drug Shortage Record</a></div>'
     ) if cite_url else ""
 
-    # Per-card CSS: target this card's bordered wrapper via :has() marker.
-    # Card-based layout — white tile, rounded corners, NO coloured left bar.
-    marker_cls = f"rxcm-{card_idx}"
-    card_sel = (
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-    )
-    st.markdown(
-        f'<style>'
-        # Outer card: solid white, thin gray border, rounded corners, gap below
-        f'{card_sel} {{'
-        f'  background: {_WHITE} !important;'
-        f'  border: 1px solid {_BORDER} !important;'
-        f'  border-radius: 8px !important;'
-        f'  margin-bottom: 16px !important;'
-        f'  padding: 6px !important;'
-        f'  box-shadow: 0 1px 2px rgba(13,28,46,0.04);'
-        f'}}'
-        # Nested blocks inside the card: transparent (no internal sub-boxes)
-        f'{card_sel} [data-testid="stVerticalBlock"],'
-        f'{card_sel} [data-testid="stHorizontalBlock"],'
-        f'{card_sel} [data-testid="column"],'
-        f'{card_sel} [data-testid="stExpander"] {{'
-        f'  background: transparent !important;'
-        f'  border: none !important;'
-        f'}}'
-        # Right-aligned buttons: capped width, sit on white surface
-        f'{card_sel} [data-testid="column"]:nth-child(2) .stButton > button {{'
-        f'  max-width: 132px;'
-        f'  margin: 0 0 6px auto;'
-        f'  padding: 6px 12px;'
-        f'  font-size: 13px;'
-        f'  min-height: 32px;'
-        f'  border-radius: 6px;'
-        f'}}'
-        # Escalate (3rd button) = red text only
-        f'{card_sel} [data-testid="column"]:nth-child(2)'
-        f' .stButton:nth-of-type(3) > button {{'
-        f'  color: #ba1a1a !important;'
-        f'  background: transparent !important;'
-        f'  border: none !important;'
-        f'  box-shadow: none !important;'
-        f'  font-weight: 600 !important;'
-        f'}}'
-        f'{card_sel} [data-testid="column"]:nth-child(2)'
-        f' .stButton:nth-of-type(3) > button:hover {{'
-        f'  background: #ffdad6 !important;'
-        f'}}'
-        f'</style>'
-        f'<span class="{marker_cls}" style="display:none;"></span>',
-        unsafe_allow_html=True,
-    )
+    # Card styling now handled globally in render_briefing_tab().
+    # No per-card CSS needed — every st.container(border=True) becomes a
+    # white card automatically via the section.main rules.
 
     # ── Bordered card container ──────────────────────────────────────────────
     with st.container(border=True):
@@ -280,11 +231,64 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 # ── Briefing tab ───────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
-    # Tab-level overrides ONLY — card backgrounds handled per-card in
-    # render_collapsed_card so nested wrappers don't accidentally style.
+    # Tab-level styling: card-based layout for Active Alerts.
+    # All bordered wrappers in this tab are styled as white cards; nested
+    # wrappers (inside columns / expanders) are stripped to transparent so
+    # we don't get sub-boxes inside cards.
     st.markdown(
         f"""<style>
-        /* Primary button (Accept) = navy — applies to the briefing tab */
+        /* Outer card containers — white tile with rounded corners */
+        section.main [data-testid="stVerticalBlockBorderWrapper"],
+        [data-testid="stMain"] [data-testid="stVerticalBlockBorderWrapper"] {{
+          background: {_WHITE} !important;
+          border: 1px solid {_BORDER} !important;
+          border-radius: 8px !important;
+          padding: 8px !important;
+          margin-bottom: 14px !important;
+          box-shadow: 0 1px 2px rgba(13,28,46,0.04);
+        }}
+        /* Strip nested bordered wrappers (inside columns or expanders)
+           so sub-boxes don't appear inside cards */
+        section.main [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
+        section.main [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"],
+        [data-testid="stMain"] [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
+        [data-testid="stMain"] [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"] {{
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+          margin-bottom: 0 !important;
+        }}
+        /* Right-column buttons: capped width, right-aligned, smaller */
+        [data-testid="stVerticalBlockBorderWrapper"]
+          [data-testid="stHorizontalBlock"]
+          > [data-testid="column"]:nth-child(2) .stButton > button {{
+          max-width: 132px;
+          margin: 0 0 6px auto;
+          padding: 6px 12px;
+          font-size: 13px;
+          min-height: 32px;
+          border-radius: 6px;
+          display: block;
+        }}
+        /* Escalate (3rd button) = red text only, no border */
+        [data-testid="stVerticalBlockBorderWrapper"]
+          [data-testid="stHorizontalBlock"]
+          > [data-testid="column"]:nth-child(2)
+          .stButton:nth-of-type(3) > button {{
+          color: #ba1a1a !important;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          font-weight: 600 !important;
+        }}
+        [data-testid="stVerticalBlockBorderWrapper"]
+          [data-testid="stHorizontalBlock"]
+          > [data-testid="column"]:nth-child(2)
+          .stButton:nth-of-type(3) > button:hover {{
+          background: #ffdad6 !important;
+        }}
+        /* Primary (Accept) button = navy */
         .stButton button[kind="primaryButton"],
         button[data-testid="baseButton-primary"] {{
           background-color: {_NAVY} !important;
