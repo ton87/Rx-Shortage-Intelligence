@@ -3,6 +3,11 @@ LLM judgment vary. Rules are listed in priority order; the first matching rule s
 After rule-based assignment, you may add nuance via the rationale field, but you may NOT
 upgrade or downgrade severity except per the explicit override rules at the end.
 
+Rule IDs (C1, C2, C3, C4, W1, W2, W3, R1, R2) are for internal classification only. Never
+include rule IDs in the final BriefingItem JSON. Translate matched rules into plain-language
+user-facing rationale (e.g. "High hospital impact because this injectable drug is used by
+critical-care departments and no preferred formulary substitute is designated.").
+
 # Inputs the classifier sees
 
 Per candidate drug, you have:

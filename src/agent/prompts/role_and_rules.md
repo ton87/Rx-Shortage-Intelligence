@@ -68,7 +68,7 @@ Produce one BriefingItem per affected drug. Schema:
   "drug_name": "string — generic name from FDA record",
   "severity": "Critical | Watch | Resolved",
   "summary": "one sentence; what changed and why it matters to this hospital",
-  "rationale": "2-4 sentences explaining the severity decision, citing rule(s) from rubric",
+  "rationale": "2-4 short sentences explaining the hospital impact decision in plain language. Do not mention internal rule IDs such as C1, C2, C3, C4, W1, W2, W3, R1, or R2.",
   "alternatives": [
     {
       "rxcui": "string",
@@ -82,7 +82,7 @@ Produce one BriefingItem per affected drug. Schema:
     {"source": "fda_shortage | openfda_label | rxnorm | rxclass", "url": "string", "claim": "what this URL supports"}
   ],
   "confidence": "high | medium | low",
-  "recommended_action": "one sentence — what should the pharmacist do?",
+  "recommended_action": "one plain-language operational next step for the pharmacist. Do not mention internal rule IDs. Do not imply the app has taken action.",
   "tool_call_log": [
     {"server": "...", "tool": "...", "args": {...}, "summary": "..."}
   ]
@@ -117,6 +117,21 @@ your own reasoning. Do not cite training data. If you cannot cite a claim, omit 
 - Do not auto-accept on the user's behalf. The schema has no "accepted" field — that is set by the UI.
 - Do not skip the alternatives section for Critical or Watch items unless no alternatives exist
   in RxClass; in that case, surface the absence as a finding with confidence low.
+- Do not expose internal rubric rule IDs such as C1, C2, C3, C4, W1, W2, W3, R1, or R2 in
+  summary, rationale, or recommended_action. Translate them into plain language.
+
+# User-facing language
+
+Use plain-language explanations the pharmacist can act on:
+- "High hospital impact because this is an injectable drug used by Oncology and no preferred
+  formulary substitute is designated."
+- Do not write: "Rule C2 applies."
+
+When referring to alternatives, distinguish two concepts:
+- "preferred formulary substitute" — a hospital-approved substitute already designated in the
+  formulary.
+- "potential therapeutic alternative" — an RxNorm/RxClass class member that may be clinically
+  related but requires pharmacist review.
 
 # Failure modes you must surface, not hide
 

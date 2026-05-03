@@ -10,10 +10,26 @@ process, keeping the same in-memory string as the prompt cache warms against.
 """
 
 import json
+import re
 from functools import cache
 from pathlib import Path
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
+
+# Defensive sanitizer — strip any leaked internal rule references from user-facing text.
+# The model is instructed not to emit these, but this guards against prompt drift.
+_RULE_RE = re.compile(r"\bRule\s+[CWR]\d\b[:\s\-—]*", re.IGNORECASE)
+_RULE_BARE_RE = re.compile(r"\b[CWR]\d\b")
+
+
+def _remove_internal_rule_refs(text):
+    """Strip 'Rule C2', 'C2', etc. from a string. Pass-through non-strings."""
+    if not isinstance(text, str):
+        return text
+    text = _RULE_RE.sub("", text)
+    text = _RULE_BARE_RE.sub("", text)
+    # Collapse whitespace introduced by removals
+    return " ".join(text.split())
 
 
 @cache
@@ -138,6 +154,10 @@ def parse_briefing_item(text: str, drug_name: str, rxcui: str) -> dict:
         try:
             obj, _ = decoder.raw_decode(text[idx:])
             if isinstance(obj, dict):
+                # Defensive sanitization — strip any leaked rule IDs.
+                for _f in ("summary", "rationale", "recommended_action"):
+                    if _f in obj:
+                        obj[_f] = _remove_internal_rule_refs(obj[_f])
                 return obj
         except json.JSONDecodeError:
             pass

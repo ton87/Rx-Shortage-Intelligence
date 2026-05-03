@@ -1,8 +1,10 @@
 # Rx Shortage Intelligence — v0.1
 
-AI morning briefing for hospital pharmacy directors. Cross-references live FDA drug shortages against a hospital formulary, classifies severity (Critical / Watch / Resolved), and recommends therapeutic alternatives with citations.
+AI morning briefing for hospital pharmacy directors. Cross-references live FDA drug shortages against a hospital formulary, classifies hospital impact (High / Monitor / Resolved), and recommends therapeutic alternatives with citations.
 
-> ⚠️ Formulary and active orders are **synthetic** for demo. FDA, openFDA, and RxNorm data are **live**.
+> ⚠️ Formulary and active orders are **synthetic** for demo. FDA shortage feed and RxNorm are **live public data**.
+
+> 🎯 Prototype built by **Anton Verenitch** for the **Micromedex by Merative** Senior Product Manager, Formulary Intelligence job interview demo. Not a production product.
 
 ---
 
@@ -46,11 +48,38 @@ That opens the dashboard at **http://localhost:8501**
 
 ## What the dashboard does
 
-1. Opens showing a sample briefing (Cisplatin Critical, Methotrexate Watch)
-2. Click **Re-run briefing** to generate a live one — hits real FDA/RxNorm APIs, takes ~30–60s
-3. Click any item to expand agent reasoning + citations
-4. Click **✓ Accept**, **✎ Override**, or **⚠ Escalate** to log your decision
-5. Sidebar → **Eval** tab to see 15-case scoring results
+1. Opens to today's briefing — three metric tiles (**High Impact / Monitor / Resolved**) with one card per surfaced drug
+2. Click **Re-run briefing** to fetch fresh FDA data — hits real FDA/RxNorm APIs, takes ~30–60s
+3. Each card answers the pharmacist's questions in scannable order:
+   - What drug is this? → drug name in the card header
+   - What does FDA say? → `FDA: Current shortage` pill
+   - How much does it matter here? → `Impact: High / Monitor / Resolved` pill
+   - Why is FDA reporting it? → `Reason: …` row (or "Not provided by FDA")
+   - Is supply constrained? → `Availability: …` row
+   - Why does it matter locally? → **Why it matters** body section (plain-language hospital impact)
+   - What should I do? → **Recommended next step** body section
+4. Each card has two HITL actions:
+   - **Mark reviewed** — log that the alert was seen; the app takes no clinical action
+   - **Dismiss** — record a required reason explaining why the alert is not actionable for this briefing
+5. Expand **Details + citations** on any card for the **FDA details** panel (FDA status, FDA reason, FDA availability, manufacturer, presentation, dosage form, RxCUI, posting dates, estimated resolution), the agent rationale, the **Potential therapeutic alternatives** table (RxNorm/RxClass suggestions — clinical review required), and the full citation list
+6. Top tabs: **Briefing** · **Formulary** (synthetic drugs being checked) · **Active Orders** (synthetic 30-day order volume) · **Eval** (15-case scoring results)
+
+### UX terminology — internal vs. user-facing
+
+The internal severity/confidence values stay in the JSON for backward compatibility, but the UI translates them into pharmacist-facing language so internal rule IDs and rubric jargon never appear in the alert text.
+
+| Internal value (JSON) | User-facing label |
+|----------------------|-------------------|
+| `severity: Critical` | `Impact: High` |
+| `severity: Watch`    | `Impact: Monitor` |
+| `severity: Resolved` | `Impact: Resolved` |
+| `status: Current`    | `FDA: Current shortage` |
+| `status: To Be Discontinued` | `FDA: To be discontinued` |
+| `status: Resolved`   | `FDA: Resolved by FDA` |
+| `user_action: accept` | "Reviewed" pill |
+| `user_action: dismiss` (legacy `override` also accepted) | "Dismissed" pill |
+
+The agent prompt is hardened to never emit internal rule IDs (`C1`, `C2`, `W1`, `R1`, etc.) in user-facing text; a defensive sanitizer in `parse_briefing_item()` strips any leakage as a safety net.
 
 ---
 
@@ -59,7 +88,7 @@ That opens the dashboard at **http://localhost:8501**
 ```bash
 make run        # launch Streamlit dashboard  → http://localhost:8501
 make briefing   # generate a live briefing    (hits real APIs, ~$0.10–0.20)
-make test       # run 283 unit tests          (~1 second)
+make test       # run 340 unit tests          (~1 second)
 make eval       # run eval harness            (no API cost, deterministic)
 make smoke      # confirm 6 MCP tools found   (quick sanity check)
 make install    # install/verify dependencies
@@ -123,7 +152,7 @@ data/
   briefings/               # YYYY-MM-DD.json written on each run
   eval_results.json
 
-tests/                     # 283 tests
+tests/                     # 340 tests
 ```
 
 ---

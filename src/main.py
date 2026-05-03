@@ -36,24 +36,25 @@ def _render_header() -> None:
     if _LOGO_PATH.exists():
         logo_b64 = base64.b64encode(_LOGO_PATH.read_bytes()).decode()
 
-    # Avatar — real photo or initials fallback
+    # Avatar — real photo or initials fallback (108px = 72 × 1.5)
     if _AVATAR_PATH.exists():
         av_b64 = base64.b64encode(_AVATAR_PATH.read_bytes()).decode()
         avatar_html = (
             f'<img src="data:image/png;base64,{av_b64}" alt="{_USER_NAME}" '
-            f'style="width:72px;height:72px;border-radius:50%;object-fit:cover;'
+            f'style="width:108px;height:108px;border-radius:50%;object-fit:cover;'
             f'border:2px solid #dce3ed;flex-shrink:0;"/>'
         )
     else:
         avatar_html = (
-            f'<div style="width:72px;height:72px;border-radius:50%;background:#1C3561;'
+            f'<div style="width:108px;height:108px;border-radius:50%;background:#1C3561;'
             f'display:flex;align-items:center;justify-content:center;'
-            f'color:white;font-weight:700;font-size:22px;flex-shrink:0;">AV</div>'
+            f'color:white;font-weight:700;font-size:33px;flex-shrink:0;">AV</div>'
         )
 
+    # Logo — 195px = 130 × 1.5
     logo_html = (
         f'<img src="data:image/png;base64,{logo_b64}" alt="Anton Hospital" '
-        f'height="130" style="display:block; margin-left:-48px;"/>'
+        f'height="195" style="display:block; margin-left:-48px;"/>'
         if logo_b64 else ""
     )
 

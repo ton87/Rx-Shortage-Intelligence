@@ -15,7 +15,14 @@ from src.ui.components import demo_banner
 from src.ui.formatters import format_timestamp
 from src.ui.runner import run_briefing_with_status
 
-ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
+# ACTION_LABELS — displayed pill text after the user takes an action.
+# Backwards-compatible: legacy "override" entries still render as "Dismissed".
+ACTION_LABELS = {
+    "accept":   "Reviewed",
+    "override": "Dismissed",   # legacy — kept for items written before the rename
+    "dismiss":  "Dismissed",
+    "escalate": "Flagged for P&T",
+}
 
 # ── Design tokens ──────────────────────────────────────────────────────────────
 _NAVY       = "#002045"   # used for body text/links — stays dark for legibility
@@ -30,8 +37,37 @@ _BORDER     = "#c4c6cf"
 _SEV_ACCENT   = {"Critical": "#ba1a1a", "Watch": "#b45309", "Resolved": "#15803d"}
 _SEV_BADGE_BG = {"Critical": "#ffdad6", "Watch": "#fffbeb", "Resolved": "#dcfce7"}
 _SEV_BADGE_FG = {"Critical": "#93000a", "Watch": "#92400e", "Resolved": "#166534"}
-_CONF_BG = {"HIGH": "#dcfce7", "MEDIUM": "#dce9ff", "LOW": "#fee2e2"}
-_CONF_FG = {"HIGH": "#166534", "MEDIUM": "#43474e", "LOW": "#991b1b"}
+_CONF_BG = {"High": "#dcfce7", "Medium": "#dce9ff", "Low": "#fee2e2"}
+_CONF_FG = {"High": "#166534", "Medium": "#43474e", "Low": "#991b1b"}
+
+# FDA status badge palette — neutral slate so it doesn't compete with Impact colour.
+_FDA_BADGE_BG = "#eef2f7"
+_FDA_BADGE_FG = "#1f2937"
+
+
+# ── Display label helpers ──────────────────────────────────────────────────────
+
+def _impact_label(severity: str | None) -> str:
+    """Internal severity -> pharmacist-facing impact label."""
+    return {
+        "Critical": "High",
+        "Watch":    "Monitor",
+        "Resolved": "Resolved",
+    }.get(severity or "", "Monitor")
+
+
+def _fda_status_label(status: str | None) -> str:
+    """FDA canonical status -> pharmacist-facing wording."""
+    return {
+        "Current":             "Current shortage",
+        "To Be Discontinued":  "To be discontinued",
+        "Resolved":            "Resolved by FDA",
+    }.get(status or "", "FDA status unknown")
+
+
+def _evidence_label(confidence: str | None) -> str:
+    """Agent confidence -> evidence wording (Title-cased)."""
+    return (confidence or "low").title()
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -61,41 +97,47 @@ def _metric_tile(label: str, value: str, accent: str) -> str:
 # ── Drilldown ──────────────────────────────────────────────────────────────────
 
 def render_drilldown(item: dict) -> None:
-    # ── FDA operational intelligence ───────────────────────────────────────
-    shortage_reason = item.get("shortage_reason")
-    related_info    = item.get("related_info")
-    availability    = item.get("availability")
-    company_name    = item.get("company_name")
-    presentation    = item.get("presentation")
-    update_date     = item.get("update_date")
-    initial_date    = item.get("initial_posting_date")
+    # ── FDA details ────────────────────────────────────────────────────────
+    status              = item.get("status")
+    shortage_reason     = item.get("shortage_reason")
+    related_info        = item.get("related_info")
+    availability        = item.get("availability")
+    company_name        = item.get("company_name")
+    presentation        = item.get("presentation")
+    dosage_form         = item.get("dosage_form")
+    update_date         = item.get("update_date")
+    initial_date        = item.get("initial_posting_date")
+    estimated_resolution = item.get("estimated_resolution")
 
     rxcui = item.get("rxcui")
 
     fda_rows = []
-    if shortage_reason:
-        fda_rows.append(("Root cause", shortage_reason))
-    if availability:
-        fda_rows.append(("Availability", availability))
+    fda_rows.append(("FDA status",       _fda_status_label(status)))
+    fda_rows.append(("FDA reason",       shortage_reason or "Not provided by FDA"))
+    fda_rows.append(("FDA availability", availability or "Not provided by FDA"))
     if related_info:
         fda_rows.append(("Manufacturer note", related_info))
     if company_name:
         fda_rows.append(("Manufacturer", company_name))
     if presentation:
         fda_rows.append(("Presentation", presentation))
+    if dosage_form:
+        fda_rows.append(("Dosage form", dosage_form))
     if rxcui:
         fda_rows.append(("RxCUI", rxcui))
     if initial_date:
         fda_rows.append(("First posted", initial_date))
     if update_date:
         fda_rows.append(("Last updated", update_date))
+    if estimated_resolution:
+        fda_rows.append(("Estimated resolution", estimated_resolution))
 
     if fda_rows:
-        st.markdown("**FDA Shortage Intelligence**")
+        st.markdown("**FDA details**")
         for label, value in fda_rows:
             st.markdown(
                 f'<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;">'
-                f'<span style="color:#6B7280;min-width:140px;font-weight:500;">{html.escape(label)}</span>'
+                f'<span style="color:#6B7280;min-width:160px;font-weight:500;">{html.escape(label)}</span>'
                 f'<span style="color:#1F2937;">{html.escape(str(value))}</span>'
                 f'</div>',
                 unsafe_allow_html=True,
@@ -109,14 +151,15 @@ def render_drilldown(item: dict) -> None:
 
     alts = item.get("alternatives", []) or []
     if alts:
-        st.markdown("**Therapeutic alternatives**")
+        st.markdown("**Potential therapeutic alternatives**")
+        st.caption("RxNorm/RxClass suggestions; clinical review required.")
         rows = [
             {
-                "Rank":       "Preferred" if i == 0 else "Alternative",
-                "Drug":       a.get("name", ""),
-                "Confidence": (a.get("confidence", "") or "").upper(),
-                "RxCUI":      a.get("rxcui", ""),
-                "Rationale":  a.get("rationale", ""),
+                "Option":   f"Option {i + 1}",
+                "Drug":     a.get("name", ""),
+                "Evidence": (a.get("confidence", "") or "").title(),
+                "RxCUI":    a.get("rxcui", ""),
+                "Notes":    a.get("rationale", ""),
             }
             for i, a in enumerate(alts)
         ]
@@ -140,27 +183,27 @@ def render_drilldown(item: dict) -> None:
                 st.code(f"{tc.get('tool', '')}({args_str})\n→ {preview}", language="text")
 
 
-# ── Override form ──────────────────────────────────────────────────────────────
+# ── Dismiss form ───────────────────────────────────────────────────────────────
 
-def _render_override_form(item_id: str, briefing_path) -> None:
-    override_key = f"override-open-{item_id}"
+def _render_dismiss_form(item_id: str, briefing_path) -> None:
+    dismiss_key = f"dismiss-open-{item_id}"
     reason = st.text_area(
-        "Override reason (required)",
-        key=f"override-reason-{item_id}",
-        placeholder="Document the clinical rationale…",
+        "Dismiss reason (required)",
+        key=f"dismiss-reason-{item_id}",
+        placeholder="Why is this not actionable for this briefing?",
         height=80,
     )
     c1, c2 = st.columns(2)
-    if c1.button("Confirm", key=f"override-confirm-{item_id}",
+    if c1.button("Dismiss alert", key=f"dismiss-confirm-{item_id}",
                  type="primary", use_container_width=True):
         if reason and reason.strip():
-            log_action(briefing_path, item_id, "override", reason.strip())
-            st.session_state[override_key] = False
+            log_action(briefing_path, item_id, "dismiss", reason.strip())
+            st.session_state[dismiss_key] = False
             st.rerun()
         else:
             st.warning("Reason required.")
-    if c2.button("Cancel", key=f"override-cancel-{item_id}", use_container_width=True):
-        st.session_state[override_key] = False
+    if c2.button("Cancel", key=f"dismiss-cancel-{item_id}", use_container_width=True):
+        st.session_state[dismiss_key] = False
         st.rerun()
 
 
@@ -195,50 +238,55 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
     drug         = item.get("drug_name", "Unknown")
     summary      = item.get("summary", "")
     action       = item.get("recommended_action", "")
-    confidence   = item.get("confidence", "low")
     cite_url     = primary_citation_url(item)
     user_action  = item.get("user_action")
     item_id      = item.get("item_id", "")
-    override_key = f"override-open-{item_id}"
+    dismiss_key  = f"dismiss-open-{item_id}"
 
     # ── FDA factual fields ──────────────────────────────────────────────────
-    availability  = item.get("availability")
-    company_name  = item.get("company_name")
-    presentation  = item.get("presentation")
+    fda_status      = item.get("status")
+    availability    = item.get("availability")
     shortage_reason = item.get("shortage_reason")
-    related_info  = item.get("related_info")
-    update_date   = item.get("update_date")
+    update_date     = item.get("update_date")
 
-    accent   = _SEV_ACCENT.get(severity, "#5E7BA4")
+    # ── Two primary status labels: FDA / Impact ─────────────────────────────
+    # (Evidence pill removed per UX simplification — internal confidence
+    # signal is not pharmacist-facing.)
+    impact          = _impact_label(severity)
+    fda_status_text = _fda_status_label(fda_status)
+
     badge_bg = _SEV_BADGE_BG.get(severity, "#e5eeff")
     badge_fg = _SEV_BADGE_FG.get(severity, _NAVY)
-    conf_up  = (confidence or "low").upper()
-    conf_bg  = _CONF_BG.get(conf_up, "#e5eeff")
-    conf_fg  = _CONF_FG.get(conf_up, _NAVY)
+
+    def _pill(label: str, bg: str, fg: str) -> str:
+        return (
+            f'<span style="background:{bg};color:{fg};font-size:11px;'
+            f'font-weight:600;letter-spacing:0.02em;'
+            f'padding:3px 9px;border-radius:2px;white-space:nowrap;">'
+            f'{html.escape(label)}</span>'
+        )
 
     badges_html = (
-        f'<span style="background:{badge_bg};color:{badge_fg};font-size:10px;'
-        f'font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
-        f'padding:3px 9px;border-radius:2px;">{html.escape(severity.upper())}</span>'
-        f'&nbsp;'
-        f'<span style="background:{conf_bg};color:{conf_fg};font-size:10px;'
-        f'font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
-        f'padding:3px 9px;border-radius:2px;">CONF: {html.escape(conf_up)}</span>'
-        + (f'&nbsp;{_avail_chip(availability)}' if availability else "")
+        _pill(f"FDA: {fda_status_text}", _FDA_BADGE_BG, _FDA_BADGE_FG)
+        + "&nbsp;"
+        + _pill(f"Impact: {impact}", badge_bg, badge_fg)
     )
 
-    # Manufacturer + presentation meta row
-    meta_parts = []
-    if company_name:
-        meta_parts.append(html.escape(company_name))
-    if presentation:
-        meta_parts.append(html.escape(presentation))
+    # ── FDA facts row: Reason · Availability · Updated ──────────────────────
+    reason_text = shortage_reason or "Not provided by FDA"
+    fact_parts = [f'<b style="color:{_ON_VARIANT};">Reason:</b> {html.escape(reason_text)}']
+    if availability:
+        fact_parts.append(
+            f'<b style="color:{_ON_VARIANT};">Availability:</b> {html.escape(availability)}'
+        )
     if update_date:
-        meta_parts.append(f'Updated {html.escape(update_date)}')
-    meta_html = (
-        f'<div style="font-size:11.5px;color:{_SLATE};margin:6px 0 10px 0;'
-        f'line-height:1.5;">{" &nbsp;·&nbsp; ".join(meta_parts)}</div>'
-    ) if meta_parts else ""
+        fact_parts.append(
+            f'<b style="color:{_ON_VARIANT};">Updated:</b> {html.escape(update_date)}'
+        )
+    facts_html = (
+        f'<div style="font-size:12px;color:{_SLATE};margin:8px 0 12px 0;'
+        f'line-height:1.6;">{" &nbsp;·&nbsp; ".join(fact_parts)}</div>'
+    )
 
     source_html = (
         f'<div style="margin-top:14px;">{_lbl("Source")}'
@@ -257,20 +305,20 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
                 f'<div style="padding:4px 4px 4px 8px;">'
                 # Header row: drug name + badges
                 f'<div style="display:flex;justify-content:space-between;'
-                f'align-items:flex-start;margin-bottom:6px;gap:12px;">'
+                f'align-items:flex-start;margin-bottom:6px;gap:12px;flex-wrap:wrap;">'
                 f'<div style="font-size:17px;font-weight:600;color:{_ON_SURFACE};'
                 f'letter-spacing:-0.01em;line-height:1.3;">{html.escape(drug)}</div>'
-                f'<div style="display:flex;gap:6px;padding-top:2px;flex-shrink:0;">'
-                f'{badges_html}</div>'
+                f'<div style="display:flex;gap:6px;padding-top:2px;flex-shrink:0;'
+                f'flex-wrap:wrap;">{badges_html}</div>'
                 f'</div>'
-                # Manufacturer · presentation · update date meta row
-                f'{meta_html}'
-                # 2-col grid: description | action required
+                # FDA facts row: Reason · Availability · Updated
+                f'{facts_html}'
+                # 2-col grid: why it matters | recommended next step
                 f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">'
-                f'<div>{_lbl("Description")}'
+                f'<div>{_lbl("Why it matters")}'
                 f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
-                f'{html.escape(summary)}</div></div>'
-                f'<div>{_lbl("Action Recommendation")}'
+                f'{html.escape(summary) if summary else "—"}</div></div>'
+                f'<div>{_lbl("Recommended next step")}'
                 f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
                 f'{html.escape(action) if action else "—"}</div></div>'
                 f'</div>'
@@ -284,7 +332,7 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
             if user_action:
                 fg2, bg2 = (
                     ("#166534", "#dcfce7") if user_action == "accept" else
-                    ("#92400e", "#fffbeb") if user_action == "override" else
+                    ("#92400e", "#fffbeb") if user_action in ("override", "dismiss") else
                     ("#93000a", "#ffdad6")
                 )
                 label = ACTION_LABELS.get(user_action, user_action.title())
@@ -294,21 +342,25 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
                     f'text-align:center;">{html.escape(label)}</div>',
                     unsafe_allow_html=True,
                 )
-            elif st.session_state.get(override_key):
-                _render_override_form(item_id, briefing_path)
+            elif st.session_state.get(dismiss_key):
+                _render_dismiss_form(item_id, briefing_path)
             else:
-                if st.button("Accept", key=f"accept-{item_id}",
-                             type="primary", use_container_width=True):
+                if st.button(
+                    "Mark reviewed",
+                    key=f"accept-{item_id}",
+                    type="primary",
+                    use_container_width=True,
+                    help="Record that this alert has been reviewed; the app takes no clinical action.",
+                ):
                     log_action(briefing_path, item_id, "accept")
                     st.rerun()
-                if st.button("Override", key=f"override-{item_id}",
-                             use_container_width=True):
-                    st.session_state[override_key] = True
-                    st.rerun()
-                if st.button("Escalate", key=f"escalate-{item_id}",
-                             use_container_width=True):
-                    log_action(briefing_path, item_id, "escalate")
-                    st.toast("Escalation flagged in audit log.")
+                if st.button(
+                    "Dismiss",
+                    key=f"dismiss-{item_id}",
+                    use_container_width=True,
+                    help="Record why this alert is not actionable for this briefing.",
+                ):
+                    st.session_state[dismiss_key] = True
                     st.rerun()
 
         # Drilldown expander INSIDE the card
@@ -451,12 +503,13 @@ def render_briefing_tab() -> None:
     )
 
     t1, t2, t3 = st.columns(3)
-    t1.markdown(_metric_tile("Critical", str(counts[Severity.CRITICAL]), _SEV_ACCENT["Critical"]), unsafe_allow_html=True)
-    t2.markdown(_metric_tile("Watch",    str(counts[Severity.WATCH]),    _SEV_ACCENT["Watch"]),    unsafe_allow_html=True)
-    t3.markdown(_metric_tile("Resolved", str(counts[Severity.RESOLVED]), _SEV_ACCENT["Resolved"]), unsafe_allow_html=True)
+    t1.markdown(_metric_tile("High Impact", str(counts[Severity.CRITICAL]), _SEV_ACCENT["Critical"]), unsafe_allow_html=True)
+    t2.markdown(_metric_tile("Monitor",     str(counts[Severity.WATCH]),    _SEV_ACCENT["Watch"]),    unsafe_allow_html=True)
+    t3.markdown(_metric_tile("Resolved",    str(counts[Severity.RESOLVED]), _SEV_ACCENT["Resolved"]), unsafe_allow_html=True)
 
     st.markdown(
         f'<div style="font-size:12px;color:{_SLATE};margin-top:6px;margin-bottom:4px;">'
+        f'Impact reflects local formulary use, active orders, route, departments, and substitute availability. · '
         f'{run.get("items_reviewed", 0)} drugs reviewed · '
         f'{run.get("items_surfaced", 0)} items surfaced</div>',
         unsafe_allow_html=True,

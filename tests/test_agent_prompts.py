@@ -13,8 +13,10 @@ import json
 import unittest
 
 # R2 baseline hashes from docs/superpowers/plans/baseline-2026-05-01.md
-ROLE_HASH = "68f482f157934367850cafef4bde40e4c58fc2fbd725505a14af2d358750df9a"
-RUBRIC_HASH = "802ae28a8aa0d062c6b32d52b85dd0ac8733de475d96fbbd6f886ea73024b00c"
+# Updated 2026-05-03: prompts revised per UX/UI recommendations (rule-ID
+# suppression + plain-language rationale); see commit log.
+ROLE_HASH = "c1b97822cc60c577b6b10329928b67078df331bd0e53b60ee383015a01cba178"
+RUBRIC_HASH = "c036c456528c1aa31ba88766044d1d2b481416d7d5ade7e36976f04ee8fd9f6b"
 
 
 class TestLoadPrompt(unittest.TestCase):

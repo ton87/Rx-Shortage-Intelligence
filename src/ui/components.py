@@ -32,8 +32,17 @@ def demo_banner() -> str:
     return (
         '<div class="rx-demo-banner">'
         '<span class="rx-demo-chip">DEMO</span>'
-        '<span>Formulary and active orders are synthetic. '
-        'FDA shortage feed and RxNorm are live public data.</span>'
+        '<div class="rx-demo-body">'
+        '<div class="rx-demo-line">'
+        'Formulary and active orders are synthetic. '
+        'FDA shortage feed and RxNorm are live public data.'
+        '</div>'
+        '<div class="rx-demo-meta">'
+        'Prototype built by <b>Anton Verenitch</b> for the '
+        '<b>Micromedex by Merative</b> Senior Product Manager, Formulary Intelligence '
+        'job interview demo.'
+        '</div>'
+        '</div>'
         '</div>'
     )
 

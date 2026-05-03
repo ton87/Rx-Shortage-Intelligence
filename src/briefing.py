@@ -206,9 +206,12 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
                         "_diff_bucket": drug.get("_diff_bucket", "unknown"),
                     }
                     for _fda_field in (
+                        "status",
                         "availability", "company_name", "presentation",
+                        "dosage_form",
                         "shortage_reason", "related_info",
                         "update_date", "initial_posting_date",
+                        "estimated_resolution",
                     ):
                         if drug.get(_fda_field) is not None:
                             timeout_item[_fda_field] = drug[_fda_field]
@@ -222,9 +225,12 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
                 # Attach directly so the UI can surface them without re-running
                 # the agent or re-fetching the API.
                 for _fda_field in (
+                    "status",
                     "availability", "company_name", "presentation",
+                    "dosage_form",
                     "shortage_reason", "related_info",
                     "update_date", "initial_posting_date",
+                    "estimated_resolution",
                 ):
                     if drug.get(_fda_field) is not None:
                         item[_fda_field] = drug[_fda_field]
