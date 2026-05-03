@@ -107,6 +107,29 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
             key=_candidate_sort_key,
         )
 
+        # ── Deduplicate by primary formulary rxcui ───────────────────────────
+        # A formulary drug has one primary rxcui and a rxcui_list of product
+        # variants. index_formulary() creates one index entry per list member,
+        # so a single FDA shortage record can match multiple entries for the
+        # same physical drug. Without deduplication the agent produces N
+        # identical (or near-identical) briefing items — one per matched rxcui.
+        # Fix: keep only the first (highest-priority) candidate per primary rxcui.
+        seen_primary: set[str] = set()
+        deduped: list[dict] = []
+        for drug in candidates:
+            frxcui = drug.get("_formulary_rxcui", "")
+            # formulary_idx entries all carry the drug's primary rxcui field
+            primary = formulary_idx.get(frxcui, {}).get("rxcui", frxcui)
+            if primary not in seen_primary:
+                seen_primary.add(primary)
+                deduped.append(drug)
+        if len(deduped) < len(candidates):
+            _log(
+                f"phase=dedup removed={len(candidates)-len(deduped)} duplicates "
+                f"(same formulary drug matched multiple rxcui_list entries)"
+            )
+        candidates = deduped
+
         # Cut line: cap at DEFAULT_CANDIDATE_CAP drugs for v0.1 tier-1 latency budget.
         cap = DEFAULT_CANDIDATE_CAP
         if len(candidates) > cap:
