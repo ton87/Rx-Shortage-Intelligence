@@ -70,6 +70,8 @@ def render_drilldown(item: dict) -> None:
     update_date     = item.get("update_date")
     initial_date    = item.get("initial_posting_date")
 
+    rxcui = item.get("rxcui")
+
     fda_rows = []
     if shortage_reason:
         fda_rows.append(("Root cause", shortage_reason))
@@ -81,6 +83,8 @@ def render_drilldown(item: dict) -> None:
         fda_rows.append(("Manufacturer", company_name))
     if presentation:
         fda_rows.append(("Presentation", presentation))
+    if rxcui:
+        fda_rows.append(("RxCUI", rxcui))
     if initial_date:
         fda_rows.append(("First posted", initial_date))
     if update_date:
