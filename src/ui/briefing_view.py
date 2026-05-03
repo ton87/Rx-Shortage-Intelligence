@@ -231,28 +231,23 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 # ── Briefing tab ───────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
-    # Tab-level styling: card-based layout for Active Alerts.
-    # All bordered wrappers in this tab are styled as white cards; nested
-    # wrappers (inside columns / expanders) are stripped to transparent so
-    # we don't get sub-boxes inside cards.
+    # Card-based layout — every st.container(border=True) becomes a white
+    # tile matching the Shortage Briefing KPI cards exactly.
     st.markdown(
         f"""<style>
-        /* Outer card containers — white tile with rounded corners */
-        section.main [data-testid="stVerticalBlockBorderWrapper"],
-        [data-testid="stMain"] [data-testid="stVerticalBlockBorderWrapper"] {{
+        /* Every bordered wrapper = white card (matches KPI tile styling) */
+        [data-testid="stVerticalBlockBorderWrapper"] {{
           background: {_WHITE} !important;
           border: 1px solid {_BORDER} !important;
           border-radius: 8px !important;
           padding: 8px !important;
           margin-bottom: 14px !important;
-          box-shadow: 0 1px 2px rgba(13,28,46,0.04);
+          box-shadow: 0 1px 2px rgba(13,28,46,0.04) !important;
         }}
-        /* Strip nested bordered wrappers (inside columns or expanders)
-           so sub-boxes don't appear inside cards */
-        section.main [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
-        section.main [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"],
-        [data-testid="stMain"] [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
-        [data-testid="stMain"] [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"] {{
+        /* Strip nested bordered wrappers (inside columns / expanders) so
+           we don't get a sub-box inside the card */
+        [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
+        [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"] {{
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
