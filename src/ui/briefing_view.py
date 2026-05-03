@@ -161,35 +161,52 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
     marker_cls = f"rxcm-{card_idx}"
     st.markdown(
         f'<style>'
-        # Target the bordered wrapper that immediately follows our marker
+        # Card shell: 4px coloured left border, white bg
         f'[data-testid="element-container"]:has(.{marker_cls})'
         f' + [data-testid="stVerticalBlockBorderWrapper"] {{'
         f'  border-left: 4px solid {accent} !important;'
         f'  background: {_WHITE} !important;'
         f'  margin-bottom: 12px !important;'
         f'}}'
-        # Vertical separator between content and button column
+        # Subtle vertical separator (only the line, NO background change)
         f'[data-testid="element-container"]:has(.{marker_cls})'
         f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(2) {{'
+        f' [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(2)'
+        f' > div:first-child {{'
         f'  border-left: 1px solid {_BORDER};'
-        f'  padding-left: 16px !important;'
-        f'  background: {_WHITE};'
+        f'  padding-left: 18px;'
         f'}}'
-        # Escalate button: red text, transparent bg
+        # Escalate (3rd button in right col): red text, no border, no bg
         f'[data-testid="element-container"]:has(.{marker_cls})'
         f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' .stColumn:nth-child(2) .stButton:nth-of-type(3) > button {{'
+        f' [data-testid="column"]:nth-child(2) .stButton:nth-of-type(3) > button {{'
         f'  color: #ba1a1a !important;'
         f'  background: transparent !important;'
         f'  border: none !important;'
         f'  box-shadow: none !important;'
         f'  font-weight: 600 !important;'
+        f'  padding: 4px 8px !important;'
         f'}}'
         f'[data-testid="element-container"]:has(.{marker_cls})'
         f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' .stColumn:nth-child(2) .stButton:nth-of-type(3) > button:hover {{'
+        f' [data-testid="column"]:nth-child(2) .stButton:nth-of-type(3) > button:hover {{'
         f'  background: #ffdad6 !important;'
+        f'}}'
+        # Constrain button width (narrower than column) + tighter spacing
+        f'[data-testid="element-container"]:has(.{marker_cls})'
+        f' + [data-testid="stVerticalBlockBorderWrapper"]'
+        f' [data-testid="column"]:nth-child(2) .stButton > button {{'
+        f'  max-width: 130px;'
+        f'  margin: 0 auto;'
+        f'  padding: 6px 12px;'
+        f'  font-size: 13px;'
+        f'  min-height: 32px;'
+        f'}}'
+        # Stack spacing between buttons in right column
+        f'[data-testid="element-container"]:has(.{marker_cls})'
+        f' + [data-testid="stVerticalBlockBorderWrapper"]'
+        f' [data-testid="column"]:nth-child(2) .stButton {{'
+        f'  margin-bottom: 6px;'
         f'}}'
         f'</style>'
         f'<span class="{marker_cls}" style="display:none;"></span>',
@@ -198,7 +215,7 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 
     # ── Bordered card container ──────────────────────────────────────────────
     with st.container(border=True):
-        col_content, col_btns = st.columns([5, 2])
+        col_content, col_btns = st.columns([6, 1.6])
 
         # LEFT — text content
         with col_content:
