@@ -100,16 +100,28 @@ def _trim(rec: dict, source_url: str = BASE) -> dict:
         rxcui = [rxcui] if rxcui else []
 
     return {
-        "generic_name": rec.get("generic_name"),
-        "proprietary_name": rec.get("proprietary_name"),
-        "status": rec.get("status"),
-        "shortage_reason": rec.get("shortage_reason"),
-        "availability": rec.get("availability"),
+        # Identity
+        "generic_name":        rec.get("generic_name"),
+        "proprietary_name":    rec.get("proprietary_name") or (openfda.get("brand_name") or [None])[0],
+        "company_name":        rec.get("company_name"),
+        # Exact presentation — NDC + dosage form + strength (shortage rarely hits all sizes)
+        "presentation":        rec.get("presentation"),
+        "dosage_form":         rec.get("dosage_form"),
+        # Status & root cause
+        "status":              rec.get("status"),
+        "shortage_reason":     rec.get("shortage_reason"),        # present ~40% of records
+        # Availability signal — "Available", "Unavailable", "Allocated", etc.
+        "availability":        rec.get("availability"),
+        # Recovery timeline notes from the manufacturer
+        "related_info":        rec.get("related_info"),
+        # Dates
+        "update_date":         rec.get("update_date"),
+        "initial_posting_date": rec.get("initial_posting_date"),
         "estimated_resolution": rec.get("estimated_resolution"),
-        "rxcui": rxcui,
-        "ndc": openfda.get("product_ndc", []),
-        "source_url": source_url,
-        "update_date": rec.get("update_date"),
+        # Identifiers
+        "rxcui":               rxcui,
+        "ndc":                 openfda.get("product_ndc", []),
+        "source_url":          source_url,
     }
 
 

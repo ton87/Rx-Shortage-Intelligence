@@ -41,14 +41,14 @@ def _render_header() -> None:
         av_b64 = base64.b64encode(_AVATAR_PATH.read_bytes()).decode()
         avatar_html = (
             f'<img src="data:image/png;base64,{av_b64}" alt="{_USER_NAME}" '
-            f'style="width:48px;height:48px;border-radius:50%;object-fit:cover;'
+            f'style="width:72px;height:72px;border-radius:50%;object-fit:cover;'
             f'border:2px solid #dce3ed;flex-shrink:0;"/>'
         )
     else:
         avatar_html = (
-            f'<div style="width:48px;height:48px;border-radius:50%;background:#1C3561;'
+            f'<div style="width:72px;height:72px;border-radius:50%;background:#1C3561;'
             f'display:flex;align-items:center;justify-content:center;'
-            f'color:white;font-weight:700;font-size:16px;flex-shrink:0;">AV</div>'
+            f'color:white;font-weight:700;font-size:22px;flex-shrink:0;">AV</div>'
         )
 
     logo_html = (
@@ -67,14 +67,19 @@ def _render_header() -> None:
         ">
             {logo_html}
             <div style="display:flex; align-items:center; gap:12px; padding-right:4px;">
-                <div style="text-align:right; line-height:1.5;">
-                    <div style="font-size:13px; color:#1C3561;">
-                        <span style="color:#5E7BA4; font-size:11px;">User: </span>
-                        <strong>{_USER_NAME}</strong>
+                <div style="
+                    text-align:right;
+                    line-height:1.8;
+                    border: 1.5px solid #a8c5e8;
+                    border-radius: 6px;
+                    padding: 6px 14px;
+                    background: #ffffff;
+                ">
+                    <div style="font-size:15px; font-weight:700; color:#5E7BA4;">
+                        <span style="font-size:15px; font-weight:700; color:#5E7BA4;">User:&nbsp;</span>{_USER_NAME}
                     </div>
-                    <div style="font-size:13px; color:#1C3561;">
-                        <span style="color:#5E7BA4; font-size:11px;">Role: </span>
-                        <strong>{_USER_ROLE}</strong>
+                    <div style="font-size:15px; font-weight:700; color:#5E7BA4;">
+                        <span style="font-size:15px; font-weight:700; color:#5E7BA4;">Role:&nbsp;</span>{_USER_ROLE}
                     </div>
                 </div>
                 {avatar_html}

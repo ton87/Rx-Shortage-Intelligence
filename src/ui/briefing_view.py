@@ -5,6 +5,7 @@ import json
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from src.domain.severity import Severity, SEVERITY_RANK
 from src.domain.matching import primary_citation_url
@@ -60,6 +61,43 @@ def _metric_tile(label: str, value: str, accent: str) -> str:
 # ── Drilldown ──────────────────────────────────────────────────────────────────
 
 def render_drilldown(item: dict) -> None:
+    # ── FDA operational intelligence ───────────────────────────────────────
+    shortage_reason = item.get("shortage_reason")
+    related_info    = item.get("related_info")
+    availability    = item.get("availability")
+    company_name    = item.get("company_name")
+    presentation    = item.get("presentation")
+    update_date     = item.get("update_date")
+    initial_date    = item.get("initial_posting_date")
+
+    fda_rows = []
+    if shortage_reason:
+        fda_rows.append(("Root cause", shortage_reason))
+    if availability:
+        fda_rows.append(("Availability", availability))
+    if related_info:
+        fda_rows.append(("Manufacturer note", related_info))
+    if company_name:
+        fda_rows.append(("Manufacturer", company_name))
+    if presentation:
+        fda_rows.append(("Presentation", presentation))
+    if initial_date:
+        fda_rows.append(("First posted", initial_date))
+    if update_date:
+        fda_rows.append(("Last updated", update_date))
+
+    if fda_rows:
+        st.markdown("**FDA Shortage Intelligence**")
+        for label, value in fda_rows:
+            st.markdown(
+                f'<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;">'
+                f'<span style="color:#6B7280;min-width:140px;font-weight:500;">{html.escape(label)}</span>'
+                f'<span style="color:#1F2937;">{html.escape(str(value))}</span>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
+        st.markdown("---")
+
     rationale = item.get("rationale", "")
     if rationale:
         st.markdown("**Rationale**")
@@ -124,16 +162,48 @@ def _render_override_form(item_id: str, briefing_path) -> None:
 
 # ── Alert card ─────────────────────────────────────────────────────────────────
 
+_AVAIL_STYLE = {
+    "Available":   ("#166534", "#dcfce7", "#bbf7d0"),
+    "Unavailable": ("#991b1b", "#fee2e2", "#fecaca"),
+}
+
+def _avail_chip(availability: str | None) -> str:
+    if not availability:
+        return ""
+    label = availability.strip()
+    # Normalise long availability strings to a short chip label
+    if "unavailable" in label.lower() or "not available" in label.lower():
+        key = "Unavailable"
+    elif "available" in label.lower():
+        key = "Available"
+    else:
+        key = "Available"   # fallback — show as neutral green
+    fg, bg, border = _AVAIL_STYLE.get(key, ("#374151", "#f3f4f6", "#d1d5db"))
+    return (
+        f'<span style="background:{bg};color:{fg};border:1px solid {border};'
+        f'font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
+        f'padding:3px 9px;border-radius:2px;">{html.escape(label)}</span>'
+    )
+
+
 def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
-    severity    = item.get("severity", "Watch")
-    drug        = item.get("drug_name", "Unknown")
-    summary     = item.get("summary", "")
-    action      = item.get("recommended_action", "")
-    confidence  = item.get("confidence", "low")
-    cite_url    = primary_citation_url(item)
-    user_action = item.get("user_action")
-    item_id     = item.get("item_id", "")
+    severity     = item.get("severity", "Watch")
+    drug         = item.get("drug_name", "Unknown")
+    summary      = item.get("summary", "")
+    action       = item.get("recommended_action", "")
+    confidence   = item.get("confidence", "low")
+    cite_url     = primary_citation_url(item)
+    user_action  = item.get("user_action")
+    item_id      = item.get("item_id", "")
     override_key = f"override-open-{item_id}"
+
+    # ── FDA factual fields ──────────────────────────────────────────────────
+    availability  = item.get("availability")
+    company_name  = item.get("company_name")
+    presentation  = item.get("presentation")
+    shortage_reason = item.get("shortage_reason")
+    related_info  = item.get("related_info")
+    update_date   = item.get("update_date")
 
     accent   = _SEV_ACCENT.get(severity, "#5E7BA4")
     badge_bg = _SEV_BADGE_BG.get(severity, "#e5eeff")
@@ -150,7 +220,21 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
         f'<span style="background:{conf_bg};color:{conf_fg};font-size:10px;'
         f'font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
         f'padding:3px 9px;border-radius:2px;">CONF: {html.escape(conf_up)}</span>'
+        + (f'&nbsp;{_avail_chip(availability)}' if availability else "")
     )
+
+    # Manufacturer + presentation meta row
+    meta_parts = []
+    if company_name:
+        meta_parts.append(html.escape(company_name))
+    if presentation:
+        meta_parts.append(html.escape(presentation))
+    if update_date:
+        meta_parts.append(f'Updated {html.escape(update_date)}')
+    meta_html = (
+        f'<div style="font-size:11.5px;color:{_SLATE};margin:6px 0 10px 0;'
+        f'line-height:1.5;">{" &nbsp;·&nbsp; ".join(meta_parts)}</div>'
+    ) if meta_parts else ""
 
     source_html = (
         f'<div style="margin-top:14px;">{_lbl("Source")}'
@@ -158,10 +242,6 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
         f'style="font-size:12px;color:{_NAVY};text-decoration:none;'
         f'border-bottom:1px solid {_BORDER};">∞ FDA Drug Shortage Record</a></div>'
     ) if cite_url else ""
-
-    # Card styling now handled globally in render_briefing_tab().
-    # No per-card CSS needed — every st.container(border=True) becomes a
-    # white card automatically via the section.main rules.
 
     # ── Bordered card container ──────────────────────────────────────────────
     with st.container(border=True):
@@ -173,18 +253,20 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
                 f'<div style="padding:4px 4px 4px 8px;">'
                 # Header row: drug name + badges
                 f'<div style="display:flex;justify-content:space-between;'
-                f'align-items:flex-start;margin-bottom:14px;gap:12px;">'
+                f'align-items:flex-start;margin-bottom:6px;gap:12px;">'
                 f'<div style="font-size:17px;font-weight:600;color:{_ON_SURFACE};'
                 f'letter-spacing:-0.01em;line-height:1.3;">{html.escape(drug)}</div>'
                 f'<div style="display:flex;gap:6px;padding-top:2px;flex-shrink:0;">'
                 f'{badges_html}</div>'
                 f'</div>'
+                # Manufacturer · presentation · update date meta row
+                f'{meta_html}'
                 # 2-col grid: description | action required
                 f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">'
                 f'<div>{_lbl("Description")}'
                 f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
                 f'{html.escape(summary)}</div></div>'
-                f'<div>{_lbl("Action Required")}'
+                f'<div>{_lbl("Action Recommendation")}'
                 f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
                 f'{html.escape(action) if action else "—"}</div></div>'
                 f'</div>'
@@ -233,78 +315,68 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 # ── Briefing tab ───────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
-    # Card-based layout — every st.container(border=True) becomes a white
-    # tile matching the Shortage Briefing KPI cards exactly.
+    # ── CSS: button styles only ────────────────────────────────────────────────
+    # NOTE: stVerticalBlockBorderWrapper does NOT exist in Streamlit 1.57.
+    # The bordered container is data-testid="stVerticalBlock" with Emotion CSS.
+    # Background colour is forced via JS below (computed style detection).
     st.markdown(
         f"""<style>
-        /* Every bordered wrapper = white card (matches KPI tile styling) */
-        [data-testid="stVerticalBlockBorderWrapper"] {{
-          background: {_WHITE} !important;
-          border: 1px solid {_BORDER} !important;
-          border-radius: 8px !important;
-          padding: 8px !important;
-          margin-bottom: 14px !important;
-          box-shadow: 0 1px 2px rgba(13,28,46,0.04) !important;
-        }}
-        /* Strip nested bordered wrappers (inside columns / expanders) so
-           we don't get a sub-box inside the card */
-        [data-testid="column"] [data-testid="stVerticalBlockBorderWrapper"],
-        [data-testid="stExpander"] [data-testid="stVerticalBlockBorderWrapper"] {{
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          padding: 0 !important;
-          margin-bottom: 0 !important;
-        }}
-        /* Right-column buttons: capped width, right-aligned, smaller */
-        [data-testid="stVerticalBlockBorderWrapper"]
-          [data-testid="stHorizontalBlock"]
-          > [data-testid="column"]:nth-child(2) .stButton > button {{
-          max-width: 132px;
-          margin: 0 0 6px auto;
-          padding: 6px 12px;
-          font-size: 13px;
-          min-height: 32px;
-          border-radius: 6px;
-          display: block;
-        }}
-        /* Escalate (3rd button) = red text only, no border */
-        [data-testid="stVerticalBlockBorderWrapper"]
-          [data-testid="stHorizontalBlock"]
-          > [data-testid="column"]:nth-child(2)
-          .stButton:nth-of-type(3) > button {{
-          color: #ba1a1a !important;
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          font-weight: 600 !important;
-        }}
-        [data-testid="stVerticalBlockBorderWrapper"]
-          [data-testid="stHorizontalBlock"]
-          > [data-testid="column"]:nth-child(2)
-          .stButton:nth-of-type(3) > button:hover {{
-          background: #ffdad6 !important;
-        }}
         /* Primary (Accept) button = pastel blue with dark text */
         .stButton button[kind="primaryButton"],
         button[data-testid="baseButton-primary"] {{
           background-color: {_PRIMARY_BG} !important;
-          border-color: {_PRIMARY_BG} !important;
-          color: {_PRIMARY_FG} !important;
+          border-color:     {_PRIMARY_BG} !important;
+          color:            {_PRIMARY_FG} !important;
           font-weight: 600 !important;
         }}
         .stButton button[kind="primaryButton"]:hover {{
           background-color: #93b6dc !important;
-          border-color: #93b6dc !important;
-          color: {_PRIMARY_FG} !important;
+          border-color:     #93b6dc !important;
+          color:            {_PRIMARY_FG} !important;
         }}
-        /* Force the inner span/p (text) to be dark on the pastel bg */
         .stButton button[kind="primaryButton"] p,
         button[data-testid="baseButton-primary"] p {{
           color: {_PRIMARY_FG} !important;
         }}
         </style>""",
         unsafe_allow_html=True,
+    )
+
+    # ── JS: force white on bordered stVerticalBlock elements ──────────────────
+    # stVerticalBlockBorderWrapper does NOT exist in Streamlit 1.57.
+    # Bordered containers render as stVerticalBlock with Emotion-generated CSS.
+    # We detect which ones have a border via getComputedStyle and paint them white.
+    components.html(
+        """
+        <script>
+        (function() {
+          function applyWhiteCards() {
+            try {
+              var pdoc = window.parent.document;
+              var blocks = pdoc.querySelectorAll('[data-testid="stVerticalBlock"]');
+              blocks.forEach(function(el) {
+                var cs = window.parent.getComputedStyle(el);
+                var bw = parseFloat(cs.borderLeftWidth || cs.borderWidth || '0');
+                if (bw > 0) {
+                  // This is a bordered card container — force white fill
+                  el.style.setProperty('background-color', '#ffffff', 'important');
+                }
+              });
+            } catch(e) { /* cross-origin guard, shouldn't fire on localhost */ }
+          }
+
+          // Run immediately, then again after short delays to catch late renders
+          applyWhiteCards();
+          setTimeout(applyWhiteCards, 200);
+          setTimeout(applyWhiteCards, 800);
+
+          // Re-apply on every DOM mutation (button clicks trigger Streamlit re-renders)
+          var obs = new MutationObserver(function() { applyWhiteCards(); });
+          obs.observe(window.parent.document.body, { childList: true, subtree: true });
+        })();
+        </script>
+        """,
+        height=1,
     )
 
     running = st.session_state.get("briefing_running", False)

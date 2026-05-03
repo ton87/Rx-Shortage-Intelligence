@@ -162,7 +162,7 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
                     )
                 except asyncio.TimeoutError:
                     _log(f"drug={drug_idx}/{total} name={drug_name!r} TIMEOUT after {PER_DRUG_TIMEOUT_S}s")
-                    return {
+                    timeout_item = {
                         "rxcui": frxcui,
                         "drug_name": drug_name,
                         "severity": "Watch",
@@ -175,11 +175,30 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
                         "tool_call_log": [],
                         "item_id": str(uuid.uuid4()),
                         "_diff_bucket": drug.get("_diff_bucket", "unknown"),
-                    }, 0
+                    }
+                    for _fda_field in (
+                        "availability", "company_name", "presentation",
+                        "shortage_reason", "related_info",
+                        "update_date", "initial_posting_date",
+                    ):
+                        if drug.get(_fda_field) is not None:
+                            timeout_item[_fda_field] = drug[_fda_field]
+                    return timeout_item, 0
 
                 item = parse_briefing_item(final_text, drug_name, frxcui)
                 item["item_id"] = str(uuid.uuid4())
                 item["_diff_bucket"] = drug.get("_diff_bucket", "unknown")
+                # ── Passthrough factual FDA fields ──────────────────────────
+                # These are objective data points that don't need LLM synthesis.
+                # Attach directly so the UI can surface them without re-running
+                # the agent or re-fetching the API.
+                for _fda_field in (
+                    "availability", "company_name", "presentation",
+                    "shortage_reason", "related_info",
+                    "update_date", "initial_posting_date",
+                ):
+                    if drug.get(_fda_field) is not None:
+                        item[_fda_field] = drug[_fda_field]
                 # Attribute prefetch tool calls to this drug.
                 # Match by rxcui in tool args (formulary rxcui or any alt rxcui from prefetch).
                 drug_alt_rxcuis = {
