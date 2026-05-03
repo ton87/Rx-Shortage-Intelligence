@@ -152,35 +152,10 @@ button:focus-visible {
 
 [data-testid="stMetricDelta"] { display: none !important; }
 
-/* ── Alert card tiles: always white ─────────────────────────────────────── */
+/* ── Bordered containers: white ─────────────────────────────────────────── */
 [data-testid="stVerticalBlockBorderWrapper"] {
   background-color: #ffffff !important;
 }
 
-/* ── Streamlit metric tiles: remove default styling ─────────────────────── */
+/* ── Metric tiles: no default Streamlit background ───────────────────────── */
 [data-testid="stMetric"] { background: transparent; }
-
-/* ── Accept button: dark navy (matches config.toml primaryColor #002045) ── */
-/* Belt-and-suspenders override in case browser has cached old theme */
-.stButton > button[kind="primaryButton"],
-.stButton > button[data-testid*="primary"],
-[data-testid="stBaseButton-primary"] {
-  background-color: #002045 !important;
-  border-color: #002045 !important;
-  color: #ffffff !important;
-}
-.stButton > button[kind="primaryButton"]:hover {
-  background-color: #1a365d !important;
-  border-color: #1a365d !important;
-}
-
-/* ── Escalate button: red text, no fill ─────────────────────────────────── */
-.rx-escalate button {
-  color: #ba1a1a !important;
-  background: transparent !important;
-  border: 1px solid #c4c6cf !important;
-}
-.rx-escalate button:hover {
-  background: #ffdad6 !important;
-  border-color: #ba1a1a !important;
-}

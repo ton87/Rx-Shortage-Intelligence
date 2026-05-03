@@ -1,7 +1,4 @@
-"""Briefing tab renderer.
-
-Pattern B: 100% sync — reads pre-generated JSON, never imports async/MCP.
-"""
+"""Briefing tab renderer — Pattern B: 100% sync."""
 
 import html
 import json
@@ -14,7 +11,7 @@ from src.domain.matching import primary_citation_url
 from src.io_.briefing_store import find_latest_briefing, load_briefing
 from src.ui.actions import log_action
 from src.ui.components import demo_banner
-from src.ui.formatters import format_timestamp, format_latency_or_dash
+from src.ui.formatters import format_timestamp
 from src.ui.runner import run_briefing_with_status
 
 ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
@@ -38,16 +35,14 @@ _CONF_FG = {"HIGH": "#166534", "MEDIUM": "#92400e", "LOW": "#991b1b"}
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 def _lbl(text: str) -> str:
-    """Tiny uppercase section label."""
     return (
-        f'<div style="font-size:11px;font-weight:600;letter-spacing:0.05em;'
+        f'<div style="font-size:10px;font-weight:600;letter-spacing:0.07em;'
         f'text-transform:uppercase;color:{_SLATE};margin-bottom:4px;">'
         f'{html.escape(text)}</div>'
     )
 
 
 def _metric_tile(label: str, value: str, accent: str) -> str:
-    """White metric tile with 4-px left accent bar."""
     return (
         f'<div style="background:{_WHITE};border:1px solid {_BORDER};border-radius:2px;'
         f'padding:16px 20px;position:relative;overflow:hidden;'
@@ -90,10 +85,7 @@ def render_drilldown(item: dict) -> None:
         for c in cites:
             url = c.get("url") or c.get("source_url", "")
             claim = c.get("claim", "")
-            st.markdown(
-                f"- {html.escape(claim)} — [source]({url})" if url
-                else f"- {html.escape(claim)}"
-            )
+            st.markdown(f"- {html.escape(claim)} — [source]({url})" if url else f"- {html.escape(claim)}")
 
     tool_calls = item.get("tool_call_log", []) or []
     if tool_calls:
@@ -101,7 +93,7 @@ def render_drilldown(item: dict) -> None:
         if st.toggle(f"Show audit trail ({len(tool_calls)} API calls)", key=f"trace-{item_id}"):
             for tc in tool_calls:
                 args_str = json.dumps(tc.get("args", {}))[:300]
-                preview = str(tc.get("result_preview", ""))[:300]
+                preview  = str(tc.get("result_preview", ""))[:300]
                 st.code(f"{tc.get('tool', '')}({args_str})\n→ {preview}", language="text")
 
 
@@ -109,25 +101,24 @@ def render_drilldown(item: dict) -> None:
 
 def _render_override_form(item_id: str, briefing_path) -> None:
     override_key = f"override-open-{item_id}"
-    with st.container(border=True):
-        reason = st.text_area(
-            "Override reason (required)",
-            key=f"override-reason-{item_id}",
-            placeholder="Document the clinical rationale for overriding…",
-            height=80,
-        )
-        c1, c2 = st.columns(2)
-        if c1.button("Confirm override", key=f"override-confirm-{item_id}",
-                     type="primary", use_container_width=True):
-            if reason and reason.strip():
-                log_action(briefing_path, item_id, "override", reason.strip())
-                st.session_state[override_key] = False
-                st.rerun()
-            else:
-                st.warning("Reason required to log override.")
-        if c2.button("Cancel", key=f"override-cancel-{item_id}", use_container_width=True):
+    reason = st.text_area(
+        "Override reason (required)",
+        key=f"override-reason-{item_id}",
+        placeholder="Document the clinical rationale for overriding…",
+        height=80,
+    )
+    c1, c2 = st.columns(2)
+    if c1.button("Confirm override", key=f"override-confirm-{item_id}",
+                 type="primary", use_container_width=True):
+        if reason and reason.strip():
+            log_action(briefing_path, item_id, "override", reason.strip())
             st.session_state[override_key] = False
             st.rerun()
+        else:
+            st.warning("Reason required.")
+    if c2.button("Cancel", key=f"override-cancel-{item_id}", use_container_width=True):
+        st.session_state[override_key] = False
+        st.rerun()
 
 
 # ── Alert card ─────────────────────────────────────────────────────────────────
@@ -152,132 +143,166 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 
     badges_html = (
         f'<span style="background:{badge_bg};color:{badge_fg};font-size:10px;'
-        f'font-weight:600;letter-spacing:0.05em;text-transform:uppercase;'
-        f'padding:3px 8px;border-radius:2px;">{html.escape(severity.upper())}</span>'
+        f'font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
+        f'padding:3px 9px;border-radius:2px;">{html.escape(severity.upper())}</span>'
         f'&nbsp;'
         f'<span style="background:{conf_bg};color:{conf_fg};font-size:10px;'
-        f'font-weight:600;letter-spacing:0.05em;text-transform:uppercase;'
-        f'padding:3px 8px;border-radius:2px;">CONF: {html.escape(conf_up)}</span>'
+        f'font-weight:700;letter-spacing:0.06em;text-transform:uppercase;'
+        f'padding:3px 9px;border-radius:2px;">CONF: {html.escape(conf_up)}</span>'
     )
 
     source_html = (
-        f'<div style="margin-top:12px;">{_lbl("Source")}'
+        f'<div style="margin-top:10px;padding-top:10px;border-top:1px solid {_BORDER};">'
+        f'{_lbl("Source")}'
         f'<a href="{html.escape(cite_url)}" target="_blank" '
         f'style="font-size:12px;color:{_NAVY};text-decoration:none;'
-        f'border-bottom:1px solid {_BORDER};">FDA Drug Shortage Record</a></div>'
+        f'border-bottom:1px solid {_BORDER};">FDA Drug Shortage Record ↗</a></div>'
     ) if cite_url else ""
 
-    # ── Per-card CSS: left accent bar via adjacent sibling + :has() ──────────
-    marker_cls = f"rx-card-marker-{card_idx}"
+    # ── The whole card is ONE html block (text) + st.columns (buttons) ────────
+    # Both share the same outer "card shell" via CSS on the unique marker.
+
+    uid = f"rxcard{card_idx}"
+
+    # Inject per-card CSS: colour the card shell left border
     st.markdown(
         f'<style>'
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"] {{'
-        f'  border-left: 4px solid {accent} !important;'
-        f'  background: {_WHITE} !important;'
+        f'#{uid}-shell {{'
+        f'  background: {_WHITE};'
+        f'  border: 1px solid {_BORDER};'
+        f'  border-left: 4px solid {accent};'
+        f'  border-bottom: none;'            # buttons row closes the bottom
+        f'  border-radius: 2px 2px 0 0;'
+        f'  box-shadow: 1px 0 0 0 {_BORDER}, -1px 0 0 0 {_BORDER};'
         f'}}'
-        f'</style>'
-        f'<span class="{marker_cls}" style="display:none;"></span>',
+        f'#{uid}-btns {{'
+        f'  background: {_WHITE};'
+        f'  border: 1px solid {_BORDER};'
+        f'  border-left: 4px solid {accent};'
+        f'  border-top: none;'
+        f'  border-radius: 0 0 2px 2px;'
+        f'  padding: 8px 16px 12px;'
+        f'  display: flex;'
+        f'  gap: 8px;'
+        f'  align-items: center;'
+        f'}}'
+        f'</style>',
         unsafe_allow_html=True,
     )
 
-    # ── Bordered card container ───────────────────────────────────────────────
-    with st.container(border=True):
-        col_content, col_btns = st.columns([7, 2], gap="small")
+    # ── Top section: text content ──────────────────────────────────────────
+    st.markdown(
+        f'<div id="{uid}-shell" style="padding:16px 20px 14px 16px;">'
+        # Header row
+        f'<div style="display:flex;justify-content:space-between;'
+        f'align-items:flex-start;margin-bottom:12px;">'
+        f'<div style="font-size:17px;font-weight:600;color:{_ON_SURFACE};'
+        f'letter-spacing:-0.01em;line-height:1.3;">{html.escape(drug)}</div>'
+        f'<div style="display:flex;gap:6px;padding-top:2px;">{badges_html}</div>'
+        f'</div>'
+        # 2-col grid
+        f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">'
+        f'<div>{_lbl("Description")}'
+        f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
+        f'{html.escape(summary)}</div></div>'
+        f'<div>{_lbl("Action Required")}'
+        f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.6;">'
+        f'{html.escape(action) if action else "—"}</div></div>'
+        f'</div>'
+        f'{source_html}'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
 
-        # Left: all text content
-        with col_content:
-            st.markdown(
-                f'<div style="padding:4px 8px 8px 12px;">'
-                # Header row: drug name + badges
-                f'<div style="display:flex;justify-content:space-between;'
-                f'align-items:flex-start;margin-bottom:12px;">'
-                f'<div style="font-size:17px;font-weight:600;color:{_ON_SURFACE};'
-                f'letter-spacing:-0.01em;line-height:1.3;">{html.escape(drug)}</div>'
-                f'<div style="display:flex;gap:6px;padding-top:2px;flex-wrap:wrap;'
-                f'justify-content:flex-end;">{badges_html}</div>'
-                f'</div>'
-                # 2-col grid: description | action required
-                f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">'
-                f'<div>{_lbl("Description")}'
-                f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.55;">'
-                f'{html.escape(summary)}</div></div>'
-                f'<div>{_lbl("Action Required")}'
-                f'<div style="font-size:13px;color:{_ON_VARIANT};line-height:1.55;">'
-                f'{html.escape(action) if action else "—"}</div></div>'
-                f'</div>'
-                f'{source_html}'
-                f'</div>',
-                unsafe_allow_html=True,
-            )
+    # ── Bottom section: action buttons ────────────────────────────────────
+    # Wrap button row in the styled shell div via HTML, then inject Streamlit buttons
+    st.markdown(f'<div id="{uid}-btns">', unsafe_allow_html=True)
 
-        # Right: button panel
-        with col_btns:
-            if user_action:
-                fg2, bg2 = (
-                    ("#166534", "#dcfce7") if user_action == "accept" else
-                    ("#92400e", "#fffbeb") if user_action == "override" else
-                    ("#93000a", "#ffdad6")
-                )
-                label = ACTION_LABELS.get(user_action, user_action.title())
-                st.markdown(
-                    f'<div style="margin-top:8px;font-size:12px;font-weight:600;'
-                    f'color:{fg2};background:{bg2};padding:6px 10px;border-radius:2px;'
-                    f'text-align:center;">{html.escape(label)}</div>',
-                    unsafe_allow_html=True,
-                )
-            elif st.session_state.get(override_key):
-                _render_override_form(item_id, briefing_path)
-            else:
-                if st.button("Accept", key=f"accept-{item_id}",
-                             type="primary", use_container_width=True):
-                    log_action(briefing_path, item_id, "accept")
-                    st.rerun()
-                if st.button("Override", key=f"override-{item_id}",
-                             use_container_width=True):
-                    st.session_state[override_key] = True
-                    st.rerun()
-                # Escalate — inject marker so CSS can target this button red
-                esc_cls = f"rx-esc-{card_idx}"
-                st.markdown(
-                    f'<style>'
-                    f'[data-testid="element-container"]:has(.{esc_cls})'
-                    f' + [data-testid="element-container"] button {{'
-                    f'  color: #ba1a1a !important;'
-                    f'  background: transparent !important;'
-                    f'  border: 1px solid #c4c6cf !important;'
-                    f'}}'
-                    f'[data-testid="element-container"]:has(.{esc_cls})'
-                    f' + [data-testid="element-container"] button:hover {{'
-                    f'  background: #ffdad6 !important;'
-                    f'  border-color: #ba1a1a !important;'
-                    f'}}'
-                    f'</style>'
-                    f'<span class="{esc_cls}" style="display:none;"></span>',
-                    unsafe_allow_html=True,
-                )
-                if st.button("Escalate", key=f"escalate-{item_id}",
-                             use_container_width=True):
-                    log_action(briefing_path, item_id, "escalate")
-                    st.toast("Escalation flagged in audit log.")
-                    st.rerun()
+    if user_action:
+        fg2, bg2 = (
+            ("#166534", "#dcfce7") if user_action == "accept" else
+            ("#92400e", "#fffbeb") if user_action == "override" else
+            ("#93000a", "#ffdad6")
+        )
+        label = ACTION_LABELS.get(user_action, user_action.title())
+        st.markdown(
+            f'<span style="font-size:12px;font-weight:600;color:{fg2};'
+            f'background:{bg2};padding:5px 12px;border-radius:2px;">'
+            f'{html.escape(label)}</span>',
+            unsafe_allow_html=True,
+        )
+    elif st.session_state.get(override_key):
+        _render_override_form(item_id, briefing_path)
+    else:
+        col_a, col_o, col_e = st.columns([2, 2, 2])
+        with col_a:
+            if st.button("Accept", key=f"accept-{item_id}",
+                         type="primary", use_container_width=True):
+                log_action(briefing_path, item_id, "accept")
+                st.rerun()
+        with col_o:
+            if st.button("Override", key=f"override-{item_id}",
+                         use_container_width=True):
+                st.session_state[override_key] = True
+                st.rerun()
+        with col_e:
+            if st.button("Escalate", key=f"escalate-{item_id}",
+                         use_container_width=True):
+                log_action(briefing_path, item_id, "escalate")
+                st.toast("Escalation flagged in audit log.")
+                st.rerun()
 
-        # Drilldown expander (sits flush below the card)
-        with st.expander("Details + citations"):
-            render_drilldown(item)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ── Drilldown expander (outside the card shell) ────────────────────────
+    with st.expander("Details + citations"):
+        render_drilldown(item)
+
+    st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
 
 
 # ── Briefing tab ───────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
+    # Inject global CSS for briefing tab
+    st.markdown(
+        f"""<style>
+        /* White card containers */
+        [data-testid="stVerticalBlockBorderWrapper"] {{
+          background: {_WHITE} !important;
+        }}
+        /* Accept button = dark navy */
+        .stButton button[kind="primaryButton"],
+        button[data-testid="baseButton-primary"] {{
+          background-color: {_NAVY} !important;
+          border-color: {_NAVY} !important;
+          color: #fff !important;
+        }}
+        .stButton button[kind="primaryButton"]:hover {{
+          background-color: #1a365d !important;
+        }}
+        /* Escalate = red text */
+        [id$="-btns"] .stColumns:last-child button,
+        [id$="-btns"] [data-testid="column"]:last-child button {{
+          color: #ba1a1a !important;
+          background: transparent !important;
+          border-color: {_BORDER} !important;
+        }}
+        [id$="-btns"] [data-testid="column"]:last-child button:hover {{
+          background: #ffdad6 !important;
+          border-color: #ba1a1a !important;
+        }}
+        </style>""",
+        unsafe_allow_html=True,
+    )
+
     running = st.session_state.get("briefing_running", False)
 
-    # Page header
     hcol1, hcol2 = st.columns([4, 1])
     with hcol1:
         st.markdown(
             f'<h1 style="font-size:28px;font-weight:700;color:{_ON_SURFACE};'
-            f'letter-spacing:-0.02em;margin-bottom:0;padding-bottom:0;">'
+            f'letter-spacing:-0.02em;margin-bottom:0;">'
             f'Rx Shortage Intelligence</h1>',
             unsafe_allow_html=True,
         )
@@ -302,16 +327,14 @@ def render_briefing_tab() -> None:
 
     path = find_latest_briefing()
     if path is None:
-        st.info("No briefing for today yet. Click **Re-run briefing** to fetch the latest "
-                "FDA shortage data — takes 2-3 minutes.")
+        st.info("No briefing yet — click **Re-run briefing** to fetch FDA shortage data.")
         return
 
     run   = load_briefing(path)
     items = run.get("items", []) or []
 
     if run.get("fetch_error"):
-        st.error(f"FDA shortage feed returned error: {run['fetch_error']}. "
-                 "Briefing items below may be incomplete or stale.")
+        st.error(f"FDA feed error: {run['fetch_error']}. Items may be incomplete.")
 
     counts = {s: 0 for s in Severity}
     for it in items:
@@ -343,9 +366,9 @@ def render_briefing_tab() -> None:
 
     # 3 metric tiles
     t1, t2, t3 = st.columns(3)
-    t1.markdown(_metric_tile("Critical",  str(counts[Severity.CRITICAL]),  _SEV_ACCENT["Critical"]),  unsafe_allow_html=True)
-    t2.markdown(_metric_tile("Watch",     str(counts[Severity.WATCH]),     _SEV_ACCENT["Watch"]),     unsafe_allow_html=True)
-    t3.markdown(_metric_tile("Resolved",  str(counts[Severity.RESOLVED]),  _SEV_ACCENT["Resolved"]),  unsafe_allow_html=True)
+    t1.markdown(_metric_tile("Critical", str(counts[Severity.CRITICAL]), _SEV_ACCENT["Critical"]), unsafe_allow_html=True)
+    t2.markdown(_metric_tile("Watch",    str(counts[Severity.WATCH]),    _SEV_ACCENT["Watch"]),    unsafe_allow_html=True)
+    t3.markdown(_metric_tile("Resolved", str(counts[Severity.RESOLVED]), _SEV_ACCENT["Resolved"]), unsafe_allow_html=True)
 
     st.markdown(
         f'<div style="font-size:12px;color:{_SLATE};margin-top:6px;margin-bottom:4px;">'
@@ -361,7 +384,7 @@ def render_briefing_tab() -> None:
     # Active Alerts heading
     st.markdown(
         f'<div style="font-size:18px;font-weight:600;color:{_ON_SURFACE};'
-        f'margin-top:24px;margin-bottom:8px;padding-bottom:8px;'
+        f'margin-top:24px;margin-bottom:12px;padding-bottom:8px;'
         f'border-bottom:1px solid {_BORDER};letter-spacing:-0.01em;">'
         f'Active Alerts</div>',
         unsafe_allow_html=True,
