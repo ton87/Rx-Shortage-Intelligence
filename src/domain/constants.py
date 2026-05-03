@@ -14,6 +14,10 @@ LOCK_STALE_S = 900                 # 15-min — anything older is stale, can be 
 AGENT_MODEL = "claude-sonnet-4-6"
 AGENT_MAX_ITERATIONS = 8
 AGENT_MAX_TOKENS = 4096
+# Concurrent LLM classification calls.
+# 2 halves wall-clock time (5 drugs × ~30s → ~75s vs ~150s serial).
+# Keep ≤3: higher values risk prompt-cache misses and Anthropic rate limits.
+AGENT_CLASSIFICATION_CONCURRENCY = 2
 
 # Customer (single-tenant v0.1)
 CUSTOMER_ID = "memorial-health-450"

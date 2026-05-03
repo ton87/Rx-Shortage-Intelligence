@@ -26,6 +26,7 @@ from src.domain.constants import (
     DEFAULT_CANDIDATE_CAP,
     FDA_FETCH_LIMIT,
     PER_DRUG_TIMEOUT_S,
+    AGENT_CLASSIFICATION_CONCURRENCY,
     CUSTOMER_ID,
     PROMPT_VERSION,
     SYNTHETIC_LABEL,
@@ -94,32 +95,35 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         # Sort by clinical priority: escalated first (worsening), then new,
         # then improved, then resolved. Within each bucket sort by active
         # orders descending so highest-volume drugs surface first.
+        # ── Attach primary formulary rxcui to every candidate ────────────────
+        # formulary_idx maps EVERY rxcui_list variant to the same drug entry.
+        # orders_idx is keyed by the drug's primary rxcui only — so looking up
+        # orders via a variant rxcui yields 0 (wrong). Normalise once here;
+        # use _primary_formulary_rxcui everywhere orders or display are needed,
+        # keeping _formulary_rxcui only for FDA-source matching and citations.
+        def _with_primary(drug: dict) -> dict:
+            frxcui = drug.get("_formulary_rxcui", "")
+            primary = str(formulary_idx.get(frxcui, {}).get("rxcui") or frxcui)
+            return {**drug, "_primary_formulary_rxcui": primary}
+
         BUCKET_RANK = {"escalated": 0, "new": 1, "improved": 2, "resolved": 3}
 
         def _candidate_sort_key(drug: dict) -> tuple:
-            bucket = drug.get("_diff_bucket", "new")
-            frxcui = drug.get("_formulary_rxcui", "")
-            orders = orders_idx.get(frxcui, {}).get("count_last_30_days", 0)
+            bucket   = drug.get("_diff_bucket", "new")
+            primary  = drug.get("_primary_formulary_rxcui", drug.get("_formulary_rxcui", ""))
+            orders   = orders_idx.get(primary, {}).get("count_last_30_days", 0)
             return (BUCKET_RANK.get(bucket, 9), -orders)
 
-        candidates = sorted(
-            diff["new"] + diff["escalated"] + diff["improved"] + diff["resolved"],
-            key=_candidate_sort_key,
-        )
+        raw_candidates = [_with_primary(d) for d in
+                          diff["new"] + diff["escalated"] + diff["improved"] + diff["resolved"]]
+        candidates = sorted(raw_candidates, key=_candidate_sort_key)
 
         # ── Deduplicate by primary formulary rxcui ───────────────────────────
-        # A formulary drug has one primary rxcui and a rxcui_list of product
-        # variants. index_formulary() creates one index entry per list member,
-        # so a single FDA shortage record can match multiple entries for the
-        # same physical drug. Without deduplication the agent produces N
-        # identical (or near-identical) briefing items — one per matched rxcui.
-        # Fix: keep only the first (highest-priority) candidate per primary rxcui.
+        # After normalisation, keep only the highest-priority candidate per drug.
         seen_primary: set[str] = set()
         deduped: list[dict] = []
         for drug in candidates:
-            frxcui = drug.get("_formulary_rxcui", "")
-            # formulary_idx entries all carry the drug's primary rxcui field
-            primary = formulary_idx.get(frxcui, {}).get("rxcui", frxcui)
+            primary = drug["_primary_formulary_rxcui"]
             if primary not in seen_primary:
                 seen_primary.add(primary)
                 deduped.append(drug)
@@ -149,21 +153,23 @@ async def _generate_briefing_async(date_str: str | None = None) -> dict:
         )
         system = build_system_blocks(formulary)
 
-        # Serial classification: 1 Anthropic call per drug, no tools.
-        # sem=1 guards against concurrent cache-miss storms on the system prompt.
-        sem = asyncio.Semaphore(1)
+        # Concurrent LLM classification — AGENT_CLASSIFICATION_CONCURRENCY=2
+        # halves wall-clock time vs serial (sem=1) without cache-storm risk.
+        sem = asyncio.Semaphore(AGENT_CLASSIFICATION_CONCURRENCY)
 
         async def _process_drug(drug: dict, drug_idx: int, total: int) -> tuple[dict, int]:
             async with sem:
                 t_drug = time.monotonic()
-                frxcui = drug.get("_formulary_rxcui", "")
+                frxcui  = drug.get("_formulary_rxcui", "")
+                primary = drug.get("_primary_formulary_rxcui", frxcui)
                 formulary_entry = formulary_idx.get(frxcui, {})
-                orders_entry = orders_idx.get(frxcui)
+                # Use primary rxcui for order lookup — variant rxcuis return 0
+                orders_entry = orders_idx.get(primary)
                 yesterday_item = next(
                     (r for r in yesterday if frxcui in r.get("rxcui", [])), None
                 )
                 yesterday_status = yesterday_item.get("status", "") if yesterday_item else ""
-                prefetched = prefetch_map.get(frxcui, {})
+                prefetched = prefetch_map.get(frxcui) or prefetch_map.get(primary, {})
 
                 user_msg = build_user_message_prefetch(
                     drug, formulary_entry, orders_entry,

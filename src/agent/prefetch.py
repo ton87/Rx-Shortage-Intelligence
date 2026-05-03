@@ -22,18 +22,52 @@ import asyncio
 import json
 
 
+def _has_enough_shortage_detail(drug: dict) -> bool:
+    """True when the candidate record from the FDA current-shortages feed already
+    carries the operational fields we need. In that case we skip the redundant
+    fda_shortage_get_shortage_detail call and use the candidate dict directly,
+    saving one API/cache round-trip per drug.
+
+    source_url is added by _trim() as a query-specific citation link.
+    At least one operational field must be present (availability is 100% coverage).
+    """
+    required_any = ("availability", "company_name", "presentation", "shortage_reason", "related_info")
+    return bool(drug.get("source_url")) and any(drug.get(k) for k in required_any)
+
+
 async def prefetch_drug_data(
     bridge,
     candidates: list[dict],
     formulary_idx: dict,
 ) -> dict[str, dict]:
     """Parallel-fetch shortage detail + label + alternatives for all candidates,
-    then parallel-fetch alt shortage status and top-1 alt label."""
-    frxcuis = [d.get("_formulary_rxcui", "") for d in candidates if d.get("_formulary_rxcui")]
+    then parallel-fetch alt shortage status and top-1 alt label.
+
+    Rec 2 optimisation: when the candidate dict already has enough FDA fields
+    (from the initial get_current_shortages feed), we skip get_shortage_detail
+    and use the candidate itself — avoids one redundant API call per drug.
+    """
+    # Build lookup: frxcui → candidate dict for the skip-detail check
+    candidate_by_frxcui = {
+        d.get("_formulary_rxcui", ""): d
+        for d in candidates if d.get("_formulary_rxcui")
+    }
+    frxcuis = list(candidate_by_frxcui.keys())
+
+    async def _resolved(value: str) -> str:
+        """Trivial coroutine that returns a pre-computed value without I/O."""
+        return value
 
     async def _phase1_one(frxcui: str) -> tuple[str, str, str, str]:
+        drug = candidate_by_frxcui[frxcui]
+        # Skip detail call when the feed record already has sufficient fields
+        if _has_enough_shortage_detail(drug):
+            shortage_coro = _resolved(json.dumps(drug))
+        else:
+            shortage_coro = bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": frxcui})
+
         shortage, label, alts = await asyncio.gather(
-            bridge.call_tool("fda_shortage_get_shortage_detail", {"rxcui": frxcui}),
+            shortage_coro,
             bridge.call_tool("drug_label_get_drug_label_sections", {
                 "rxcui": frxcui,
                 "sections": ["indications_and_usage", "warnings", "dosage_and_administration", "contraindications"],
