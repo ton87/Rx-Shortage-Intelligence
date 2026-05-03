@@ -158,8 +158,7 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
     ) if cite_url else ""
 
     # Per-card CSS: target this card's bordered wrapper via :has() marker.
-    # Scope every rule to the OUTER card via the marker, so nested columns/
-    # buttons don't accidentally become "sub-boxes".
+    # Card-based layout — white tile, rounded corners, NO coloured left bar.
     marker_cls = f"rxcm-{card_idx}"
     card_sel = (
         f'[data-testid="element-container"]:has(.{marker_cls})'
@@ -167,14 +166,16 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
     )
     st.markdown(
         f'<style>'
-        # Outer card: white, 4-px coloured left bar, single border
+        # Outer card: solid white, thin gray border, rounded corners, gap below
         f'{card_sel} {{'
         f'  background: {_WHITE} !important;'
-        f'  border-left: 4px solid {accent} !important;'
-        f'  margin-bottom: 12px !important;'
+        f'  border: 1px solid {_BORDER} !important;'
+        f'  border-radius: 8px !important;'
+        f'  margin-bottom: 16px !important;'
+        f'  padding: 6px !important;'
+        f'  box-shadow: 0 1px 2px rgba(13,28,46,0.04);'
         f'}}'
-        # Force every nested block inside this card to be transparent so the
-        # white card surface shows through (kills the right-side "sub-box")
+        # Nested blocks inside the card: transparent (no internal sub-boxes)
         f'{card_sel} [data-testid="stVerticalBlock"],'
         f'{card_sel} [data-testid="stHorizontalBlock"],'
         f'{card_sel} [data-testid="column"],'
@@ -182,13 +183,14 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
         f'  background: transparent !important;'
         f'  border: none !important;'
         f'}}'
-        # Buttons: narrower, smaller, sit on white card with no surrounding box
+        # Right-aligned buttons: capped width, sit on white surface
         f'{card_sel} [data-testid="column"]:nth-child(2) .stButton > button {{'
         f'  max-width: 132px;'
         f'  margin: 0 0 6px auto;'
         f'  padding: 6px 12px;'
         f'  font-size: 13px;'
         f'  min-height: 32px;'
+        f'  border-radius: 6px;'
         f'}}'
         # Escalate (3rd button) = red text only
         f'{card_sel} [data-testid="column"]:nth-child(2)'
