@@ -17,7 +17,9 @@ from src.ui.runner import run_briefing_with_status
 ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
 
 # ── Design tokens ──────────────────────────────────────────────────────────────
-_NAVY       = "#1d4ed8"
+_NAVY       = "#002045"   # used for body text/links — stays dark for legibility
+_PRIMARY_BG = "#a8c5e8"   # pastel blue for the Accept button background
+_PRIMARY_FG = "#0d1c2e"   # dark navy text on pastel button
 _SLATE      = "#74777f"
 _ON_SURFACE = "#0d1c2e"
 _ON_VARIANT = "#43474e"
@@ -283,16 +285,23 @@ def render_briefing_tab() -> None:
           .stButton:nth-of-type(3) > button:hover {{
           background: #ffdad6 !important;
         }}
-        /* Primary (Accept) button = navy */
+        /* Primary (Accept) button = pastel blue with dark text */
         .stButton button[kind="primaryButton"],
         button[data-testid="baseButton-primary"] {{
-          background-color: {_NAVY} !important;
-          border-color: {_NAVY} !important;
-          color: #fff !important;
+          background-color: {_PRIMARY_BG} !important;
+          border-color: {_PRIMARY_BG} !important;
+          color: {_PRIMARY_FG} !important;
+          font-weight: 600 !important;
         }}
         .stButton button[kind="primaryButton"]:hover {{
-          background-color: #1e40af !important;
-          border-color: #1e40af !important;
+          background-color: #93b6dc !important;
+          border-color: #93b6dc !important;
+          color: {_PRIMARY_FG} !important;
+        }}
+        /* Force the inner span/p (text) to be dark on the pastel bg */
+        .stButton button[kind="primaryButton"] p,
+        button[data-testid="baseButton-primary"] p {{
+          color: {_PRIMARY_FG} !important;
         }}
         </style>""",
         unsafe_allow_html=True,
