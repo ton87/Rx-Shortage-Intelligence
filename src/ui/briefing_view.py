@@ -157,56 +157,51 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
         f'border-bottom:1px solid {_BORDER};">∞ FDA Drug Shortage Record</a></div>'
     ) if cite_url else ""
 
-    # Per-card CSS: target this card's bordered wrapper via :has() marker
+    # Per-card CSS: target this card's bordered wrapper via :has() marker.
+    # Scope every rule to the OUTER card via the marker, so nested columns/
+    # buttons don't accidentally become "sub-boxes".
     marker_cls = f"rxcm-{card_idx}"
+    card_sel = (
+        f'[data-testid="element-container"]:has(.{marker_cls})'
+        f' + [data-testid="stVerticalBlockBorderWrapper"]'
+    )
     st.markdown(
         f'<style>'
-        # Card shell: 4px coloured left border, white bg
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"] {{'
-        f'  border-left: 4px solid {accent} !important;'
+        # Outer card: white, 4-px coloured left bar, single border
+        f'{card_sel} {{'
         f'  background: {_WHITE} !important;'
+        f'  border-left: 4px solid {accent} !important;'
         f'  margin-bottom: 12px !important;'
         f'}}'
-        # Subtle vertical separator (only the line, NO background change)
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(2)'
-        f' > div:first-child {{'
-        f'  border-left: 1px solid {_BORDER};'
-        f'  padding-left: 18px;'
+        # Force every nested block inside this card to be transparent so the
+        # white card surface shows through (kills the right-side "sub-box")
+        f'{card_sel} [data-testid="stVerticalBlock"],'
+        f'{card_sel} [data-testid="stHorizontalBlock"],'
+        f'{card_sel} [data-testid="column"],'
+        f'{card_sel} [data-testid="stExpander"] {{'
+        f'  background: transparent !important;'
+        f'  border: none !important;'
         f'}}'
-        # Escalate (3rd button in right col): red text, no border, no bg
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="column"]:nth-child(2) .stButton:nth-of-type(3) > button {{'
+        # Buttons: narrower, smaller, sit on white card with no surrounding box
+        f'{card_sel} [data-testid="column"]:nth-child(2) .stButton > button {{'
+        f'  max-width: 132px;'
+        f'  margin: 0 0 6px auto;'
+        f'  padding: 6px 12px;'
+        f'  font-size: 13px;'
+        f'  min-height: 32px;'
+        f'}}'
+        # Escalate (3rd button) = red text only
+        f'{card_sel} [data-testid="column"]:nth-child(2)'
+        f' .stButton:nth-of-type(3) > button {{'
         f'  color: #ba1a1a !important;'
         f'  background: transparent !important;'
         f'  border: none !important;'
         f'  box-shadow: none !important;'
         f'  font-weight: 600 !important;'
-        f'  padding: 4px 8px !important;'
         f'}}'
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="column"]:nth-child(2) .stButton:nth-of-type(3) > button:hover {{'
+        f'{card_sel} [data-testid="column"]:nth-child(2)'
+        f' .stButton:nth-of-type(3) > button:hover {{'
         f'  background: #ffdad6 !important;'
-        f'}}'
-        # Constrain button width (narrower than column) + tighter spacing
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="column"]:nth-child(2) .stButton > button {{'
-        f'  max-width: 130px;'
-        f'  margin: 0 auto;'
-        f'  padding: 6px 12px;'
-        f'  font-size: 13px;'
-        f'  min-height: 32px;'
-        f'}}'
-        # Stack spacing between buttons in right column
-        f'[data-testid="element-container"]:has(.{marker_cls})'
-        f' + [data-testid="stVerticalBlockBorderWrapper"]'
-        f' [data-testid="column"]:nth-child(2) .stButton {{'
-        f'  margin-bottom: 6px;'
         f'}}'
         f'</style>'
         f'<span class="{marker_cls}" style="display:none;"></span>',
@@ -283,14 +278,11 @@ def render_collapsed_card(item: dict, briefing_path, card_idx: int = 0) -> None:
 # ── Briefing tab ───────────────────────────────────────────────────────────────
 
 def render_briefing_tab() -> None:
-    # Global style overrides for this tab
+    # Tab-level overrides ONLY — card backgrounds handled per-card in
+    # render_collapsed_card so nested wrappers don't accidentally style.
     st.markdown(
         f"""<style>
-        /* All bordered card containers: white */
-        [data-testid="stVerticalBlockBorderWrapper"] {{
-          background: {_WHITE} !important;
-        }}
-        /* Primary button (Accept) = navy */
+        /* Primary button (Accept) = navy — applies to the briefing tab */
         .stButton button[kind="primaryButton"],
         button[data-testid="baseButton-primary"] {{
           background-color: {_NAVY} !important;

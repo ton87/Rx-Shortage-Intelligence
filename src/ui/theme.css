@@ -152,10 +152,8 @@ button:focus-visible {
 
 [data-testid="stMetricDelta"] { display: none !important; }
 
-/* ── Bordered containers: white ─────────────────────────────────────────── */
-[data-testid="stVerticalBlockBorderWrapper"] {
-  background-color: #ffffff !important;
-}
-
 /* ── Metric tiles: no default Streamlit background ───────────────────────── */
 [data-testid="stMetric"] { background: transparent; }
+
+/* Card backgrounds are handled per-card in briefing_view.py via :has()
+   markers, so nested column wrappers don't accidentally become sub-boxes. */
