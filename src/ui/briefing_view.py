@@ -17,7 +17,7 @@ from src.ui.runner import run_briefing_with_status
 ACTION_LABELS = {"accept": "Accepted", "override": "Overridden", "escalate": "Escalated to P&T"}
 
 # ── Design tokens ──────────────────────────────────────────────────────────────
-_NAVY       = "#002045"
+_NAVY       = "#1d4ed8"
 _SLATE      = "#74777f"
 _ON_SURFACE = "#0d1c2e"
 _ON_VARIANT = "#43474e"
@@ -291,8 +291,8 @@ def render_briefing_tab() -> None:
           color: #fff !important;
         }}
         .stButton button[kind="primaryButton"]:hover {{
-          background-color: #1a365d !important;
-          border-color: #1a365d !important;
+          background-color: #1e40af !important;
+          border-color: #1e40af !important;
         }}
         </style>""",
         unsafe_allow_html=True,
