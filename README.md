@@ -4,7 +4,7 @@ AI morning briefing for hospital pharmacy directors. Cross-references live FDA d
 
 > ⚠️ Formulary and active orders are **synthetic** for demo. FDA shortage feed and RxNorm are **live public data**.
 
-> 🎯 Prototype built by **Anton Verenitch** for the **Micromedex by Merative** Senior Product Manager, Formulary Intelligence job interview demo. Not a production product.
+> 🎯 Prototype built by **Anton Verenitch**. Not a production product.
 
 ---
 
